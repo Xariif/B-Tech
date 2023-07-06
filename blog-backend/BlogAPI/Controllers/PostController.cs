@@ -37,7 +37,7 @@ namespace BlogAPI.Controllers
             try
             {
                 await _postService.CreatePostAsync(newPost);
-                return Ok();
+                return Ok("Post created");
             }
             catch (ArgumentException ex)
             {
@@ -50,8 +50,22 @@ namespace BlogAPI.Controllers
         }
 
         [HttpPut("UpdatePost")]
-        public async Task<ActionResult> Ip[]
-
+        public async Task<ActionResult> UpdatePost(PostDTO updatePost) 
+        {
+            try
+            {
+                await _postService.UpdatePostAsync(updatePost);
+                return Ok();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
 
         [HttpDelete("DeletePost")]
         public async Task<ActionResult> DeletePost(string id)

@@ -32,12 +32,32 @@ namespace BlogAPI.Services
             var res = await postCollection.Find(filter).ToListAsync();
             if (res.Any())
             {
-                throw new ArgumentException("Post o takiej nazwie już istnieje");
+                throw new ArgumentException("Post with same name already exist");
             }
 
             await postCollection.InsertOneAsync(post);
 
         }
+
+        public async Task UpdatePostAsync(PostDTO updatePost)
+        {
+            var filter = Builders<Post>.Filter.Where(x => x.Id == ObjectId.Parse(updatePost.Id));
+
+            var post = new Post
+            {
+                Id = ObjectId.Parse(updatePost.Id),
+                Title = updatePost.Title,
+                Content = updatePost.Content,
+                Author = updatePost.Author,
+                Category = updatePost.Category?.Trim(),
+                Tags = updatePost.Tags,
+                CreatedAt = updatePost.CreatedAt,
+                UpdatedAt = updatePost.UpdatedAt
+            };
+
+            await postCollection.ReplaceOneAsync(filter,post);
+        }
+
 
         public async Task DeletePost(string id)
         {
