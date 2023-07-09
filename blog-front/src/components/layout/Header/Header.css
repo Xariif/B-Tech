@@ -1,0 +1,44 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--primary-color);
+  padding: 0 10px;
+}
+
+.logo a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--primary-color-text);
+}
+
+.logo a i {
+  margin-right: 10px;
+}
+
+.menu a {
+  margin-right: 10px;
+  text-decoration: none;
+  color: var(--primary-color-text);
+  transition: all 0.3s ease-in-out;
+  text-transform: uppercase;
+  padding: 10px;
+}
+
+.menu {
+  display: flex;
+  align-items: stretch;
+}
+
+.menu a:last-child {
+  margin-right: 0;
+}
+
+.menu a:hover {
+  background-color: var(--surface-hover);
+  color: var(--highlight-text-color);
+  transition: all 0.3s ease-in-out;
+}

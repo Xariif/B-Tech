@@ -1,11 +1,11 @@
 import Footer from "./Footer";
-import Header from "./Header";
-
+import Header from "./Header/Header";
+import "./Layout.css";
 export function Layout( props) {
   return (
     <div className="layout">
       <Header />
-      <div className="content">{props.content}</div>
+      <div className="main">{props.content}</div>
       <Footer />
     </div>
   );
