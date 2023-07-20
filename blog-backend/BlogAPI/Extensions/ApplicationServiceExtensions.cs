@@ -6,7 +6,6 @@ namespace BlogAPI.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            services.AddScoped<TokenService>();
             services.AddScoped<PostService>();
 
             return services;

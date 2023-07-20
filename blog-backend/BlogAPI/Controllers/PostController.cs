@@ -50,7 +50,7 @@ namespace BlogAPI.Controllers
         }
 
         [HttpPut("UpdatePost")]
-        public async Task<ActionResult> UpdatePost(PostDTO updatePost) 
+        public async Task<ActionResult> UpdatePost(PostDTO updatePost)
         {
             try
             {

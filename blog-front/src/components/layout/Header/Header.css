@@ -1,9 +1,7 @@
 .header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   background-color: var(--primary-color);
-  padding: 0 10px;
 }
 
 .logo a {
@@ -13,6 +11,7 @@
   font-size: 18px;
   font-weight: bold;
   color: var(--primary-color-text);
+  white-space: nowrap;
 }
 
 .logo a i {
@@ -31,6 +30,7 @@
 .menu {
   display: flex;
   align-items: stretch;
+  color: var(--primary-color-text);
 }
 
 .menu a:last-child {
@@ -38,7 +38,6 @@
 }
 
 .menu a:hover {
-  background-color: var(--surface-hover);
   color: var(--highlight-text-color);
   transition: all 0.3s ease-in-out;
 }

@@ -6,7 +6,8 @@ namespace BlogAPI.Services
     public class BaseService
     {
         protected IMongoDatabase db;
-        protected IMongoCollection<Post> postCollection;
+        protected IMongoCollection<Post> _postCollection;
+        protected IMongoCollection<Author> _authorCollection;
 
         public BaseService()
         {
@@ -25,8 +26,8 @@ namespace BlogAPI.Services
 
             db = client.GetDatabase(databaseName);
 
-            postCollection = db.GetCollection<Post>("Post");
+            _postCollection = db.GetCollection<Post>("Post");
+            _authorCollection = db.GetCollection<Author>("Author");
 
         }
-    }
-}
+    }}

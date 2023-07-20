@@ -1,11 +1,15 @@
-import Footer from "./Footer";
+import Footer from "./Footer/Footer";
 import Header from "./Header/Header";
 import "./Layout.css";
-export function Layout( props) {
+export function Layout(props) {
   return (
     <div className="layout">
       <Header />
-      <div className="main">{props.content}</div>
+      <main>
+  
+          {props.content}
+   
+      </main>
       <Footer />
     </div>
   );

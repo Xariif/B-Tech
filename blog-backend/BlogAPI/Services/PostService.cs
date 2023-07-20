@@ -10,7 +10,7 @@ namespace BlogAPI.Services
         public async Task<List<Post>> GetPostsAsync()
         {
             var filter = Builders<Post>.Filter.Empty;
-            var cursor = await postCollection.FindAsync(filter);
+            var cursor = await _postCollection.FindAsync(filter);
             return await cursor.ToListAsync();
         }
 
@@ -19,23 +19,23 @@ namespace BlogAPI.Services
             var post = new Post
             {
                 Id = ObjectId.GenerateNewId(),
-                Author = newPost.Author.Trim(),
+                AuthorId = ObjectId.Parse(newPost.AuthorId),
                 Title = newPost.Title.Trim(),
                 Content = newPost.Content.Trim(),
-                Tags = newPost.Tags,
+                Tag = newPost.Tag,
                 Category = newPost.Category?.Trim(),
                 CreatedAt = DateTime.Now,
                 UpdatedAt = null
             };
 
             var filter = Builders<Post>.Filter.Where(x => x.Title == newPost.Title);
-            var res = await postCollection.Find(filter).ToListAsync();
+            var res = await _postCollection.Find(filter).ToListAsync();
             if (res.Any())
             {
                 throw new ArgumentException("Post with same name already exist");
             }
 
-            await postCollection.InsertOneAsync(post);
+            await _postCollection.InsertOneAsync(post);
 
         }
 
@@ -48,21 +48,21 @@ namespace BlogAPI.Services
                 Id = ObjectId.Parse(updatePost.Id),
                 Title = updatePost.Title,
                 Content = updatePost.Content,
-                Author = updatePost.Author,
+                AuthorId = ObjectId.Parse(updatePost.AuthorId),
                 Category = updatePost.Category?.Trim(),
-                Tags = updatePost.Tags,
+                Tag = updatePost.Tag,
                 CreatedAt = updatePost.CreatedAt,
                 UpdatedAt = updatePost.UpdatedAt
             };
 
-            await postCollection.ReplaceOneAsync(filter,post);
+            await _postCollection.ReplaceOneAsync(filter, post);
         }
 
 
         public async Task DeletePost(string id)
         {
             var filter = Builders<Post>.Filter.Where(x => x.Id == ObjectId.Parse(id));
-            await postCollection.DeleteOneAsync(filter);
+            await _postCollection.DeleteOneAsync(filter);
         }
     }
 }

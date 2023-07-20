@@ -1,0 +1,14 @@
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: .75rem;
+  padding: .5rem 1rem;
+  margin: 0;
+  background-color: var(--surface-ground);
+}
+
+.company {
+  font-weight: bold;
+  opacity: 0.5;
+}
