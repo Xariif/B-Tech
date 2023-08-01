@@ -2,13 +2,13 @@
 {
     public class PostDTO
     {
-        public string? Id { get; set; }
-        public string? Title { get; set; }
-        public string? Content { get; set; }
-        public string? AuthorId { get; set; }
-        public string? Category { get; set; }
-        public string? Tag { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public required string Id { get; set; }
+        public required string Title { get; set; }
+        public required string Content { get; set; }
+        public required string Category { get; set; }
+        public required string AuthorId { get; set; }
+        public required string Tag { get; set; }
+        public required DateTime CreatedAt { get; set; }
+        public required DateTime UpdatedAt { get; set; } = DateTime.Now;
     }
 }

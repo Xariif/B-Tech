@@ -10,27 +10,29 @@ import Najnowsze from "./components/pages/Najnowsze";
 import Kontakt from "./components/pages/Kontakt";
 import Author from "./components/pages/Author";
 import AuthorWrapper from "./components/pages/AuthorWrapper";
+import Post from "./components/pages/Post";
 
 function App() {
-  return (
-    <Routes>
-      <Route path="/" element={<Layout content={<Outlet />} />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/top" element={<Top />} />
-        <Route path="/najnowsze" element={<Najnowsze />} />
-        <Route path="/kontakt" element={<Kontakt />} />
-        <Route
-          path="/author/:name"
-          element={
-            <AuthorWrapper>
-              <Author />
-            </AuthorWrapper>
-          }
-        />
-        <Route path="*" exact={true} element={<NotFound />} />
-      </Route>
-    </Routes>
-  );
+	return (
+		<Routes>
+			<Route path="/" element={<Layout content={<Outlet />} />}>
+				<Route path="/" element={<Home />} />
+				<Route path="/top" element={<Top />} />
+				<Route path="/najnowsze" element={<Najnowsze />} />
+				<Route path="/kontakt" element={<Kontakt />} />
+				<Route path="/post/:id" element={<Post />} />
+				<Route
+					path="/author/:id"
+					element={
+						<AuthorWrapper>
+							<Author />
+						</AuthorWrapper>
+					}
+				/>
+				<Route path="*" exact={true} element={<NotFound />} />
+			</Route>
+		</Routes>
+	);
 }
 
 export default App;

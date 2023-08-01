@@ -2,40 +2,31 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-function Author() {
-  const { name } = useParams();
-  const navigate = useNavigate();
-  const [authorData, setAuthorData] = useState(null);
+function Author({ authorData }) {
+	console.log(authorData);
 
-  useEffect(() => {
-    // Make an API call to retrieve the author data
-    fetch(`/api/authors/${name}`)
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error("Author not found");
-        }
-      })
-      .then((data) => {
-        console.log(data);
-        setAuthorData(data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, [name, navigate]);
-
-  if (authorData) {
-    return (
-      <div>
-        <h1>Author: {authorData.name}</h1>
-        {/* Render the author page content */}
-      </div>
-    );
-  } else {
-    return null; // Render nothing until the author data is loaded
-  }
+	return (
+		<>
+			<div style={{ display: "flex", alignItems: "center", justifyContent:'center' }}>
+				<i
+					style={{ fontSize: "2rem", paddingRight: "1rem" }}
+					className="pi pi-user"
+				></i>
+				<h3 style={{ margin: "0", paddingRight:'1rem' }}>
+					{authorData.name + " " + authorData.surname}
+				</h3>
+				<p>
+					Aktywny od{" "}
+					{new Date(authorData.activeFrom).toLocaleDateString("pl-PL", {
+						year: "numeric",
+						month: "long",
+						day: "numeric",
+					})}
+				</p>
+			</div>
+			<p>{authorData.description}</p>
+		</>
+	);
 }
 
 export default Author;

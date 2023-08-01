@@ -5,11 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BlogAPI.Controllers
 {
-    public class PostController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class PostController : BaseController
     {
         private readonly PostService _postService;
 
-        public PostController(PostService postService)
+        public PostController(PostService postService,IWebHostEnvironment env) : base(env)
         {
             _postService = postService;
         }
@@ -22,30 +24,38 @@ namespace BlogAPI.Controllers
                 var result = await _postService.GetPostsAsync();
                 return Ok(result);
             }
-            catch (ArgumentException ex)
+            catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return HandleError(ex);
+            }
+        }
+
+        [HttpGet("GetPostById")]
+        public async Task<ActionResult<Post>> GetPostById(string id)
+        {
+            try
+            {
+                var res = await _postService.GetPostByIdAsync(id);
+                return Ok(res);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message);
+                return HandleError(ex);
             }
         }
+
         [HttpPost("CreatePost")]
         public async Task<ActionResult> CreatePost(NewPostDTO newPost)
         {
             try
             {
+
                 await _postService.CreatePostAsync(newPost);
                 return Ok("Post created");
             }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message);
+                return HandleError(ex);
             }
         }
 
@@ -55,15 +65,11 @@ namespace BlogAPI.Controllers
             try
             {
                 await _postService.UpdatePostAsync(updatePost);
-                return Ok();
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
+                return Ok("Post updated");
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message);
+                return HandleError(ex);
             }
         }
 
@@ -73,15 +79,11 @@ namespace BlogAPI.Controllers
             try
             {
                 await _postService.DeletePost(id);
-                return Ok();
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
+                return Ok("Post deleted");
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message);
+                return HandleError(ex);
             }
         }
     }

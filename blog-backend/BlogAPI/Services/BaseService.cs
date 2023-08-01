@@ -1,6 +1,7 @@
-﻿using BlogAPI.Models;
+﻿using System.Xml.Linq;
+using BlogAPI.Models;
+using MongoDB.Bson;
 using MongoDB.Driver;
-
 namespace BlogAPI.Services
 {
     public class BaseService
@@ -8,6 +9,10 @@ namespace BlogAPI.Services
         protected IMongoDatabase db;
         protected IMongoCollection<Post> _postCollection;
         protected IMongoCollection<Author> _authorCollection;
+        protected IMongoCollection<Comment> _commentCollection;
+        protected IMongoCollection<CommentLike> _commentLikeCollection;
+        protected IMongoCollection<PostLike> _postLikeCollection;
+
 
         public BaseService()
         {
@@ -28,6 +33,18 @@ namespace BlogAPI.Services
 
             _postCollection = db.GetCollection<Post>("Post");
             _authorCollection = db.GetCollection<Author>("Author");
-
+            _commentCollection = db.GetCollection<Comment>("Comment");
+            _commentLikeCollection = db.GetCollection<CommentLike>("CommentLike");
+            _postLikeCollection = db.GetCollection<PostLike>("PostLike");
         }
-    }}
+
+        protected async Task<T> GetById<T>(IMongoCollection<T> collection, string id)
+        {
+            var filter = Builders<T>.Filter.Eq("_id", ObjectId.Parse(id));
+            var cursor = await collection.FindAsync(filter);
+            var res = await cursor.FirstOrDefaultAsync();
+
+            return res;
+        }
+    }
+}

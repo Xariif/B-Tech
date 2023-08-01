@@ -47,6 +47,6 @@ msbuild.wrn
 
 # Visual Studio 2015
 .vs/
-
+.vscode/
 #Mac
 **/.DS_Store
