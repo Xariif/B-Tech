@@ -4,8 +4,7 @@ import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 
 import "./index.css";
-import LogRocket from 'logrocket';
-LogRocket.init('mrpf53/b-tech');
+
 //theme
 import "primereact/resources/themes/saga-orange/theme.css";
 //core

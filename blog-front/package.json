@@ -4,7 +4,6 @@
 	"private": true,
 	"dependencies": {
 		"axios": "^1.4.0",
-		"logrocket": "^5.0.0",
 		"primeicons": "^6.0.1",
 		"primereact": "^9.6.0",
 		"react": "^18.2.0",
