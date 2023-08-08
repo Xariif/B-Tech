@@ -16,7 +16,7 @@ export default function Footer() {
 			>
 				<div style={{ paddingRight: ".5rem", fontWeight: "bold" }}>
 					{" "}
-					Wykonawca:{" "}
+					Author:{" "}
 				</div>
 				<div>Jakub Filiks</div>
 			</div>

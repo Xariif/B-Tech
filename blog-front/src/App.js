@@ -11,6 +11,7 @@ import Kontakt from "./components/pages/Kontakt";
 import Author from "./components/pages/Author";
 import AuthorWrapper from "./components/pages/AuthorWrapper";
 import Post from "./components/pages/Post";
+import PostWrapper from "./components/pages/PostWrapper";
 
 function App() {
 	return (
@@ -20,15 +21,8 @@ function App() {
 				<Route path="/top" element={<Top />} />
 				<Route path="/najnowsze" element={<Najnowsze />} />
 				<Route path="/kontakt" element={<Kontakt />} />
-				<Route path="/post/:id" element={<Post />} />
-				<Route
-					path="/author/:id"
-					element={
-						<AuthorWrapper>
-							<Author />
-						</AuthorWrapper>
-					}
-				/>
+				<Route path="/post/:id" element={<PostWrapper />} />
+				<Route path="/author/:id" element={<AuthorWrapper />} />
 				<Route path="*" exact={true} element={<NotFound />} />
 			</Route>
 		</Routes>
