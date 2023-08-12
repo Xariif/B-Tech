@@ -1,4 +1,4 @@
-export default function Kontakt() {
+export default function Contact() {
 	return (
 		<>
 			<div style={{ display: "flex", justifyContent: "space-between" }}>

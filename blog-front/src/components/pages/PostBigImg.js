@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import Tag from "../ui/Tag";
 
 export default function PostBigImg({ postData, author }) {
-	console.log(postData);
 	return (
 		<div style={{ maxWidth: "1180px", margin: "0 auto" }}>
 			<div

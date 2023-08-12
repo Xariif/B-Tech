@@ -1,7 +1,7 @@
 import { Button } from "primereact/button";
 import { useEffect, useState } from "react";
 import { GetPosts } from "../../services/PostService";
-export default function Najnowsze() {
+export default function Newest() {
 	const [Posts, setPosts] = useState([]);
 
 	useEffect(() => {
@@ -21,9 +21,5 @@ export default function Najnowsze() {
 			})
 			.catch((err) => console.log(err));
 	}, []);
-	return (
-		<div style={{ maxWidth: "1180px", margin: "0 auto" }}>
-			Najnowsze
-		</div>
-	);
+	return <div style={{ maxWidth: "1180px", margin: "0 auto" }}>Najnowsze</div>;
 }

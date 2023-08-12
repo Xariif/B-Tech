@@ -5,12 +5,11 @@ import { BrowserRouter } from "react-router-dom";
 
 import "./index.css";
 
-//theme
-import "primereact/resources/themes/saga-orange/theme.css";
 //core
 import "primereact/resources/primereact.min.css";
 //icons
 import "primeicons/primeicons.css";
+import ThemeProvider from "./context/ThemeContext";
 
 const rootElement = document.getElementById("root");
 
@@ -19,7 +18,9 @@ const root = ReactDOMClient.createRoot(rootElement);
 root.render(
 	<React.StrictMode>
 		<BrowserRouter>
-			<App />
+			<ThemeProvider>
+				<App />
+			</ThemeProvider>
 		</BrowserRouter>
 	</React.StrictMode>
 );

@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import "./Header.css";
-//dodać linki i ikonki
-//searchbar
-// czy zalogowany? po prawej z awatarem i button do zalogowania itd
+import { Button } from "primereact/button";
+import PrimeReact from "primereact/api";
+import { ThemeContext } from "../../../context/ThemeContext";
+import { InputSwitch } from "primereact/inputswitch";
+
 export default function Header() {
+	const toggleDarkMode = useContext(ThemeContext);
+
 	return (
 		<div className="header">
 			<div
@@ -27,15 +31,24 @@ export default function Header() {
 					</Link>
 				</div>
 				<div className="menu">
-					<Link to="/najnowsze" onClick={() => (document.title = "Najnowsze")}>
-						Najnowsze
-					</Link>
-					<Link to="/top" onClick={() => (document.title = "Top")}>
-						Top
-					</Link>
-					<Link to="/kontakt" onClick={() => (document.title = "Kontakt")}>
-						kontakt
-					</Link>
+					<Link to="/newest">Newest</Link>
+					<Link to="/top">Top</Link>
+					<Link to="/contact">Contact</Link>
+
+					<i
+						className="pi pi-moon"
+						style={{
+							transform: "rotate(-90deg)",
+							cursor: "pointer",
+						}}
+						onClick={
+							toggleDarkMode
+								? toggleDarkMode
+								: () => {
+										console.log("toggleDarkMode is undefined");
+								  }
+						}
+					/>
 				</div>
 			</div>
 		</div>
