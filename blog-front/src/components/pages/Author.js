@@ -15,14 +15,14 @@ function Author({ authorData }) {
 					size="large"
 					shape="circle"
 					label={authorData.name[0]}
-					style={{ marginRight: "1rem" }}
+					style={{ marginRight: "1rem", width: "4rem", height: "4rem" }}
 				/>
 
 				<h3 style={{ margin: "0", paddingRight: "1rem" }}>
 					{authorData.name + " " + authorData.surname}
 				</h3>
 				<p>
-					Aktywny od{" "}
+					Active from{" "}
 					{new Date(authorData.activeFrom).toLocaleDateString("pl-PL", {
 						year: "numeric",
 						month: "long",

@@ -21,7 +21,6 @@ export default function Loading() {
 			<h1
 				style={{
 					fontSize: "3rem",
-					color: "#333",
 					textShadow: "1px 1px #fff",
 					textAlign: "center",
 				}}

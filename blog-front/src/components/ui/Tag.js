@@ -1,8 +1,9 @@
 const TagColors = {
 	TECH: "blue",
 	SPACE: "orange",
-	MOTO: "red",
+	MOTO: "black",
 	NATURE: "green",
+	IMPORTANT: "red",
 };
 
 export default function Tag({ tag }) {

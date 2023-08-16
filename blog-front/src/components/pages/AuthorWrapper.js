@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import Author from "./Author";
 import NotFound from "./NotFound";
 import { GetAuthorById } from "../../services/AuthorService";
+import Loading from "./Loading";
 
 function AuthorWrapper() {
 	const { id } = useParams();
@@ -21,7 +22,7 @@ function AuthorWrapper() {
 	}, [id]);
 
 	if (authorData === null) {
-		return <>Skeleton</>;
+		return <Loading />;
 	} else if (authorData === false) {
 		return <NotFound />;
 	} else {

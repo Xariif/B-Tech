@@ -23,7 +23,8 @@
 	color: var(--primary-color-text);
 	transition: all 0.3s ease-in-out;
 	text-transform: uppercase;
-	margin: 0 10px;
+	margin: 0 1rem;
+	display: inline;
 }
 
 .menu {
@@ -34,7 +35,15 @@
 	margin-right: 0;
 }
 
-.menu a:hover {
+.menu a:hover,
+.logo a:hover,
+i:hover {
 	color: var(--highlight-text-color);
 	transition: all 0.3s ease-in-out;
+}
+
+@media only screen and (max-width: 750px) {
+	#search {
+		display: none;
+	}
 }

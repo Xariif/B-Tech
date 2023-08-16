@@ -36,5 +36,5 @@ export default function PostWrapper() {
 
 	if (postData == null || author == null) return <Loading />;
 	else if (postData === false) return <NotFound />;
-	else return <PostBigImg postData={postData} author={author} />;
+	else return <Post postData={postData} author={author} />;
 }
