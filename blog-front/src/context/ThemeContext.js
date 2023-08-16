@@ -36,19 +36,14 @@ function ThemeProvider(props) {
 			.setAttribute("href", "/resources/themes/" + currentTheme + "/theme.css");
 	}, [currentTheme]);
 
-	useEffect(() => {
-		setTheme(themes[currentThemeIndex]);
-		setCurrentTheme(themes[currentThemeIndex]);
-	}, [currentThemeIndex, currentTheme]);
-
 	const toggleDarkMode = () => {
-		setCurrentThemeIndex((prev) => {
-			if (prev >= themes.length - 1) {
-				return 0;
-			} else {
-				return prev + 1;
-			}
-		});
+		const newIndex =
+			currentThemeIndex >= themes.length - 1 ? 0 : currentThemeIndex + 1;
+
+		setCurrentThemeIndex(newIndex);
+
+		setCurrentTheme(themes[newIndex]);
+		setTheme(themes[newIndex]);
 	};
 	return (
 		<ThemeContext.Provider value={toggleDarkMode}>
