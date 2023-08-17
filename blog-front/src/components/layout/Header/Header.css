@@ -1,7 +1,7 @@
 .header {
 	display: flex;
 	align-items: center;
-	background-color: var(--primary-color);
+	background-color: var(--surface-ground);
 }
 
 .logo a {
@@ -10,8 +10,9 @@
 	text-decoration: none;
 	font-size: 18px;
 	font-weight: bold;
-	color: var(--primary-color-text);
+	color: var(--text-color);
 	white-space: nowrap;
+	transition: all 0.2s ease-in-out;
 }
 
 .logo a i {
@@ -20,15 +21,19 @@
 
 .menu a {
 	text-decoration: none;
-	color: var(--primary-color-text);
-	transition: all 0.3s ease-in-out;
+	color: var(--text-color);
 	text-transform: uppercase;
 	margin: 0 1rem;
 	display: inline;
+	transition: all 0.2s ease-in-out;
 }
 
 .menu {
-	color: var(--primary-color-text);
+	color: var(--text-color);
+}
+
+.menu i {
+	transition: all 0.2s ease-in-out;
 }
 
 .menu a:last-child {
@@ -38,8 +43,7 @@
 .menu a:hover,
 .logo a:hover,
 i:hover {
-	color: var(--highlight-text-color);
-	transition: all 0.3s ease-in-out;
+	color: var(--primary-color);
 }
 
 @media only screen and (max-width: 750px) {

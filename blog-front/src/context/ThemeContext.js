@@ -6,7 +6,7 @@ export const ThemeContext = createContext();
 
 function ThemeProvider(props) {
 	const [darkMode, setDarkMode] = useState(false);
-	const [theme, setTheme] = useLocalStorage("theme");
+	const [themeStorage, setThemeStorage] = useLocalStorage("theme");
 
 	const [currentTheme, setCurrentTheme] = useState("");
 	const [currentThemeIndex, setCurrentThemeIndex] = useState(0);
@@ -24,9 +24,9 @@ function ThemeProvider(props) {
 		"rhea",
 	];
 	useEffect(() => {
-		if (theme) {
-			setCurrentThemeIndex((prev) => themes.indexOf(theme));
-			setCurrentTheme(theme);
+		if (themeStorage) {
+			setCurrentThemeIndex((prev) => themes.indexOf(themeStorage));
+			setCurrentTheme(themeStorage);
 		}
 	}, []);
 
@@ -36,17 +36,17 @@ function ThemeProvider(props) {
 			.setAttribute("href", "/resources/themes/" + currentTheme + "/theme.css");
 	}, [currentTheme]);
 
-	const toggleDarkMode = () => {
+	const nextTheme = () => {
 		const newIndex =
 			currentThemeIndex >= themes.length - 1 ? 0 : currentThemeIndex + 1;
 
 		setCurrentThemeIndex(newIndex);
 
 		setCurrentTheme(themes[newIndex]);
-		setTheme(themes[newIndex]);
+		setThemeStorage(themes[newIndex]);
 	};
 	return (
-		<ThemeContext.Provider value={toggleDarkMode}>
+		<ThemeContext.Provider value={nextTheme}>
 			{props.children}
 		</ThemeContext.Provider>
 	);

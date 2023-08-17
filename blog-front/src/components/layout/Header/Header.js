@@ -9,19 +9,15 @@ import useLocalStorage from "../../hooks/useLocalStorage";
 import { InputText } from "primereact/inputtext";
 
 export default function Header() {
-	const toggleDarkMode = useContext(ThemeContext);
+	const nextTheme = useContext(ThemeContext);
 	const searchRef = useRef(null);
 
 	const [searchValue, setSearchValue] = useState("");
 
-	function handleKeyDown(event) {
-		if (event.key === "Enter") {
-			console.log("do validate");
-			console.log(searchValue);
-			//prevent default
-			event.preventDefault();
-			setSearchValue("");
-		}
+	function handleSearch(event) {
+		console.log(searchValue);
+		event.preventDefault();
+		setSearchValue("");
 	}
 
 	return (
@@ -46,11 +42,15 @@ export default function Header() {
 				</div>
 				<div className="menu">
 					<span className="p-input-icon-right" id="search">
-						<i className="pi pi-search" />
+						<i className="pi pi-search" onClick={handleSearch} />
 						<InputText
 							placeholder="Search"
 							style={{ borderRadius: "1rem" }}
-							onKeyDown={handleKeyDown}
+							onKeyDown={(event) => {
+								if (event.key === "Enter") {
+									handleSearch(event);
+								}
+							}}
 							value={searchValue}
 							onChange={(e) => setSearchValue(e.target.value)}
 						/>
@@ -67,7 +67,7 @@ export default function Header() {
 							marginRight: "1rem",
 						}}
 						onClick={() => {
-							toggleDarkMode();
+							nextTheme();
 						}}
 					/>
 				</div>

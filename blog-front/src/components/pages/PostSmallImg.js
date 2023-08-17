@@ -16,18 +16,14 @@ export default function PostSmallImg({ postData }) {
 
 	return (
 		<div
+			className="PostSmallImg"
 			style={{
 				minWidth: "200px",
 				width: "200px",
-				display: "flex",
 				borderRadius: "1rem",
 				overflow: "hidden",
-				textAlign: "left",
 				fontWeight: "bold",
-				backgroundColor: "var(--primary-color)",
-				justifyContent: "space-between",
-				flexDirection: "column",
-				marginRight: "1rem",
+				border: "1px solid var(--primary-color)",
 			}}
 		>
 			<Link
@@ -57,6 +53,7 @@ export default function PostSmallImg({ postData }) {
 						display: "-webkit-box",
 						WebkitBoxOrient: "vertical",
 						WebkitLineClamp: 2,
+						height: "2.5rem",
 						overflow: "hidden",
 						textOverflow: "ellipsis",
 					}}

@@ -21,7 +21,7 @@ export default function Contact() {
 				<div>
 					<h1>Contact:</h1>
 					<p>
-						Adress: Czerniakowska 26A, 00-714 Warszawa
+						Address: Czerniakowska 26A, 00-714 Warszawa
 						<br />
 						Phone: +48 668 022 456 between 9:00-17:00
 					</p>
@@ -52,7 +52,7 @@ export default function Contact() {
 					</a>
 					<a
 						href="https://www.instagram.com"
-						style={{ ...testStyle, ...hoverStyle }}
+						style={{ color: "var(--text-color)" }}
 					>
 						<i
 							className="pi pi-instagram"
