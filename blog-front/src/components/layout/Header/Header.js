@@ -21,7 +21,7 @@ export default function Header() {
 	}
 
 	return (
-		<div className="header">
+		<div id="header" className="header">
 			<div
 				style={{
 					width: "calc( 1180px - 2rem )",

@@ -14,7 +14,7 @@ namespace BlogAPI.Models
         public ObjectId UserId { get; set; }
 
         [BsonRepresentation(BsonType.ObjectId)]
-        public ObjectId PostId { get; set; }
+        public ObjectId CommentId { get; set; }
 
         public bool IsLiked { get; set; }
     }

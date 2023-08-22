@@ -11,18 +11,7 @@ function ThemeProvider(props) {
 	const [currentTheme, setCurrentTheme] = useState("");
 	const [currentThemeIndex, setCurrentThemeIndex] = useState(0);
 
-	const themes = [
-		"lara-light-blue",
-		"lara-dark-blue",
-		"arya-blue",
-		"arya-green",
-		"arya-orange",
-		"arya-purple",
-		"lara-dark-teal",
-		"nano",
-		"nova",
-		"rhea",
-	];
+	const themes = ["light-blue", "dark-blue"];
 	useEffect(() => {
 		if (themeStorage) {
 			setCurrentThemeIndex((prev) => themes.indexOf(themeStorage));

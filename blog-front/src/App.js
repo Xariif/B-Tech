@@ -5,12 +5,13 @@ import { Outlet } from "react-router-dom";
 import { Layout } from "./components/layout/Layout";
 import NotFound from "./components/pages/NotFound";
 import Top from "./components/pages/Top";
-import Home from "./components/pages/Home";
+import Home from "./components/pages//Home";
 import Newest from "./components/pages/Newest";
 import Contact from "./components/pages/Contact";
-import AuthorWrapper from "./components/pages/AuthorWrapper";
-import PostWrapper from "./components/pages/PostWrapper";
+
 import { PrimeReactContext } from "primereact/api";
+import PostWrapper from "./components/wrappers/PostWrapper";
+import AuthorWrapper from "./components/wrappers/AuthorWrapper";
 
 function App() {
 	return (

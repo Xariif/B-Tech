@@ -9,7 +9,7 @@ namespace BlogAPI.Services
     {
         public async Task<AuthorDTO> GetAuthorByIdAsync(string id)
         {
-            var author = await GetById(_authorCollection, id) ?? throw new ArgumentException("Author not found");
+            var author = await GetByIdAsync(_authorCollection, id) ?? throw new ArgumentException("Author not found");
             return new AuthorDTO
             {
                 Id = author.Id.ToString(),
@@ -60,7 +60,7 @@ namespace BlogAPI.Services
 
         public async Task UpdateAuthorAsync(AuthorDTO updateAuthor)
         {
-            var author = await GetById(_authorCollection, updateAuthor.Id) ?? throw new ArgumentException("Author not found");
+            var author = await GetByIdAsync(_authorCollection, updateAuthor.Id) ?? throw new ArgumentException("Author not found");
             author = new Author
             {
                 Id = ObjectId.Parse(updateAuthor.Id),

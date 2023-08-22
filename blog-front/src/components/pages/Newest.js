@@ -21,5 +21,5 @@ export default function Newest() {
 			})
 			.catch((err) => console.log(err));
 	}, []);
-	return <div style={{ maxWidth: "1180px", margin: "0 auto" }}>Najnowsze</div>;
+	return <>Najnowsze</>;
 }

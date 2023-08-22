@@ -7,10 +7,10 @@ namespace BlogAPI.Services
     public class BaseService
     {
         protected IMongoDatabase db;
-        protected IMongoCollection<Post> _postCollection;
         protected IMongoCollection<Author> _authorCollection;
         protected IMongoCollection<Comment> _commentCollection;
         protected IMongoCollection<CommentLike> _commentLikeCollection;
+        protected IMongoCollection<Post> _postCollection;
         protected IMongoCollection<PostLike> _postLikeCollection;
 
 
@@ -38,7 +38,7 @@ namespace BlogAPI.Services
             _postLikeCollection = db.GetCollection<PostLike>("PostLike");
         }
 
-        protected async Task<T> GetById<T>(IMongoCollection<T> collection, string id)
+        protected async Task<T> GetByIdAsync<T>(IMongoCollection<T> collection, string id)
         {
             var filter = Builders<T>.Filter.Eq("_id", ObjectId.Parse(id));
             var cursor = await collection.FindAsync(filter);

@@ -9,6 +9,8 @@ import "./index.css";
 import "primereact/resources/primereact.min.css";
 //icons
 import "primeicons/primeicons.css";
+//primeflex
+import "primeflex/primeflex.css";
 
 import ThemeProvider, { ThemeContext } from "./context/ThemeContext";
 import { PrimeReactContext, PrimeReactProvider } from "primereact/api";

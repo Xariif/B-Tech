@@ -6,7 +6,7 @@ export function Layout(props) {
 	return (
 		<div className="layout">
 			<Header />
-			<main>{props.content}</main>
+			<main style={{ width: "1180px", margin: "0 auto" }}>{props.content}</main>
 			<Footer />
 		</div>
 	);

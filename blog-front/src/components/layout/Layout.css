@@ -1,5 +1,4 @@
 main {
-	background-color: var(--surface-card);
 	padding: 1rem;
 	padding-top: calc(50px + 1rem);
 	min-height: calc(100vh - 50px);
@@ -7,7 +6,7 @@ main {
 }
 
 .footer {
-	background-color: var(--surface-ground);
+	background-color: var(--surface-card);
 
 	width: 100%;
 	height: 50px;
@@ -17,6 +16,9 @@ main {
 	display: flex;
 	flex-direction: column;
 	height: 100%;
+	background-color: var(--surface-ground);
+
+	min-width: 420px;
 }
 
 .header {
@@ -28,9 +30,6 @@ main {
 	z-index: 9999;
 }
 
-.PostSmallImg {
-	background-color: var(--surface-section);
-}
 .PostSmallImg:hover {
 	background-color: var(--surface-hover);
 }

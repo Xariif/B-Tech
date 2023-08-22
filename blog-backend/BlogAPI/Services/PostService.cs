@@ -31,7 +31,7 @@ namespace BlogAPI.Services
 
 		public async Task<PostDTO> GetPostByIdAsync(string id)
 		{
-			var post =await GetById(_postCollection, id) ?? throw new ArgumentException("Post with specific id dont exist");
+			var post =await GetByIdAsync(_postCollection, id) ?? throw new ArgumentException("Post with specific id dont exist");
             var res = new PostDTO
 			{
 				AuthorId = post.AuthorId.ToString(),
@@ -51,7 +51,7 @@ namespace BlogAPI.Services
 		public async Task CreatePostAsync(NewPostDTO newPost)
 		{
 
-			var author = await GetById(_authorCollection, newPost.AuthorId) ?? throw new ArgumentException("Author with specific id dont exist.");
+			var author = await GetByIdAsync(_authorCollection, newPost.AuthorId) ?? throw new ArgumentException("Author with specific id dont exist.");
             var post = new Post
 			{
 				Id = ObjectId.GenerateNewId(),
@@ -77,9 +77,9 @@ namespace BlogAPI.Services
 
 		public async Task UpdatePostAsync(PostDTO updatePost)
 		{
-            var post = await GetById(_postCollection, updatePost.Id) ?? throw new ArgumentException("Post with specific id dont exist.");
+            var post = await GetByIdAsync(_postCollection, updatePost.Id) ?? throw new ArgumentException("Post with specific id dont exist.");
             var filter = Builders<Post>.Filter.Where(x => x.Id == ObjectId.Parse(updatePost.Id));
-			var author = await GetById(_authorCollection, updatePost.AuthorId) ?? throw new ArgumentException("Author with specific id dont exist.");
+			var author = await GetByIdAsync(_authorCollection, updatePost.AuthorId) ?? throw new ArgumentException("Author with specific id dont exist.");
             post = new Post
 			{
 				Id = ObjectId.Parse(updatePost.Id),
@@ -98,7 +98,7 @@ namespace BlogAPI.Services
 
 		public async Task DeletePost(string id)
 		{
-		   var post = await GetById(_postCollection, id) ?? throw new ArgumentException("Post with specific id doesn't exist");
+		   var post = await GetByIdAsync(_postCollection, id) ?? throw new ArgumentException("Post with specific id doesn't exist");
             var filter = Builders<Post>.Filter.Where(x => x.Id == ObjectId.Parse(id));
 			await _postCollection.DeleteOneAsync(filter);
 		}

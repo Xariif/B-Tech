@@ -29,7 +29,10 @@ namespace BlogAPI.Models
 		public int Likes { get; set; } = 0;
 
 		public int Dislikes { get; set; } = 0;
-	}
+
+        public List<Comment> Comments { get; set; } = new List<Comment>();
+
+    }
 }
 
 
