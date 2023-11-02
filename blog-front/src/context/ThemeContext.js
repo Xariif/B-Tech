@@ -8,7 +8,7 @@ function ThemeProvider(props) {
 	const [darkMode, setDarkMode] = useState(false);
 	const [themeStorage, setThemeStorage] = useLocalStorage("theme");
 
-	const [currentTheme, setCurrentTheme] = useState("");
+	const [currentTheme, setCurrentTheme] = useState("light-blue");
 	const [currentThemeIndex, setCurrentThemeIndex] = useState(0);
 
 	const themes = ["light-blue", "dark-blue"];

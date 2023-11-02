@@ -2,6 +2,9 @@
 
 using BlogAPI.Models;
 using BlogAPI.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlogAPI.Controllers
@@ -16,7 +19,6 @@ namespace BlogAPI.Controllers
         {
             _authorService = authorService;
         }
-
 
         [HttpGet("GetAuthorById")]
         public async Task<ActionResult<AuthorDTO>> GetAuthorById(string id)

@@ -48,6 +48,15 @@ function NewComment() {
 function Comment({ comment }) {
 	return <>Komentarz</>;
 }
+function CommentList({ comments }) {
+	return (
+		<>
+			{comments.map((comment) => (
+				<Comment comment={comment} />
+			))}
+		</>
+	);
+}
 
 export default function CommentSection({ postId }) {
 	//get comments from api

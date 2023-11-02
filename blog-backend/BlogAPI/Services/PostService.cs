@@ -21,6 +21,7 @@ namespace BlogAPI.Services
 				Content = post.Content,
 				Category = post.Category,
 				AuthorId = post.AuthorId.ToString(),
+				AuthorName = post.AuthorName,
 				Tag = post.Tag,
 				CreatedAt = post.CreatedAt,
 				UpdatedAt = post.UpdatedAt
@@ -35,6 +36,7 @@ namespace BlogAPI.Services
             var res = new PostDTO
 			{
 				AuthorId = post.AuthorId.ToString(),
+				AuthorName = post.AuthorName,
 				CreatedAt = post.CreatedAt,
 				UpdatedAt = post.UpdatedAt,
 				Category = post.Category,
@@ -56,6 +58,7 @@ namespace BlogAPI.Services
 			{
 				Id = ObjectId.GenerateNewId(),
 				AuthorId = ObjectId.Parse(newPost.AuthorId),
+				AuthorName= author.Name + " "+ author.Surname,
 				Title = newPost.Title.Trim(),
 				Content = newPost.Content.Trim(),
 				Tag = newPost.Tag,

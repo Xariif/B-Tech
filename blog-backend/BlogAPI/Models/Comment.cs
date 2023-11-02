@@ -15,7 +15,9 @@ namespace BlogAPI.Models
         public ObjectId PostId { get; set; }
 
         [BsonRepresentation(BsonType.ObjectId)]
-        public ObjectId AuthorId { get; set; }
+        public ObjectId? AuthorId { get; set; }
+
+        public string? AuthorName { get; set; }
 
         public DateTime CreatedAt { get; set; }
 

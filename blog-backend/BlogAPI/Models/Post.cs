@@ -14,7 +14,9 @@ namespace BlogAPI.Models
 		public required string Content { get; set; }
 
         [BsonRepresentation(BsonType.ObjectId)]
-        public required ObjectId AuthorId { get; set; }
+        public ObjectId? AuthorId { get; set; }
+
+		public string? AuthorName { get; set; }
 
 		public required string Category { get; set; }
 
@@ -22,7 +24,7 @@ namespace BlogAPI.Models
 
 		public required DateTime CreatedAt { get; set; }
 
-		public required DateTime UpdatedAt { get; set; } = DateTime.Now;
+		public DateTime? UpdatedAt { get; set; }
 
 		public int Views { get; set; } = 0;
 

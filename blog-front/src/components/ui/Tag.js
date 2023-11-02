@@ -4,6 +4,7 @@ const TagColors = {
 	MOTO: "black",
 	NATURE: "green",
 	IMPORTANT: "red",
+	TIPS: "purple",
 };
 
 export default function Tag({ tag }) {

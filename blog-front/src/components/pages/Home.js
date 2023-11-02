@@ -53,43 +53,45 @@ export default function Home() {
 
 	return (
 		<>
-			<div
-				style={{
-					backgroundColor: "var(--surface-card)",
-					borderRadius: "var(--border-radius)",
-					padding: "1rem",
-				}}
-			>
+			{Posts && (
 				<div
 					style={{
-						margin: "0.5rem 5rem",
-						opacity: "1.8",
+						backgroundColor: "var(--surface-card)",
+						borderRadius: "var(--border-radius)",
+						padding: "1rem",
 					}}
 				>
-					<Tag tag="important" />
+					<div
+						style={{
+							margin: "0.5rem 5rem",
+							opacity: "1.8",
+						}}
+					>
+						<Tag tag="important" />
+					</div>
+					<Carousel
+						responsive={responsive}
+						infinite={true}
+						arrows={false}
+						autoPlay
+						autoPlaySpeed={3000}
+					>
+						{importantPosts.map((element) => {
+							return (
+								<div
+									style={{
+										display: "flex",
+										justifyContent: "center",
+									}}
+									key={element.id}
+								>
+									<PostSmallImg postData={element} />
+								</div>
+							);
+						})}
+					</Carousel>
 				</div>
-				<Carousel
-					responsive={responsive}
-					infinite={true}
-					arrows={false}
-					autoPlay
-					autoPlaySpeed={3000}
-				>
-					{importantPosts.map((element) => {
-						return (
-							<div
-								style={{
-									display: "flex",
-									justifyContent: "center",
-								}}
-								key={element.id}
-							>
-								<PostSmallImg postData={element} />
-							</div>
-						);
-					})}
-				</Carousel>
-			</div>
+			)}
 
 			{otherPosts.map((element) => {
 				return <PostBigImg postData={element} key={element.id} />;
