@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33815.320
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlogAPI", "BlogAPI.csproj", "{7C77D2A8-B11C-4568-8504-997DF2A38BAE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogAPI.Tests", "..\BlogAPI.Tests\BlogAPI.Tests.csproj", "{D0ECD84A-5FEF-405B-9187-813032D8D92A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7C77D2A8-B11C-4568-8504-997DF2A38BAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C77D2A8-B11C-4568-8504-997DF2A38BAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C77D2A8-B11C-4568-8504-997DF2A38BAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C77D2A8-B11C-4568-8504-997DF2A38BAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0ECD84A-5FEF-405B-9187-813032D8D92A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0ECD84A-5FEF-405B-9187-813032D8D92A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0ECD84A-5FEF-405B-9187-813032D8D92A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0ECD84A-5FEF-405B-9187-813032D8D92A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F0D7785B-95B1-4732-AF71-8A3766537A74}
+	EndGlobalSection
+EndGlobal
