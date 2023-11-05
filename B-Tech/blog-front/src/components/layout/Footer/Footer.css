@@ -1,13 +1,18 @@
 .footer {
+	justify-content: center;
+	display: flex;
+	background-color: var(--surface-ground);
+}
+
+.footerContent {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	font-size: 0.75rem;
 	padding: 0.5rem 1rem;
 	margin: 0;
-	background-color: var(--surface-ground);
+	width: 1180px;
 }
-
 .company {
 	font-weight: bold;
 }

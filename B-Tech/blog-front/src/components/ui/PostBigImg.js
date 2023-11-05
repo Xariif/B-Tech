@@ -70,6 +70,10 @@ export default function PostBigImg({ postData }) {
 								year: "numeric",
 								month: "long",
 								day: "numeric",
+								hour: "2-digit",
+								minute: "2-digit",
+								hour12: false,
+								hourCycle: "h24",
 							})}
 						</Link>
 						<p style={{ margin: "0", userSelect: "none" }}>
@@ -83,6 +87,12 @@ export default function PostBigImg({ postData }) {
 					to={{
 						pathname: "post/" + postData.id,
 					}}
+					style={{
+						display: "block",
+						borderRadius: "1.5rem",
+						overflow: "hidden",
+						lineHeight: "0",
+					}}
 				>
 					<img
 						src={"https://picsum.photos/seed/" + postData.id + "/1920/1080"}
@@ -90,7 +100,6 @@ export default function PostBigImg({ postData }) {
 						style={{
 							objectFit: "cover",
 
-							borderRadius: "1.5rem",
 							height: "480px",
 							width: "100%",
 						}}

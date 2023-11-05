@@ -24,7 +24,7 @@ function Author({ authorData }) {
 				</h3>
 				<p>
 					Active from{" "}
-					{new Date(authorData.activeFrom).toLocaleDateString("pl-PL", {
+					{new Date(authorData.activeFrom).toLocaleDateString("en-us", {
 						year: "numeric",
 						month: "long",
 						day: "numeric",

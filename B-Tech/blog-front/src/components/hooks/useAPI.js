@@ -13,9 +13,9 @@ const useAPI = () => {
 	};
 
 	const get = async (url) => {
-		console.log("🚀 ~ file: useAPI.js:12 ~ get ~ url:", url);
 		try {
 			const token = await getToken();
+			console.log("token", token);
 
 			const response = await axiosInstance.get(url, {
 				headers: { Authorization: "Bearer " + token },

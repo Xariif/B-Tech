@@ -37,6 +37,7 @@ export default function Header() {
 	return (
 		<div id="header" className="header">
 			<div
+				className="headerContent"
 				style={{
 					width: "calc( 1180px - 2rem )",
 					margin: "0 auto",
@@ -87,20 +88,9 @@ export default function Header() {
 							/>
 						</>
 					) : (
-						<>
-							<Button
-								style={{
-									backgroundColor: "transparent",
-									border: "none",
-									cursor: "pointer",
-									marginRight: "1rem",
-									color: "var(--text)",
-								}}
-								onClick={() => loginWithRedirect()}
-							>
-								LOG IN
-							</Button>
-						</>
+						<Button id="login" onClick={() => loginWithRedirect()}>
+							LOG IN
+						</Button>
 					)}
 
 					<i

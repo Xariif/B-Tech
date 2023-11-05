@@ -8,17 +8,19 @@ export default function Footer() {
 
 	return (
 		<div className="footer">
-			<div className="company"> B-TECH {new Date().getFullYear()}&copy;</div>
+			<div className="footerContent">
+				<div className="company"> B-TECH {new Date().getFullYear()}&copy;</div>
 
-			<div
-				className="authors"
-				style={{ display: "flex", alignItems: "center" }}
-			>
-				<div style={{ paddingRight: ".5rem", fontWeight: "bold" }}>
-					{" "}
-					Author:{" "}
+				<div
+					className="authors"
+					style={{ display: "flex", alignItems: "center" }}
+				>
+					<div style={{ paddingRight: ".5rem", fontWeight: "bold" }}>
+						{" "}
+						Author:{" "}
+					</div>
+					<div>Jakub Filiks</div>
 				</div>
-				<div>Jakub Filiks</div>
 			</div>
 		</div>
 	);

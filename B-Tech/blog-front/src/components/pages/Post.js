@@ -108,7 +108,7 @@ function Opinions() {
 
 			const scrollPosition = window.scrollY + window.innerHeight;
 
-			console.log(scrollPosition, height);
+			//console.log(scrollPosition, height);
 
 			if (scrollPosition >= height / 2 && scrollPosition < height) {
 				setShowOpinions(true);

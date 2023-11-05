@@ -12,7 +12,6 @@
 	font-weight: bold;
 	color: var(--text-color);
 	white-space: nowrap;
-	transition: all 0.2s ease-in-out;
 }
 
 .logo a i {
@@ -25,15 +24,10 @@
 	text-transform: uppercase;
 	margin: 0 1rem;
 	display: inline;
-	transition: all 0.2s ease-in-out;
 }
 
 .menu {
 	color: var(--text-color);
-}
-
-.menu i {
-	transition: all 0.2s ease-in-out;
 }
 
 .menu a:last-child {
@@ -42,8 +36,24 @@
 
 .menu a:hover,
 .logo a:hover,
-i:hover {
+.menu i:hover {
 	color: var(--primary-color);
+}
+.logo a:hover i {
+	color: yellow !important;
+}
+
+.p-button {
+	color: var(--text-color);
+	border: none;
+	vertical-align: initial !important;
+	background-color: transparent !important;
+	padding: 0;
+	margin: 0 1rem !important;
+	cursor: pointer;
+}
+.p-button:hover {
+	color: var(--primary-color) !important;
 }
 
 @media only screen and (max-width: 750px) {
