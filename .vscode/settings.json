@@ -1,0 +1,3 @@
+{
+	"dotnet.defaultSolution": "blog-backend/BlogAPI/BlogAPI.sln"
+}
