@@ -1,7 +1,5 @@
 import useAPI from "../components/hooks/useAPI";
 
-var url = process.env.REACT_APP_API_URL + "Author/";
-
 const AuthorService = () => {
 	const api = useAPI();
 

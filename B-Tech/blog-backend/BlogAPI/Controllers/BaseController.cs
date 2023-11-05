@@ -25,7 +25,7 @@ namespace BlogAPI.Controllers
             }
             else if (exception is UnauthorizedAccessException)
             {
-                return Unauthorized("Nie posiadasz uprawnień do wykonania tej akcji.");
+                return Unauthorized("You're unauthorized");
             }
             else if (_env.IsDevelopment())
             {
@@ -33,7 +33,7 @@ namespace BlogAPI.Controllers
             }
             else
             {
-                return StatusCode(500, new { ErrorMessage = "Wystąpił błąd serwera. Skontaktuj się z administratorem." });
+                return StatusCode(500, new { ErrorMessage = "Error occured, contact with administrator" });
             }
         }
     }

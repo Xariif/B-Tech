@@ -8,10 +8,15 @@ import Tag from "../ui/Tag";
 
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-
+import { useAuth0 } from "@auth0/auth0-react";
+import useAPI from "../hooks/useAPI";
 export default function Home() {
+	const api = useAPI();
 	const [posts, setPosts] = useState([]);
 	const { GetPosts } = PostService();
+
+	const { getAccessTokenSilently, user, isAuthenticated, getIdTokenClaims } =
+		useAuth0();
 
 	useEffect(() => {
 		GetPosts()
@@ -27,6 +32,14 @@ export default function Home() {
 			})
 			.catch((err) => console.log(err));
 	}, []);
+
+	if (isAuthenticated) {
+		getAccessTokenSilently().then((res) => {});
+		console.log(user);
+		getIdTokenClaims().then((res) => {
+			console.log(res);
+		});
+	}
 
 	const responsive = {
 		superLargeDesktop: {
@@ -57,7 +70,7 @@ export default function Home() {
 
 	return (
 		<>
-			{posts && (
+			{posts.length != 0 && (
 				<div
 					style={{
 						backgroundColor: "var(--surface-card)",

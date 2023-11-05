@@ -23,10 +23,7 @@ namespace BlogAPI.Controllers
         public async Task<IActionResult> AddCommentToPost(string postId, NewCommentDTO comment, string? parentCommentId = null)
         {
             try
-            {
-                
-
-
+            { 
                 await _commentService.AddCommentToPost(postId, comment, parentCommentId);
                 return Ok();
             }

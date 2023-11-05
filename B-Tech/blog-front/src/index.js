@@ -29,7 +29,7 @@ root.render(
 			authorizationParams={{
 				redirect_uri: window.location.origin,
 				audience: "https://b-tech-api",
-				scope: "read:messages",
+				scope: "openid profile email admin author user",
 			}}
 			cacheLocation="localstorage"
 		>

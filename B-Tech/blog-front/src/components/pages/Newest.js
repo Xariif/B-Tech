@@ -23,6 +23,7 @@ export default function Newest() {
 			})
 			.catch((err) => console.log(err));
 	}, []);
+
 	return (
 		<>
 			{Posts.map((element) => (

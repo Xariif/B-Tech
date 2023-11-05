@@ -88,9 +88,16 @@ export default function Header() {
 							/>
 						</>
 					) : (
-						<Button id="login" onClick={() => loginWithRedirect()}>
+						<a
+							id="login"
+							href="#"
+							onClick={(e) => {
+								e.preventDefault();
+								loginWithRedirect();
+							}}
+						>
 							LOG IN
-						</Button>
+						</a>
 					)}
 
 					<i

@@ -16,7 +16,6 @@ export default function PostWrapper() {
 	useEffect(() => {
 		GetPostById(id)
 			.then((res) => {
-				console.log("🚀 ~ file: PostWrapper.js:19 ~ .then ~ res:", res);
 				if (res === null) {
 					setPostData(false);
 				} else {

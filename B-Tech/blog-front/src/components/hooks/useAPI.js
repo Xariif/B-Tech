@@ -1,7 +1,10 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
-import axiosInstance from "./axiosInstance";
 const useAPI = () => {
+	const axiosInstance = axios.create({
+		baseURL: process.env.REACT_APP_API_URL,
+	});
+
 	const { getAccessTokenSilently, isAuthenticated, isLoading } = useAuth0();
 
 	const getToken = async () => {
@@ -15,7 +18,6 @@ const useAPI = () => {
 	const get = async (url) => {
 		try {
 			const token = await getToken();
-			console.log("token", token);
 
 			const response = await axiosInstance.get(url, {
 				headers: { Authorization: "Bearer " + token },

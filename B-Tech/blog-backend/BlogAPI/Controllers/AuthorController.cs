@@ -54,7 +54,9 @@ namespace BlogAPI.Controllers
 
         }
 
+        
         [HttpPost("CreateAuthor")]
+        [Authorize(Roles ="admin")]
         public async Task<ActionResult> CreateAuthor(NewAuthorDTO newAuthorDTO)
         {
             try

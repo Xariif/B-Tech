@@ -17,6 +17,8 @@ namespace BlogAPI.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public ObjectId? AuthorId { get; set; }
 
+        public bool Edited { get; set; } = false;
+
         public string? AuthorName { get; set; }
 
         public DateTime CreatedAt { get; set; }
