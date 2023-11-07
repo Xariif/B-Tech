@@ -12,42 +12,25 @@ import Contact from "./components/pages/Contact";
 import PostWrapper from "./components/wrappers/PostWrapper";
 import AuthorWrapper from "./components/wrappers/AuthorWrapper";
 import Search from "./components/pages/Search";
-import SmallScreen from "./components/ui/SmallScreen";
+import { red } from "@mui/material/colors";
 
 function App() {
-	const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 800);
-	useEffect(() => {
-		const handleResize = () => {
-			setIsSmallScreen(window.innerWidth < 800);
-		};
+	const [mode, setMode] = useState("light");
 
-		window.addEventListener("resize", handleResize);
-
-		return () => {
-			window.removeEventListener("resize", handleResize);
-		};
-	}, []);
-
-	if (isSmallScreen) {
-		return <SmallScreen />;
-	} else {
-		return (
-			<>
-				<Routes>
-					<Route path="/" element={<Layout content={<Outlet />} />}>
-						<Route path="/" element={<Home />} />
-						<Route path="/top" element={<Top />} />
-						<Route path="/newest" element={<Newest />} />
-						<Route path="/contact" element={<Contact />} />
-						<Route path="/post/:id" element={<PostWrapper />} />
-						<Route path="/author/:id" element={<AuthorWrapper />} />
-						<Route path="/search/:term" element={<Search />} />
-						<Route path="*" exact={true} element={<NotFound />} />
-					</Route>
-				</Routes>
-			</>
-		);
-	}
+	return (
+		<Routes>
+			<Route path="/" element={<Layout content={<Outlet />} />}>
+				<Route path="/" element={<Home />} />
+				<Route path="/top" element={<Top />} />
+				<Route path="/newest" element={<Newest />} />
+				<Route path="/contact" element={<Contact />} />
+				<Route path="/post/:id" element={<PostWrapper />} />
+				<Route path="/author/:id" element={<AuthorWrapper />} />
+				<Route path="/search/:term" element={<Search />} />
+				<Route path="*" exact={true} element={<NotFound />} />
+			</Route>
+		</Routes>
+	);
 }
 
 export default App;

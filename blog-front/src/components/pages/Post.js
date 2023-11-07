@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import Tag from "../ui/Tag";
 import CommentSection from "../ui/CommentSection";
-import { Button } from "primereact/button";
 import { useEffect, useRef, useState } from "react";
 
 export default function PostBigImg({ postData }) {

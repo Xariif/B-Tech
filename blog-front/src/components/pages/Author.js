@@ -1,5 +1,5 @@
+import { Avatar } from "@mui/material";
 import React from "react";
-import { Avatar } from "primereact/avatar";
 
 function Author({ authorData }) {
 	console.log("🚀 ~ file: Author.js:5 ~ Author ~ authorData:", authorData);
@@ -11,14 +11,6 @@ function Author({ authorData }) {
 					alignItems: "center",
 				}}
 			>
-				<Avatar
-					icon="pi pi-user"
-					size="large"
-					shape="circle"
-					label={authorData.name[0]}
-					style={{ marginRight: "1rem", width: "4rem", height: "4rem" }}
-				/>
-
 				<h3 style={{ margin: "0", paddingRight: "1rem" }}>
 					{authorData.name + " " + authorData.surname}
 				</h3>

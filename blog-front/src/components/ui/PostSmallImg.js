@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import Tag from "./Tag";
 import { useEffect, useState } from "react";
-import { Avatar } from "primereact/avatar";
 import AuthorService from "../../services/AuthorService";
 
 export default function PostSmallImg({ postData }) {
