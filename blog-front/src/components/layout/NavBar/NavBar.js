@@ -2,15 +2,25 @@ import {
 	AppBar,
 	Toolbar,
 	Typography,
+	Container,
 	styled,
 	alpha,
 	Link,
 	Stack,
+	SvgIcon,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
 import BoltIcon from "@mui/icons-material/Bolt";
 import theme from "../../../theme";
+import { useAuth0 } from "@auth0/auth0-react";
+import { useNavigate } from "react-router-dom";
+import {
+	Logout,
+	Power,
+	PowerInput,
+	PowerSettingsNew,
+} from "@mui/icons-material";
 
 const Search = styled("div")(({ theme }) => ({
 	position: "relative",
@@ -60,23 +70,34 @@ const StyledToolBar = styled(Toolbar)(({ theme }) => ({
 const StyledLink = styled(Link)(({ theme }) => ({
 	"&:hover": {
 		cursor: "pointer",
+		color: theme.palette.primary.main,
 	},
 	color: "inherit",
 	alignItems: "center",
 }));
 
+const StyledIcon = styled(SvgIcon)(({ theme }) => ({
+	"&:hover": {
+		color: theme.palette.primary.main,
+	},
+}));
+
 const NavBar = () => {
+	const {
+		user,
+		isAuthenticated,
+		isLoading,
+		logout,
+		loginWithRedirect,
+		getAccessTokenSilently,
+	} = useAuth0();
+
+	const navigate = useNavigate();
+
 	return (
-		<AppBar
-			position="sticky"
-			sx={{
-				display: "flex",
-				maxWidth: "1200px",
-				margin: "auto",
-			}}
-		>
-			<StyledToolBar variant="dense">
-				<>
+		<AppBar position="sticky">
+			<Container maxWidth="lg">
+				<StyledToolBar variant="dense">
 					<StyledLink href="/" underline="none" style={{ display: "flex" }}>
 						<BoltIcon fontSize="large" />
 						<Typography variant="h6">B-TECH</Typography>
@@ -97,12 +118,32 @@ const NavBar = () => {
 						<StyledLink underline="none" href="newest">
 							Newest
 						</StyledLink>
-						<StyledLink underline="none" onClick={() => {}}>
-							Login
-						</StyledLink>
+						{!isLoading && !isAuthenticated ? (
+							<StyledLink
+								underline="none"
+								onClick={(e) => {
+									e.preventDefault();
+									loginWithRedirect();
+								}}
+							>
+								Login
+							</StyledLink>
+						) : (
+							<StyledLink
+								underline="none"
+								onClick={(e) => {
+									e.preventDefault();
+									logout({ returnTo: window.location.origin });
+								}}
+							>
+								<StyledIcon sx={{ justifyContent: "center", display: "flex" }}>
+									<PowerSettingsNew />
+								</StyledIcon>
+							</StyledLink>
+						)}
 					</Stack>
-				</>
-			</StyledToolBar>
+				</StyledToolBar>
+			</Container>
 		</AppBar>
 	);
 };

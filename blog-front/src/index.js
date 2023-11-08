@@ -3,10 +3,8 @@ import * as ReactDOMClient from "react-dom/client";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import "./index.css";
-
 import { Auth0Provider } from "@auth0/auth0-react";
-
-import { CssBaseline } from "@mui/material";
+import { ReducerProvider } from "./context/ReducerContext";
 
 const rootElement = document.getElementById("root");
 
@@ -25,7 +23,9 @@ root.render(
 			cacheLocation="localstorage"
 		>
 			<BrowserRouter>
-				<App />
+				<ReducerProvider>
+					<App />
+				</ReducerProvider>
 			</BrowserRouter>
 		</Auth0Provider>
 	</React.StrictMode>

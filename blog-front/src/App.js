@@ -12,11 +12,8 @@ import Contact from "./components/pages/Contact";
 import PostWrapper from "./components/wrappers/PostWrapper";
 import AuthorWrapper from "./components/wrappers/AuthorWrapper";
 import Search from "./components/pages/Search";
-import { red } from "@mui/material/colors";
 
 function App() {
-	const [mode, setMode] = useState("light");
-
 	return (
 		<Routes>
 			<Route path="/" element={<Layout content={<Outlet />} />}>
