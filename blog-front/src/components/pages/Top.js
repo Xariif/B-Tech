@@ -1,26 +1,11 @@
-import { Button } from "@mui/material";
 import React, { useState, useEffect } from "react";
 
+import { Button } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { createToast, hideToast } from "../../features/toasts/toastsActions";
+
 export default function Top() {
-	return (
-		<div className="card">
-			<p> top</p> <p> top</p>
-			<p> top</p>
-			<p> top</p>
-			<p> top</p>
-			<p> top</p>
-			<p> top</p>
-			<p> top</p>
-			<p> top</p>
-			<p> top</p>
-			<p> top</p>
-			<p> top</p>
-			<p> top</p>
-			<p> top</p>
-			<p> top</p>
-			<p> top</p>
-			<p> top</p>
-			<p> top</p>
-		</div>
-	);
+	const dispatch = useDispatch();
+
+	return <>top</>;
 }

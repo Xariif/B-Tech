@@ -1,8 +1,10 @@
 import { combineReducers } from "redux";
-import toastReducer from "./features/toasts/toastsSlice";
+import toastsReducer from "./features/toasts/toastsSlice";
+import postsReducer from "./features/posts/postSlice";
 
 const rootReducer = combineReducers({
-	toasts: toastReducer,
+	toasts: toastsReducer,
+	posts: postsReducer,
 });
 
 export default rootReducer;

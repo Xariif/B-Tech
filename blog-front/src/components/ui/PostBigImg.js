@@ -1,110 +1,97 @@
 import { Link } from "react-router-dom";
 import Tag from "./Tag";
 import { useEffect, useState } from "react";
-import AuthorService from "../../services/AuthorService";
 
-export default function PostBigImg({ postData }) {
-	const { GetAuthorById } = AuthorService();
-	const [author, setAuthor] = useState(null);
-	useEffect(() => {
-		GetAuthorById({ id: postData.authorId }).then((res) => {
-			setAuthor(res);
-		});
-	}, []);
+export default function PostBigImg({ post }) {
+	return (
+		<div
+			style={{
+				backgroundColor: "var(--surface-card)",
+				borderRadius: "var(--border-radius)",
+				padding: "1rem",
 
-	if (author == null) return <></>;
-	else
-		return (
+				marginTop: "1rem",
+			}}
+		>
 			<div
 				style={{
-					backgroundColor: "var(--surface-card)",
-					borderRadius: "var(--border-radius)",
-					padding: "1rem",
-
-					marginTop: "1rem",
+					borderBottom: "1px solid grey",
+					marginBottom: ".5rem",
+					paddingBottom: ".5rem",
+					maxWidth: "calc(1180px - 10rem)",
+					margin: ".5rem auto ",
 				}}
 			>
-				<div
+				<Tag tag={post.tag} />
+				<a
+					href={"post/" + post.id}
 					style={{
-						borderBottom: "1px solid grey",
-						marginBottom: ".5rem",
-						paddingBottom: ".5rem",
-						maxWidth: "calc(1180px - 10rem)",
-						margin: ".5rem auto ",
+						fontWeight: "bolder",
+						fontSize: "2rem",
+						textDecoration: "none",
+						color: "inherit",
 					}}
 				>
-					<Tag tag={postData.tag} />
-					<a
-						href={"post/" + postData.id}
+					{post.title}
+				</a>
+
+				<div
+					style={{
+						display: "flex",
+						justifyContent: "space-between",
+						fontSize: ".8rem",
+					}}
+				>
+					<Link
 						style={{
-							fontWeight: "bolder",
-							fontSize: "2rem",
+							display: "flex",
 							textDecoration: "none",
 							color: "inherit",
 						}}
-					>
-						{postData.title}
-					</a>
-
-					<div
-						style={{
-							display: "flex",
-							justifyContent: "space-between",
-							fontSize: ".8rem",
+						to={{
+							pathname: "/author/" + post.authorId,
 						}}
 					>
-						<Link
-							style={{
-								display: "flex",
-								textDecoration: "none",
-								color: "inherit",
-							}}
-							to={{
-								pathname: "/author/" + postData.authorId,
-							}}
-						>
-							<div style={{ fontWeight: "bold" }}>
-								{author.name + " " + author.surname}&nbsp;
-							</div>
-							{new Date(postData.createdAt).toLocaleDateString("en-EN", {
-								year: "numeric",
-								month: "long",
-								day: "numeric",
-								hour: "2-digit",
-								minute: "2-digit",
-								hour12: false,
-								hourCycle: "h24",
-							})}
-						</Link>
-						<p style={{ margin: "0", userSelect: "none" }}>
-							Views: {Math.floor(Math.random() * 1000) + 1}
-							&nbsp; Comments: {Math.floor(Math.random() * 100) + 1}
-						</p>
-					</div>
+						<div style={{ fontWeight: "bold" }}>{post.authorName}&nbsp;</div>
+						{new Date(post.createdAt).toLocaleDateString("en-EN", {
+							year: "numeric",
+							month: "long",
+							day: "numeric",
+							hour: "2-digit",
+							minute: "2-digit",
+							hour12: false,
+							hourCycle: "h24",
+						})}
+					</Link>
+					<p style={{ margin: "0", userSelect: "none" }}>
+						Views: {Math.floor(Math.random() * 1000) + 1}
+						&nbsp; Comments: {Math.floor(Math.random() * 100) + 1}
+					</p>
 				</div>
-
-				<Link
-					to={{
-						pathname: "post/" + postData.id,
-					}}
-					style={{
-						display: "block",
-						borderRadius: "1.5rem",
-						overflow: "hidden",
-						lineHeight: "0",
-					}}
-				>
-					<img
-						src={"https://picsum.photos/seed/" + postData.id + "/1920/1080"}
-						alt="zdjęcie"
-						style={{
-							objectFit: "cover",
-
-							height: "480px",
-							width: "100%",
-						}}
-					/>
-				</Link>
 			</div>
-		);
+
+			<Link
+				to={{
+					pathname: "post/" + post.id,
+				}}
+				style={{
+					display: "block",
+					borderRadius: "1.5rem",
+					overflow: "hidden",
+					lineHeight: "0",
+				}}
+			>
+				<img
+					src={"https://picsum.photos/seed/" + post.id + "/1920/1080"}
+					alt="zdjęcie"
+					style={{
+						objectFit: "cover",
+
+						height: "480px",
+						width: "100%",
+					}}
+				/>
+			</Link>
+		</div>
+	);
 }

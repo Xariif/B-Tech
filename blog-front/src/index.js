@@ -7,6 +7,7 @@ import { Auth0Provider } from "@auth0/auth0-react";
 import { ReducerProvider } from "./context/ReducerContext";
 
 import { Provider } from "react-redux";
+import store from "./store";
 
 const rootElement = document.getElementById("root");
 
@@ -21,7 +22,7 @@ root.render(
 				authorizationParams={{
 					redirect_uri: window.location.origin,
 					audience: "https://b-tech-api",
-					scope: "openid profile email admin author user",
+					scope: "openid profile email",
 				}}
 				cacheLocation="localstorage"
 			>

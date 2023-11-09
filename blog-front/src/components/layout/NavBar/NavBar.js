@@ -15,12 +15,16 @@ import BoltIcon from "@mui/icons-material/Bolt";
 import theme from "../../../theme";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { createToast } from "../../../features/toasts/toastsActions";
 import {
+	CompareSharp,
 	Logout,
 	Power,
 	PowerInput,
 	PowerSettingsNew,
 } from "@mui/icons-material";
+import { useUser } from "../../hooks/useUser";
 
 const Search = styled("div")(({ theme }) => ({
 	position: "relative",
@@ -84,7 +88,6 @@ const StyledIcon = styled(SvgIcon)(({ theme }) => ({
 
 const NavBar = () => {
 	const {
-		user,
 		isAuthenticated,
 		isLoading,
 		logout,
@@ -92,7 +95,11 @@ const NavBar = () => {
 		getAccessTokenSilently,
 	} = useAuth0();
 
+	const { user } = useUser();
+
 	const navigate = useNavigate();
+
+	const dispatch = useDispatch();
 
 	return (
 		<AppBar position="sticky">
@@ -129,17 +136,24 @@ const NavBar = () => {
 								Login
 							</StyledLink>
 						) : (
-							<StyledLink
-								underline="none"
-								onClick={(e) => {
-									e.preventDefault();
-									logout({ returnTo: window.location.origin });
-								}}
-							>
-								<StyledIcon sx={{ justifyContent: "center", display: "flex" }}>
-									<PowerSettingsNew />
-								</StyledIcon>
-							</StyledLink>
+							<>
+								<StyledLink underline="none" href="/admin">
+									Admin
+								</StyledLink>
+								<StyledLink
+									underline="none"
+									onClick={(e) => {
+										e.preventDefault();
+										logout();
+									}}
+								>
+									<StyledIcon
+										sx={{ justifyContent: "center", display: "flex" }}
+									>
+										<PowerSettingsNew />
+									</StyledIcon>
+								</StyledLink>
+							</>
 						)}
 					</Stack>
 				</StyledToolBar>

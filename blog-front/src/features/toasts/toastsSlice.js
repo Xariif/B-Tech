@@ -1,29 +1,22 @@
+import { CREATE_TOAST, HIDE_TOAST } from "./toastsActions";
+
 const initialState = {
-	open: false,
-	autoHideDuration: 6000,
-	onClose: () => {},
+	toasts: [],
+	autoHideDuration: 5000,
 	anchorOrigin: { vertical: "bottom", horizontal: "center" },
-	message: "",
-	color: "",
-	severity: "",
-	variant: "",
 };
 
 export default function toastReducer(state = initialState, action) {
 	switch (action.type) {
-		case "toasts/openToast":
+		case CREATE_TOAST:
 			return {
 				...state,
-				open: true,
-				message: action.payload.message,
-				color: action.payload.color,
-				severity: action.payload.severity,
-				variant: action.payload.variant,
+				toasts: [...state.toasts, action.payload],
 			};
-		case "toasts/closeToast":
+		case HIDE_TOAST:
 			return {
 				...state,
-				open: false,
+				toasts: state.toasts.slice(1),
 			};
 
 		default:
