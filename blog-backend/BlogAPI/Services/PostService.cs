@@ -49,8 +49,42 @@ namespace BlogAPI.Services
             return res;
 
         }
+        public async Task<List<PostDTO>> GetPostsByAuthorIdAsync(string id)
+        {
+          //  var post = await GetByIdAsync(_postCollection, id) ?? throw new ArgumentException("Post with specific id dont exist");
 
-		public async Task CreatePostAsync(NewPostDTO newPost)
+
+            var filter = Builders<Post>.Filter.Eq("AuthorId",BsonObjectId.Parse(id));
+            var cursor = await _postCollection.FindAsync(filter);
+
+
+            var posts = await cursor.ToListAsync();
+
+
+			var res = new List<PostDTO>();
+
+
+			res = posts.Select(post=> new PostDTO {
+                AuthorId = post.AuthorId.ToString(),
+                AuthorName = post.AuthorName,
+                CreatedAt = post.CreatedAt,
+                UpdatedAt = post.UpdatedAt,
+                Category = post.Category,
+                Content = post.Content,
+                Id = post.Id.ToString(),
+                Tag = post.Tag,
+                Title = post.Title
+
+            }).ToList();
+			        
+            return res;
+        }
+
+
+
+
+
+        public async Task CreatePostAsync(NewPostDTO newPost)
 		{
 
 			var author = await GetByIdAsync(_authorCollection, newPost.AuthorId) ?? throw new ArgumentException("Author with specific id dont exist.");

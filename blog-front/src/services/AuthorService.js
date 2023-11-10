@@ -16,6 +16,12 @@ const AuthorService = () => {
 		});
 	};
 
+	const GetAuthorPosts = ({ id }) => {
+		return api.getWithParams("Post/GetPostsByAuthorId", {
+			id: id,
+		});
+	};
+
 	return { GetAuthorByNameSurname, GetAuthorById };
 };
 

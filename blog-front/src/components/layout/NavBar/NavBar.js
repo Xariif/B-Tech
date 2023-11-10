@@ -25,6 +25,7 @@ import {
 	PowerSettingsNew,
 } from "@mui/icons-material";
 import { useUser } from "../../hooks/useUser";
+import { useState } from "react";
 
 const Search = styled("div")(({ theme }) => ({
 	position: "relative",
@@ -97,9 +98,63 @@ const NavBar = () => {
 
 	const { user } = useUser();
 
-	const navigate = useNavigate();
+	const BasicMenuBar = () => {
+		return (
+			<>
+				<StyledLink underline="none" href="/top">
+					Top
+				</StyledLink>
+				<StyledLink underline="none" href="/newest">
+					Newest
+				</StyledLink>
+				{!isLoading && !isAuthenticated ? (
+					<StyledLink
+						underline="none"
+						onClick={(e) => {
+							e.preventDefault();
+							loginWithRedirect();
+						}}
+					>
+						Login
+					</StyledLink>
+				) : (
+					<>
+						<StyledLink
+							underline="none"
+							onClick={(e) => {
+								e.preventDefault();
+								logout();
+							}}
+						>
+							<StyledIcon sx={{ justifyContent: "center", display: "flex" }}>
+								<PowerSettingsNew />
+							</StyledIcon>
+						</StyledLink>
+					</>
+				)}
+				{}
+			</>
+		);
+	};
 
-	const dispatch = useDispatch();
+	const MenuBar = () => {
+		return (
+			<>
+				{user && user.permissions.includes("admin") && (
+					<StyledLink underline="none" href="/admin">
+						Admin
+					</StyledLink>
+				)}
+				{user && user.permissions.includes("author") && (
+					<StyledLink underline="none" href="/post/menager">
+						Post Menager
+					</StyledLink>
+				)}
+
+				<BasicMenuBar />
+			</>
+		);
+	};
 
 	return (
 		<AppBar position="sticky">
@@ -109,52 +164,9 @@ const NavBar = () => {
 						<BoltIcon fontSize="large" />
 						<Typography variant="h6">B-TECH</Typography>
 					</StyledLink>
-					<Search>
-						<SearchIconWrapper>
-							<SearchIcon />
-						</SearchIconWrapper>
-						<StyledInputBase
-							placeholder="Search…"
-							inputProps={{ "aria-label": "search" }}
-						/>
-					</Search>
+					<SearchBar />
 					<Stack direction={"row"} gap={"1rem"}>
-						<StyledLink underline="none" href="/top">
-							Top
-						</StyledLink>
-						<StyledLink underline="none" href="newest">
-							Newest
-						</StyledLink>
-						{!isLoading && !isAuthenticated ? (
-							<StyledLink
-								underline="none"
-								onClick={(e) => {
-									e.preventDefault();
-									loginWithRedirect();
-								}}
-							>
-								Login
-							</StyledLink>
-						) : (
-							<>
-								<StyledLink underline="none" href="/admin">
-									Admin
-								</StyledLink>
-								<StyledLink
-									underline="none"
-									onClick={(e) => {
-										e.preventDefault();
-										logout();
-									}}
-								>
-									<StyledIcon
-										sx={{ justifyContent: "center", display: "flex" }}
-									>
-										<PowerSettingsNew />
-									</StyledIcon>
-								</StyledLink>
-							</>
-						)}
+						<MenuBar />
 					</Stack>
 				</StyledToolBar>
 			</Container>
@@ -163,3 +175,30 @@ const NavBar = () => {
 };
 
 export default NavBar;
+
+const SearchBar = () => {
+	const [searchTerm, setSearchTerm] = useState("");
+
+	return (
+		<>
+			<Search>
+				<SearchIconWrapper>
+					<SearchIcon />
+				</SearchIconWrapper>
+				<StyledInputBase
+					placeholder="Search…"
+					inputProps={{ "aria-label": "search" }}
+					onChange={(e) => {
+						setSearchTerm(e.target.value);
+					}}
+					onKeyDown={(e) => {
+						if (e.key === "Enter") {
+							e.preventDefault();
+							window.location.href = `/search/${searchTerm}`;
+						}
+					}}
+				/>
+			</Search>
+		</>
+	);
+};

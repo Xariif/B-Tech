@@ -20,7 +20,7 @@ namespace BlogAPI.Controllers
 
         [HttpGet("GetPosts")]
         [AllowAnonymous]
-        public async Task<ActionResult<List<Post>>> GetPosts()
+        public async Task<ActionResult<List<Post>>> GetPosts(PaginationParams pagination, string test)
         {
             try
             {
@@ -48,8 +48,25 @@ namespace BlogAPI.Controllers
             }
         }
 
-        
-        [HttpPost("CreatePost")]
+
+        [HttpGet("GetPostsByAuthorId")]
+        [AllowAnonymous]
+        public async Task<ActionResult<Post>> GetPostByAuthorId(string id)
+        {
+            try
+            {
+                var res = await _postService.GetPostsByAuthorIdAsync(id);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
+        }
+
+
+
+        [HttpPost("CreatePost")]    
         public async Task<ActionResult> CreatePost(NewPostDTO newPost)
         {
             try
@@ -69,6 +86,9 @@ namespace BlogAPI.Controllers
         {
             try
             {
+                
+
+
                 await _postService.UpdatePostAsync(updatePost);
                 return Ok("Post updated");
             }

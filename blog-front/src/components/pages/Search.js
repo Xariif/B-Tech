@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import Loading from "./Loading";
+import Loading from "../ui/Loading";
 import { useEffect } from "react";
 
 export default function Search(props) {

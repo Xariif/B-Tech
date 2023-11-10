@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { Box, Button, Pagination, Paper } from "@mui/material";
+import { Box, Button, Pagination, Paper, TextField } from "@mui/material";
 
 function NewComment() {
 	const [text, setText] = useState("");
@@ -23,11 +23,11 @@ function NewComment() {
 				<div style={{ display: "flex", gap: "1rem" }}>
 					<span className="p-input-icon-left">
 						<i className="pi pi-user" />
-						<InputText placeholder="Name" style={{ width: "100%" }} />
+						<TextField placeholder="Name" style={{ width: "100%" }} />
 					</span>
 					<span className="p-input-icon-left">
 						<i className="pi pi-envelope" />
-						<InputText placeholder="E-mail" style={{ width: "100%" }} />
+						<TextField placeholder="E-mail" style={{ width: "100%" }} />
 					</span>
 					<Button label="Post" onClick={handlePost} />
 					<Button icon="pi pi-check" aria-label="Filter" />

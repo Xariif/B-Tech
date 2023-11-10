@@ -2,7 +2,7 @@ import NotFound from "../pages/NotFound";
 import Post from "../pages/Post";
 import PostService from "../../services/PostService";
 import AuthorService from "../../services/AuthorService";
-import Loading from "../pages/Loading";
+import Loading from "../ui/Loading";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import PostBigImg from "../ui/PostBigImg";

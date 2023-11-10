@@ -12,12 +12,14 @@ import Unauthorized from "./components/pages/Unathorized";
 import PostWrapper from "./components/wrappers/PostWrapper";
 import AuthorWrapper from "./components/wrappers/AuthorWrapper";
 import Search from "./components/pages/Search";
-import { useNavigate } from "react-router-dom";
-
+import { Navigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import useLocalStorage from "./components/hooks/useLocalStorage";
 import { useUser } from "./components/hooks/useUser";
 import Admin from "./components/pages/Admin";
+import Loading from "./components/ui/Loading";
+import PostMenager from "./components/pages/PostMenager";
 function App() {
 	const [token, setToken] = useLocalStorage("token", null);
 
@@ -28,14 +30,15 @@ function App() {
 				<Route path="/top" element={<Top />} />
 				<Route path="/newest" element={<Newest />} />
 				<Route path="/contact" element={<Contact />} />
+				<Route path="/unauthorized" element={<Unauthorized />} />
+				<Route element={<ProtectedRoute allowedPermissions={["admin"]} />}>
+					<Route path="/admin" element={<Admin />} />
+				</Route>
 				<Route
-					path="/admin"
-					element={
-						<ProtectedRoute permissions={["admin"]}>
-							<Admin />
-						</ProtectedRoute>
-					}
-				></Route>
+					element={<ProtectedRoute allowedPermissions={["author", "admin"]} />}
+				>
+					<Route path="/post/menager" element={<PostMenager />} />
+				</Route>
 
 				<Route path="/post/:id" element={<PostWrapper />} />
 				<Route path="/author/:id" element={<AuthorWrapper />} />
@@ -46,19 +49,24 @@ function App() {
 	);
 }
 
-const ProtectedRoute = ({ children, permissions }) => {
+const ProtectedRoute = ({ allowedPermissions }) => {
 	const { user, isLoading } = useUser();
 	const { isAuthenticated } = useAuth0();
+	const location = useLocation();
 
-	const navigate = useNavigate();
+	if (isLoading) {
+		return <Loading />;
+	}
 
-	if (isLoading || !isAuthenticated) return navigate("/");
+	if (!isAuthenticated) {
+		return <Navigate to="/" state={{ from: location }} replace />;
+	}
 
-	if (!user) return <Unauthorized />;
-
-	if (permissions.some((permission) => user.permissions.includes(permission)))
-		return children;
-	else return <Unauthorized />;
+	if (user?.permissions?.find((role) => allowedPermissions?.includes(role))) {
+		return <Outlet />;
+	} else {
+		return <Navigate to="/unauthorized" state={{ from: location }} replace />;
+	}
 };
 
 export default App;

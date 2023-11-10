@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import Author from "../pages/Author";
 import NotFound from "../pages/NotFound";
 import AuthorService from "../../services/AuthorService";
-import Loading from "../pages/Loading";
+import Loading from "../ui/Loading";
 
 function AuthorWrapper() {
 	const { GetAuthorById } = AuthorService();
@@ -13,13 +13,13 @@ function AuthorWrapper() {
 	const [authorData, setAuthorData] = useState(null);
 
 	useEffect(() => {
-		GetAuthorById({ id }).then((res) => {
-			if (res === null) {
-				setAuthorData(false);
-			} else {
+		GetAuthorById({ id })
+			.then((res) => {
 				setAuthorData(res);
-			}
-		});
+			})
+			.catch((err) => {
+				setAuthorData(false);
+			});
 	}, [id]);
 
 	if (authorData === null || authorData === undefined) {

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import PostBigImg from "../ui/PostBigImg";
 import PostSmallImg from "../ui/PostSmallImg";
 import Tag from "../ui/Tag";
-
+import Loading from "../ui/Loading";
 import { useAuth0 } from "@auth0/auth0-react";
 import useAPI from "../hooks/useAPI";
 import { Paper } from "@mui/material";
@@ -50,21 +50,19 @@ export default function Home() {
 			});
 	}, []);
 
-	return (
-		<Paper>
-			{posts.loading ? (
-				<div>Loading...</div>
-			) : posts.error ? (
-				<NotFound />
-			) : (
-				posts.posts.map((post) => {
+	if (posts.loading) return <Loading />;
+	else if (posts.error) {
+		return <NotFound />;
+	} else
+		return (
+			<Paper>
+				{posts.posts.map((post) => {
 					return (
 						<div key={post.id}>
 							<PostBigImg post={post} />
 						</div>
 					);
-				})
-			)}
-		</Paper>
-	);
+				})}
+			</Paper>
+		);
 }

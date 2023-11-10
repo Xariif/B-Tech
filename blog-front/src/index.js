@@ -14,24 +14,22 @@ const rootElement = document.getElementById("root");
 const root = ReactDOMClient.createRoot(rootElement);
 
 root.render(
-	<React.StrictMode>
-		<Provider store={store}>
-			<Auth0Provider
-				domain="dev-uasjfxeuwrj58j4g.us.auth0.com"
-				clientId="zxa0jWBh7donY0oLbt3X4FCkWVQQ9yc7"
-				authorizationParams={{
-					redirect_uri: window.location.origin,
-					audience: "https://b-tech-api",
-					scope: "openid profile email",
-				}}
-				cacheLocation="localstorage"
-			>
-				<BrowserRouter>
-					<ReducerProvider>
-						<App />
-					</ReducerProvider>
-				</BrowserRouter>
-			</Auth0Provider>
-		</Provider>
-	</React.StrictMode>
+	<Provider store={store}>
+		<Auth0Provider
+			domain="dev-uasjfxeuwrj58j4g.us.auth0.com"
+			clientId="zxa0jWBh7donY0oLbt3X4FCkWVQQ9yc7"
+			authorizationParams={{
+				redirect_uri: window.location.origin,
+				audience: "https://b-tech-api",
+				scope: "openid profile email",
+			}}
+			cacheLocation="localstorage"
+		>
+			<BrowserRouter>
+				<ReducerProvider>
+					<App />
+				</ReducerProvider>
+			</BrowserRouter>
+		</Auth0Provider>
+	</Provider>
 );

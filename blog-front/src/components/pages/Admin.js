@@ -1,3 +1,8 @@
 export default function Admin() {
-	return <>ADMINNNNN</>;
+	return (
+		<>
+			Panel admina - w przygotowaniu akceptacja <br></br>
+			postów zarządzanie postami itp.
+		</>
+	);
 }

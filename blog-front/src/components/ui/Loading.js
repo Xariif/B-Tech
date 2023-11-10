@@ -5,7 +5,7 @@ export default function Loading() {
 	useEffect(() => {
 		const intervalId = setInterval(() => {
 			setDots((prev) => (prev.length === 3 ? "" : prev + "."));
-		}, 1000);
+		}, 500);
 		return () => clearInterval(intervalId);
 	}, []);
 
@@ -15,6 +15,7 @@ export default function Loading() {
 				fontSize: "3rem",
 				textShadow: "1px 1px #fff",
 				margin: 0,
+				textAlign: "center",
 			}}
 		>
 			Loading{dots}

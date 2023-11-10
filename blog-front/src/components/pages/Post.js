@@ -2,8 +2,10 @@ import { Link } from "react-router-dom";
 import Tag from "../ui/Tag";
 import CommentSection from "../ui/CommentSection";
 import { useEffect, useRef, useState } from "react";
+import { Button } from "@mui/material";
 
 export default function PostBigImg({ postData }) {
+	console.log(postData);
 	const opionionsRef = useRef(null);
 
 	return (
@@ -16,7 +18,6 @@ export default function PostBigImg({ postData }) {
 					padding: "1rem",
 				}}
 			>
-				<Opinions />
 				<div
 					style={{
 						margin: "0 auto .5rem ",
@@ -83,12 +84,18 @@ export default function PostBigImg({ postData }) {
 					}}
 				/>
 				<div
-					style={{ margin: ".5rem auto ", maxWidth: "calc(1180px - 10rem)" }}
+					style={{
+						margin: ".5rem auto ",
+						maxWidth: "calc(1180px - 10rem)",
+						textAlign: "justify",
+					}}
 				>
 					{postData.content}
 				</div>
 			</div>
-			<CommentSection postId={postData.id} />
+			{
+				//<CommentSection postId={postData.id} />
+			}
 		</div>
 	);
 }
@@ -100,10 +107,11 @@ function Opinions() {
 
 	useEffect(() => {
 		const handleScroll = () => {
+			console.log(document.getElementById("post"));
 			const postHeight = document.getElementById("post").offsetHeight;
-			const headerHeight = document.getElementById("header").offsetHeight;
+			//const headerHeight = document.getElementById("header").offsetHeight;
 
-			const height = postHeight + headerHeight;
+			const height = postHeight;
 
 			const scrollPosition = window.scrollY + window.innerHeight;
 
