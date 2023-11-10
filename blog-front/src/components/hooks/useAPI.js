@@ -48,8 +48,21 @@ const useAPI = () => {
 		}
 	};
 
-	const post = (url, data) => {
-		return axiosInstance.post(url, { data });
+	const post = async (url, params) => {
+		try {
+			const token = await getToken();
+			const response = await axiosInstance.post(url, {
+				headers: { Authorization: "Bearer " + token },
+				params: params,
+			});
+			if (response.status !== 200) {
+				throw new Error(`Unexpected response status: ${response.status}`);
+			}
+			return response.data;
+		} catch (error) {
+			console.error(error);
+			throw error;
+		}
 	};
 
 	const put = (url, data) => {

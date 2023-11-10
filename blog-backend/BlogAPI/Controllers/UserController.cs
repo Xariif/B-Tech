@@ -61,6 +61,14 @@ namespace BlogAPI.Controllers
             return Ok("Dane chronione user");
         }
 
+
+        [HttpGet("SecureEndpointAll")]
+        [Authorize(Policy = "admin,author")]
+        public IActionResult SecureEndpointAll ()
+        {
+            return Ok("Dane chronione user");
+        }
+
     }
 }
 

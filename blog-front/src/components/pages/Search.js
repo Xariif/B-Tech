@@ -8,7 +8,7 @@ export default function Search(props) {
 	useEffect(() => {}, []);
 	return (
 		<>
-			<h1>Search: {term}</h1>
+			<h1>Searching term: {term}</h1>
 			<Loading />
 		</>
 	);

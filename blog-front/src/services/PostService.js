@@ -31,7 +31,7 @@ const PostService = () => {
 		return api.delete("Post/DeletePost", id);
 	};
 
-	return { GetPosts, GetPostById };
+	return { GetPosts, GetPostById, CreatePost, UpdatePost, DeletePost };
 };
 
 export default PostService;

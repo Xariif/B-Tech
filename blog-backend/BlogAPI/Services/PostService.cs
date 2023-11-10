@@ -9,7 +9,7 @@ namespace BlogAPI.Services
 	{
 		public async Task<List<PostDTO>> GetPostsAsync()
 		{
-			var filter = Builders<Post>.Filter.Empty;
+			var filter = Builders<Post>.Filter.Eq("Approved", true);
 			var cursor = await _postCollection.FindAsync(filter);
 
 			var posts = await cursor.ToListAsync();
@@ -24,7 +24,8 @@ namespace BlogAPI.Services
 				AuthorName = post.AuthorName,
 				Tag = post.Tag,
 				CreatedAt = post.CreatedAt,
-				UpdatedAt = post.UpdatedAt
+				UpdatedAt = post.UpdatedAt,
+				Approved = post.Approved
 			}).ToList();
 
 			return postDTOs;
@@ -98,7 +99,12 @@ namespace BlogAPI.Services
 				Tag = newPost.Tag,
 				Category = newPost.Category.Trim(),
 				CreatedAt = DateTime.Now,
-				UpdatedAt = DateTime.Now
+				UpdatedAt = DateTime.Now,
+				Approved = false,
+				Comments = new List<Comment>(),
+				Dislikes = 0,
+				Likes = 0,
+				Views = 0,
 			};
 
 			var filter = Builders<Post>.Filter.Where(x => x.Title == newPost.Title);

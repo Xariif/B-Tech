@@ -17,9 +17,9 @@ import { red } from "@mui/material/colors";
 import { useEffect, useState } from "react";
 import { createToast } from "../../features/toasts/toastsActions";
 import { useDispatch } from "react-redux";
+import PostService from "../../services/PostService";
 export default function PostMenager() {
 	const [value, setValue] = useState("1");
-
 	const handleChange = (event, newValue) => {
 		setValue(newValue);
 	};
@@ -50,6 +50,7 @@ export default function PostMenager() {
 
 const NewPost = () => {
 	const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
+	const { CreatePost } = PostService();
 
 	const [title, setTitle] = useState("");
 	const [category, setCategory] = useState("");
@@ -205,10 +206,14 @@ const NewPost = () => {
 				sx={{ mt: 2 }}
 				disabled={submitButtonDisabled}
 				onClick={() => {
-					setTitle("");
-					setCategory("");
-					setTags([]);
-					setContent("");
+					CreatePost({
+						title: title,
+						category: category,
+						tags: tags,
+						content: content,
+					}).then((res) => {
+						console.log(res);
+					});
 
 					dispatch(
 						createToast({

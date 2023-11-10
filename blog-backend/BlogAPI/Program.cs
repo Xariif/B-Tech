@@ -38,7 +38,7 @@ builder.Services.AddAuthentication(options =>
         options.Audience = builder.Configuration["Auth0:Audience"];
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            NameClaimType = ClaimTypes.NameIdentifier
+            NameClaimType = ClaimTypes.NameIdentifier,            
         };
     });
 
@@ -47,7 +47,7 @@ builder.Services.AddAuthorization(options =>
     var policies = new string[] { "admin", "author", "user" };
 
     foreach (var policy in policies)
-    {
+    {        
         options.AddPolicy(policy, x => x.Requirements.Add(new HasScopeRequirement(policy, domain)));
     }
 });

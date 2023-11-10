@@ -32,6 +32,8 @@ namespace BlogAPI.Models
 
 		public int Dislikes { get; set; } = 0;
 
+        public bool Approved{ get; set; } 
+
         public List<Comment> Comments { get; set; } = new List<Comment>();
 
     }

@@ -8,7 +8,7 @@ namespace BlogAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "admin,author")]
+ 
     public class PostController : BaseController
     {
         private readonly PostService _postService;
@@ -20,7 +20,7 @@ namespace BlogAPI.Controllers
 
         [HttpGet("GetPosts")]
         [AllowAnonymous]
-        public async Task<ActionResult<List<Post>>> GetPosts(PaginationParams pagination, string test)
+        public async Task<ActionResult<List<Post>>> GetPosts()
         {
             try
             {
@@ -50,7 +50,6 @@ namespace BlogAPI.Controllers
 
 
         [HttpGet("GetPostsByAuthorId")]
-        [AllowAnonymous]
         public async Task<ActionResult<Post>> GetPostByAuthorId(string id)
         {
             try
@@ -66,9 +65,12 @@ namespace BlogAPI.Controllers
 
 
 
-        [HttpPost("CreatePost")]    
+        [HttpPost("CreatePost")]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult> CreatePost(NewPostDTO newPost)
         {
+            var x= User;
+            var y = Request;
             try
             {
 

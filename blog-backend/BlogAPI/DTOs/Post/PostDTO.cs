@@ -11,5 +11,6 @@
         public required string Tag { get; set; }
         public required DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; } = DateTime.Now;
+        public bool Approved { get; set; }
     }
 }
