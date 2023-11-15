@@ -44,19 +44,19 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization(options =>
 {
-    var policies = new string[] { "admin", "author", "user" };
+   
+    options.AddPolicy("user", x => x.RequireClaim("permissions", "read:posts","comment:posts"));
 
-    foreach (var policy in policies)
-    {        
-        options.AddPolicy(policy, x => x.Requirements.Add(new HasScopeRequirement(policy, domain)));
-    }
+    options.AddPolicy("author", x => x.RequireClaim("permissions", "write:posts","delete:posts"));
+
+    options.AddPolicy("admin", x => x.RequireClaim("permissions","admin"));
+
 });
 
 builder.Services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

@@ -1,52 +1,18 @@
+import { useEffect, useState } from "react";
+import PostService from "../../../../services/PostService";
+import { useDispatch } from "react-redux";
 import {
-	Autocomplete,
 	Box,
-	Button,
-	MenuItem,
 	Paper,
-	Select,
-	Tab,
-	Tabs,
 	TextField,
 	Typography,
+	styled,
+	Button,
 } from "@mui/material";
-import TabContext from "@mui/lab/TabContext";
-import TabList from "@mui/lab/TabList";
-import TabPanel from "@mui/lab/TabPanel";
-import { red } from "@mui/material/colors";
-import { useEffect, useState } from "react";
-import { createToast } from "../../features/toasts/toastsActions";
-import { useDispatch } from "react-redux";
-import PostService from "../../services/PostService";
-export default function PostMenager() {
-	const [value, setValue] = useState("1");
-	const handleChange = (event, newValue) => {
-		setValue(newValue);
-	};
-
-	return (
-		<>
-			<TabContext value={value}>
-				<Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-					<TabList onChange={handleChange} aria-label="lab API tabs example">
-						<Tab label="Your posts" value="1" />
-						<Tab label="Post creator" value="2" />
-						<Tab label="Waiting for approval" value="3" />
-					</TabList>
-				</Box>
-				<TabPanel value="1">
-					<YourPosts />
-				</TabPanel>
-				<TabPanel value="2">
-					<NewPost />
-				</TabPanel>
-				<TabPanel value="3">
-					<WaitingForApproval />
-				</TabPanel>
-			</TabContext>
-		</>
-	);
-}
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import Autocomplete from "@mui/material/Autocomplete";
+import MenuItem from "@mui/material/MenuItem";
+import { createToast } from "../../../../features/toasts/toastsActions";
 
 const NewPost = () => {
 	const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
@@ -56,6 +22,7 @@ const NewPost = () => {
 	const [category, setCategory] = useState("");
 	const [tags, setTags] = useState([]);
 	const [content, setContent] = useState("");
+	const [file, setFile] = useState(null);
 
 	const dispatch = useDispatch();
 
@@ -131,7 +98,8 @@ const NewPost = () => {
 			title.length > 0 &&
 			category != "" &&
 			tags.length > 0 &&
-			content.length > 0
+			content.length > 0 &&
+			file != null
 		) {
 			setSubmitButtonDisabled(false);
 		} else {
@@ -141,8 +109,19 @@ const NewPost = () => {
 
 	useEffect(() => {
 		chceckIfSubmitButtonShouldBeDisabled();
-	}, [title, category, tags, content]);
+	}, [title, category, tags, content, file]);
 
+	const VisuallyHiddenInput = styled("input")({
+		clip: "rect(0 0 0 0)",
+		clipPath: "inset(50%)",
+		height: 1,
+		overflow: "hidden",
+		position: "absolute",
+		bottom: 0,
+		left: 0,
+		whiteSpace: "nowrap",
+		width: 1,
+	});
 	return (
 		<Paper sx={{ p: 2 }}>
 			<Typography variant="h4">New Post</Typography>
@@ -156,8 +135,31 @@ const NewPost = () => {
 					setTitle(e.target.value);
 				}}
 			/>
+
+			<Box sx={{ mt: 2, display: "flex" }}>
+				<Button
+					component="label"
+					variant="contained"
+					startIcon={<CloudUploadIcon />}
+					sx={{ mr: 2, width: "-webkit-fill-available" }}
+				>
+					Upload image
+					<VisuallyHiddenInput
+						type="file"
+						accept="image/*"
+						multiple={false}
+						onChange={(e) => {
+							setFile(e.target.files[0]);
+						}}
+					/>
+				</Button>
+				<TextField
+					value={file?.name}
+					disabled
+					sx={{ width: "-webkit-fill-available" }}
+				/>
+			</Box>
 			<TextField
-				id="outlined-select-currency"
 				select
 				label="Category"
 				defaultValue={category}
@@ -201,62 +203,47 @@ const NewPost = () => {
 					setContent((prev) => e.target.value);
 				}}
 			/>
-			<Button
-				variant="contained"
-				sx={{ mt: 2 }}
-				disabled={submitButtonDisabled}
-				onClick={() => {
-					CreatePost({
-						title: title,
-						category: category,
-						tags: tags,
-						content: content,
-					}).then((res) => {
-						console.log(res);
-					});
+			<Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
+				<Button
+					variant="contained"
+					color={"error"}
+					onClick={() => {
+						setTitle("");
+						setCategory("");
+						setTags([]);
+						setContent("");
+						setFile(null);
+					}}
+				>
+					Cancel
+				</Button>
+				<Button
+					variant="contained"
+					disabled={submitButtonDisabled}
+					onClick={() => {
+						CreatePost({
+							title: title,
+							category: category,
+							tags: tags,
+							content: content,
+							image: file,
+						}).then((res) => {
+							console.log(res);
+						});
 
-					dispatch(
-						createToast({
-							message: "Post created",
-							type: "success",
-						})
-					);
-				}}
-			>
-				Submit
-			</Button>
-			<Button
-				variant="contained"
-				color={"error"}
-				sx={{ mt: 2, ml: 2 }}
-				onClick={() => {
-					setTitle("");
-					setCategory("");
-					setTags([]);
-					setContent("");
-				}}
-			>
-				Cancel
-			</Button>
+						dispatch(
+							createToast({
+								message: "Post created",
+								type: "success",
+							})
+						);
+					}}
+				>
+					Submit
+				</Button>
+			</Box>
 		</Paper>
 	);
 };
 
-const YourPosts = () => {
-	return (
-		<>
-			<Typography variant="h4">Your posts</Typography>
-			tu będzie lista postów z możliwościa edycji i usunięcia
-		</>
-	);
-};
-
-const WaitingForApproval = () => {
-	return (
-		<>
-			<Typography variant="h4">Waiting for approval</Typography>
-			tu będzie lista postów oczeikujących na zatwierdzenie lub orzuconych z
-			informacją
-		</>
-	);
-};
+export default NewPost;

@@ -66,11 +66,9 @@ namespace BlogAPI.Controllers
 
 
         [HttpPost("CreatePost")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Policy ="author")]
         public async Task<ActionResult> CreatePost(NewPostDTO newPost)
         {
-            var x= User;
-            var y = Request;
             try
             {
 
@@ -84,6 +82,7 @@ namespace BlogAPI.Controllers
         }
 
         [HttpPut("UpdatePost")]
+        [Authorize(Policy ="author")]
         public async Task<ActionResult> UpdatePost(PostDTO updatePost)
         {
             try
@@ -101,6 +100,7 @@ namespace BlogAPI.Controllers
         }
 
         [HttpDelete("DeletePost")]
+        [Authorize(Policy ="author")]
         public async Task<ActionResult> DeletePost(string id)
         {
             try

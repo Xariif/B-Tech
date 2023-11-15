@@ -97,6 +97,7 @@ const NavBar = () => {
 	} = useAuth0();
 
 	const { user } = useUser();
+	console.log(user);
 
 	const BasicMenuBar = () => {
 		return (
@@ -145,7 +146,7 @@ const NavBar = () => {
 						Admin
 					</StyledLink>
 				)}
-				{user && user.permissions.includes("author") && (
+				{user && user.permissions.includes("write:posts") && (
 					<StyledLink underline="none" href="/post/menager">
 						Post Menager
 					</StyledLink>

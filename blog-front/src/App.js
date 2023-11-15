@@ -19,10 +19,9 @@ import useLocalStorage from "./components/hooks/useLocalStorage";
 import { useUser } from "./components/hooks/useUser";
 import Admin from "./components/pages/Admin";
 import Loading from "./components/ui/Loading";
-import PostMenager from "./components/pages/PostMenager";
-function App() {
-	const [token, setToken] = useLocalStorage("token", null);
+import PostMenager from "./components/pages/PostMenager/PostMenager";
 
+function App() {
 	return (
 		<Routes>
 			<Route path="/" element={<Layout content={<Outlet />} />}>
@@ -53,7 +52,7 @@ const ProtectedRoute = ({ allowedPermissions }) => {
 	const { user, isLoading } = useUser();
 	const { isAuthenticated } = useAuth0();
 	const location = useLocation();
-
+	console.log(user);
 	if (isLoading) {
 		return <Loading />;
 	}

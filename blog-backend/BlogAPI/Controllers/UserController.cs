@@ -43,31 +43,26 @@ namespace BlogAPI.Controllers
         }
 
         [HttpGet("SecureEndpointAdmin")]
-        [Authorize("admin")]
+        [Authorize( Policy="admin")]
         public IActionResult SecureEndpointAdmin()
         {
             return Ok("Dane chronione admin");
         }
         [HttpGet("SecureEndpointAuthor")]
-        [Authorize("author")]
+        [Authorize(Policy ="author")]
         public IActionResult SecureEndpointAuthor()
         {
             return Ok("Dane chronione author");
         }
         [HttpGet("SecureEndpointUser")]
-        [Authorize("user")]
+        [Authorize(Policy ="user")]
         public IActionResult SecureEndpointUser()
         {
             return Ok("Dane chronione user");
         }
 
 
-        [HttpGet("SecureEndpointAll")]
-        [Authorize(Policy = "admin,author")]
-        public IActionResult SecureEndpointAll ()
-        {
-            return Ok("Dane chronione user");
-        }
+    
 
     }
 }

@@ -10,6 +10,7 @@ namespace BlogAPI.Services
 		public async Task<List<PostDTO>> GetPostsAsync()
 		{
 			var filter = Builders<Post>.Filter.Eq("Approved", true);
+
 			var cursor = await _postCollection.FindAsync(filter);
 
 			var posts = await cursor.ToListAsync();
