@@ -15,7 +15,7 @@ namespace BlogAPI.Models
         public ObjectId PostId { get; set; }
 
         [BsonRepresentation(BsonType.ObjectId)]
-        public ObjectId? AuthorId { get; set; }
+        public ObjectId? UserId { get; set; }
 
         public bool Edited { get; set; } = false;
 
@@ -29,6 +29,5 @@ namespace BlogAPI.Models
 
         public int Dislikes { get; set; } = 0;
 
-        public List<Comment>? SubComments { get; set; }
     }
 }

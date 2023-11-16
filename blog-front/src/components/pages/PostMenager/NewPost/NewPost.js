@@ -149,6 +149,7 @@ const NewPost = () => {
 						accept="image/*"
 						multiple={false}
 						onChange={(e) => {
+							console.log(e.target.files);
 							setFile(e.target.files[0]);
 						}}
 					/>

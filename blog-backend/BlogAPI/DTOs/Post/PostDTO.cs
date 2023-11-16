@@ -1,16 +1,20 @@
-﻿namespace BlogAPI.DTOs.Post
+﻿using BlogAPI.Models;
+using Microsoft.CodeAnalysis.Operations;
+
+namespace BlogAPI.DTOs.Post
 {
     public class PostDTO
     {
-        public required string Id { get; set; }
-        public required string Title { get; set; }
-        public required string Content { get; set; }
-        public required string Category { get; set; }
-        public required string AuthorId { get; set; }
-        public required string AuthorName { get; set; }
-        public required string Tag { get; set; }
-        public required DateTime CreatedAt { get; set; }
+        public  string? Id { get; set; }
+        public  string? Title { get; set; }
+        public  string? Content { get; set; }
+        public  string? Category { get; set; }
+        public  string? AuthorId { get; set; }
+        public  string? AuthorName { get; set; }
+        public  string? Tag { get; set; }
+        public  DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; } = DateTime.Now;
         public bool Approved { get; set; }
+        public Models.File? Image { get; set; } 
     }
 }

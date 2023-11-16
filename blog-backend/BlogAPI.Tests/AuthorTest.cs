@@ -5,54 +5,15 @@ namespace BlogAPI.Tests
 {
     public class AuthorTest
     {
-        private readonly AuthorService _authorService;
+        private readonly UserService _userService;
 
         public AuthorTest()
         {
-            _authorService = new AuthorService();
+            _userService = new UserService();
         }
 
 
-        [Fact]
-        public async Task CreateAuthorAsync_ShouldCreateAuthor()
-        {
-            // Arrange
-            var newAuthorDTO = new NewAuthorDTO
-            {
-                Name = "Adam",
-                Surname = "Czarnecki",
-                Description = "Testowy opis",
-                ActiveFrom = new DateTime(1999, 4, 12),
 
-            };
-            // Act
-            await _authorService.CreateAuthorAsync(newAuthorDTO);
-
-            // Assert
-
-
-            var author = await _authorService.GetAuthorByNameSurnameAsync(newAuthorDTO.Name, newAuthorDTO.Surname);
-
-            Assert.NotNull(author);
-            Assert.Equal(newAuthorDTO.Name, author.Name);
-            Assert.Equal(newAuthorDTO.Surname, author.Surname);
-        }
-
-        [Fact]
-        public async Task GetAuthorByIdAsync_ShouldReturnAuthorDTO()
-        {
-            // Arrange
-            var authorDTO = await _authorService.GetAuthorByNameSurnameAsync("Adam", "Czarnecki");
-
-            // Act
-            var result = await _authorService.GetAuthorByIdAsync(authorDTO.Id.ToString());
-
-            // Assert
-            var resultAuthorDTO = Assert.IsType<AuthorDTO>(result);
-            Assert.Equal(authorDTO.Id, resultAuthorDTO.Id);
-            Assert.Equal(authorDTO.Name, resultAuthorDTO.Name);
-            Assert.Equal(authorDTO.Surname, resultAuthorDTO.Surname);
-        }
 
         [Fact]
         public async Task GetAuthorByNameSurnameAsync_ShouldReturnAuthorDTO()
@@ -61,10 +22,10 @@ namespace BlogAPI.Tests
             string name = "Adam";
             string surname = "Czarnecki";
             // Act
-            var result = await _authorService.GetAuthorByNameSurnameAsync(name, surname);
+            var result = await _userService.GetUserByNameSurnameAsync(name, surname);
 
             // Assert
-            Assert.IsType<AuthorDTO>(result);
+            Assert.IsType<UserDTO>(result);
             Assert.Equal(name, result.Name);
             Assert.Equal(surname, result.Surname);
         }
@@ -73,16 +34,16 @@ namespace BlogAPI.Tests
         public async Task UpdateAuthorAsync_ShouldUpdateAuthor()
         {
             // Arrange
-            var authorDTO = await _authorService.GetAuthorByNameSurnameAsync("Adam", "Czarnecki");
+            var authorDTO = await _userService.GetUserByNameSurnameAsync("Adam", "Czarnecki");
 
             authorDTO.Surname = "Nowicki";
             authorDTO.Description = "Testowy opis";
 
             // Act
-            await _authorService.UpdateAuthorAsync(authorDTO);
+            await _userService.UpdateUserAsync(authorDTO);
 
             // Assert
-            var author = await _authorService.GetAuthorByIdAsync(authorDTO.Id.ToString());
+            var author = await _userService.GetUserByUserIdAsync(authorDTO.UserId.ToString());
 
             Assert.NotNull(author);
             Assert.Equal(authorDTO.Name, author.Name);
@@ -99,14 +60,14 @@ namespace BlogAPI.Tests
         {
             // Arrange
 
-            var authorDTO = await _authorService.GetAuthorByNameSurnameAsync("Adam", "Nowicki");
+            var authorDTO = await _userService.GetUserByNameSurnameAsync("Adam", "Nowicki");
 
             // Act
-            await _authorService.DeleteAuthorAsync(authorDTO.Id.ToString());
+            await _userService.DeleteUserAsync(authorDTO.UserId.ToString());
 
             // Assert
             //how to check if is deleted? i return exception when author not found
-            await Assert.ThrowsAsync<ArgumentException>(() => _authorService.GetAuthorByIdAsync(authorDTO.Id.ToString()));
+            await Assert.ThrowsAsync<ArgumentException>(() => _userService.GetUserByUserIdAsync(authorDTO.UserId.ToString()));
 
         }
     }

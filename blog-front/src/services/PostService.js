@@ -19,6 +19,13 @@ const PostService = () => {
 		});
 	};
 
+	const GetPostsByAuthorId = (id) => {
+		console.log(id);
+		return api.getWithParams("Post/GetPostsByAuthorId", {
+			id: id,
+		});
+	};
+
 	const CreatePost = (post) => {
 		return api.post("Post/CreatePost", post);
 	};
@@ -31,7 +38,14 @@ const PostService = () => {
 		return api.delete("Post/DeletePost", id);
 	};
 
-	return { GetPosts, GetPostById, CreatePost, UpdatePost, DeletePost };
+	return {
+		GetPosts,
+		GetPostById,
+		CreatePost,
+		UpdatePost,
+		DeletePost,
+		GetPostsByAuthorId,
+	};
 };
 
 export default PostService;

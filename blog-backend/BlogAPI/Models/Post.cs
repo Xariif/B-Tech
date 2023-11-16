@@ -11,12 +11,11 @@ namespace BlogAPI.Models
 
 		public required string Title { get; set; }
 
+		public File? Image { get; set; }
+
 		public required string Content { get; set; }
 
-        [BsonRepresentation(BsonType.ObjectId)]
-        public ObjectId? AuthorId { get; set; }
-
-		public string? AuthorName { get; set; }
+        public required string AuthorId { get; set; }
 
 		public required string Category { get; set; }
 
@@ -32,10 +31,9 @@ namespace BlogAPI.Models
 
 		public int Dislikes { get; set; } = 0;
 
-        public bool Approved{ get; set; } 
+        public bool Approved{ get; set; }  
 
-        public List<Comment> Comments { get; set; } = new List<Comment>();
-
+        public List<Comment> Comments { get; set; } = new List<Comment>();	
     }
 }
 

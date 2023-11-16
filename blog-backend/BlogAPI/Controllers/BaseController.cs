@@ -1,5 +1,8 @@
-﻿using System;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Auth0.ManagementApi.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BlogAPI.Controllers
 {

@@ -97,7 +97,6 @@ const NavBar = () => {
 	} = useAuth0();
 
 	const { user } = useUser();
-	console.log(user);
 
 	const BasicMenuBar = () => {
 		return (

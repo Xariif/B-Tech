@@ -14,36 +14,10 @@ namespace BlogAPI.Services
 
 
 
-            if (parentCommentId != null)
-            {
-
-                var newComment = new Comment
+        
+              var newComment = new Comment
                 {
-                    Id = ObjectId.GenerateNewId(),
-                    PostId = ObjectId.Parse(postId),
-                    AuthorId = ObjectId.Parse(comment.AuthorId),
-                    Description = comment.Description,
-                    CreatedAt = DateTime.Now,
-                    Dislikes = 0,
-                    Likes = 0,
-                    SubComments = new List<Comment>()
-                };
-
-                await _commentCollection.InsertOneAsync(newComment);
-
-            }
-            else
-            {
-                var newComment = new Comment
-                {
-                    Id = ObjectId.GenerateNewId(),
-                    PostId = ObjectId.Parse(postId),
-                    AuthorId = ObjectId.Parse(comment.AuthorId),
-                    Description = comment.Description,
-                    CreatedAt = DateTime.Now,
-                    Dislikes = 0,
-                    Likes = 0,
-                    SubComments = new List<Comment>()
+                  Description = postId,
                 };
 
                 //find in all nested comments and add new comment to it
@@ -52,8 +26,7 @@ namespace BlogAPI.Services
                 var update = Builders<Comment>.Update.Push("SubComments", newComment);
 
                 await _commentCollection.UpdateOneAsync(filter, update);
-
-            }   
+  
         }
 
 
@@ -74,7 +47,7 @@ namespace BlogAPI.Services
             List<CommentDTO> commentDTOs = comments.Select(async comment =>
             {
 
-                var author = await GetByIdAsync(_authorCollection, comment.AuthorId.ToString());
+                var author = await GetByIdAsync(_userCollection, comment.Id.ToString());
 
 
                 return new CommentDTO

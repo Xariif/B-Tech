@@ -1,6 +1,9 @@
-﻿using System;
-using System.Security.Claims;
+﻿using BlogAPI.DTOs.Author;
+
+using BlogAPI.Models;
+using BlogAPI.Services;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,62 +11,115 @@ namespace BlogAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UserController :BaseController
-	{
-		public UserController(IWebHostEnvironment env) : base(env)
-        { 
-		}
+    public class UserController : BaseController
+    {
+        private readonly UserService _userService;
 
-        [HttpGet("claims")]
-        public IActionResult Claims()
+        public UserController(UserService userService, IWebHostEnvironment env) : base(env)
         {
-            return Ok(User.Claims.Select(c =>
-                new
-                {
-                    c.Type,
-                    c.Value
-                }));
+            _userService = userService;
         }
 
-        [HttpGet("SecureEndpoint")]
-        [Authorize]
-        public IActionResult GetSecureData()
-        {            
-
-
-            var x= User?.Identity?.Name;
-
-            var y = User.Claims;
-
-           var z =  User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-
-
-            return Ok("Dane chronione");
-        }
-
-        [HttpGet("SecureEndpointAdmin")]
-        [Authorize( Policy="admin")]
-        public IActionResult SecureEndpointAdmin()
+        [HttpGet("GetUserByUserId")]
+        [AllowAnonymous]
+        public async Task<ActionResult<UserDTO>> GetUserByUserIdAsync(string userId)
         {
-            return Ok("Dane chronione admin");
+            try
+            {
+                return await _userService.GetUserByUserIdAsync(userId);
+
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
         }
-        [HttpGet("SecureEndpointAuthor")]
-        [Authorize(Policy ="author")]
-        public IActionResult SecureEndpointAuthor()
+
+
+        [HttpGet("GetUserByNameSurnameAsync")]
+        [AllowAnonymous]
+        public async Task<ActionResult<UserDTO>> GetUserByNameSurnameAsync(string name, string surname)
         {
-            return Ok("Dane chronione author");
+            try
+            {
+                return await _userService.GetUserByNameSurnameAsync(name, surname);
+
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
         }
-        [HttpGet("SecureEndpointUser")]
+
+        
+        [HttpPut("UpdateUser")]
         [Authorize(Policy ="user")]
-        public IActionResult SecureEndpointUser()
+        public async Task<ActionResult> UpdateUserAsync(UserDTO userDTO)
         {
-            return Ok("Dane chronione user");
+            try
+            {
+                if (User?.Identity?.Name != userDTO.UserId)
+                    throw new UnauthorizedAccessException();
+
+
+                await _userService.UpdateUserAsync(userDTO);
+                return Ok("User updated");
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
+        }
+
+        [HttpDelete("DeleteUser")]
+        [Authorize(Policy ="user")]
+        public async Task<ActionResult> DeleteUserAsync(string userId)
+        {
+            try
+            {           
+
+
+                if (User?.Identity?.Name != userId)
+                    throw new UnauthorizedAccessException();
+
+                await _userService.DeleteUserAsync(userId);
+                return Ok("Author Deleted");
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
         }
 
 
-    
-
+        [HttpPut("GiveRole")]
+        [Authorize(Policy ="admin")]
+        public async Task<ActionResult> GiveRole(string roleId, string userId)
+        {
+            try
+            { 
+                await _userService.GiveRole(userId,roleId);
+                return Ok("Role assigned");
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
+        }
+        [HttpPut("RemoveRole")]
+        [Authorize(Policy = "admin")]
+        public async Task<ActionResult> RemoveRole(string roleId, string userId)
+        {
+            try
+            {
+                await _userService.RemoveRole(userId, roleId);
+                return Ok("Role removed");
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
+        }
     }
 }
 

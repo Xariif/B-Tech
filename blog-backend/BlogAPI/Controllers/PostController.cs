@@ -1,4 +1,5 @@
-﻿using BlogAPI.DTOs.Post;
+﻿using BlogAPI.DTOs.Author;
+using BlogAPI.DTOs.Post;
 using BlogAPI.Models;
 using BlogAPI.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -20,11 +21,11 @@ namespace BlogAPI.Controllers
 
         [HttpGet("GetPosts")]
         [AllowAnonymous]
-        public async Task<ActionResult<List<Post>>> GetPosts()
+        public async Task<ActionResult<List<Post>>> GetApprovedPosts()
         {
             try
             {
-                var result = await _postService.GetPostsAsync();
+                var result = await _postService.GetApprovedPosts();
                 return Ok(result);
             }
             catch (Exception ex)
@@ -54,6 +55,7 @@ namespace BlogAPI.Controllers
         {
             try
             {
+
                 var res = await _postService.GetPostsByAuthorIdAsync(id);
                 return Ok(res);
             }
@@ -71,6 +73,8 @@ namespace BlogAPI.Controllers
         {
             try
             {
+                if (User?.Identity?.Name != newPost.AuthorId)
+                    throw new UnauthorizedAccessException();
 
                 await _postService.CreatePostAsync(newPost);
                 return Ok("Post created");
@@ -88,9 +92,26 @@ namespace BlogAPI.Controllers
             try
             {
                 
+                if (User?.Identity?.Name!= updatePost.AuthorId)
+                    throw new UnauthorizedAccessException();
 
 
                 await _postService.UpdatePostAsync(updatePost);
+                return Ok("Post updated");
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
+        }
+
+        [HttpPut("AcceptPost")]
+        [Authorize(Policy ="author")]
+        public async Task<ActionResult> AcceptPost(string id)
+        {
+            try
+            {
+                await _postService.AcceptPostAsync(id);
                 return Ok("Post updated");
             }
             catch (Exception ex)

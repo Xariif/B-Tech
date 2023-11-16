@@ -52,7 +52,6 @@ const ProtectedRoute = ({ allowedPermissions }) => {
 	const { user, isLoading } = useUser();
 	const { isAuthenticated } = useAuth0();
 	const location = useLocation();
-	console.log(user);
 	if (isLoading) {
 		return <Loading />;
 	}
