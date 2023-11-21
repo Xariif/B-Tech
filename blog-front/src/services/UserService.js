@@ -1,13 +1,13 @@
-import { useNewAPI, useAPI } from "../components/hooks/useAPI";
+import useAPI from "../components/hooks/useAPI";
 
 const UserService = () => {
-	const api = useNewAPI();
+	const api = useAPI();
 
-	const SecureEndpoint = () => {
-		return api.get("User/SecureEndpoint");
+	const GetAllUsers = async () => {
+		return await api.get("/User/GetAllUsers");
 	};
 
-	return { SecureEndpoint };
+	return { GetAllUsers };
 };
 
 export default UserService;

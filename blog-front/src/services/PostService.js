@@ -1,10 +1,5 @@
 import { useDispatch } from "react-redux";
 import useAPI from "../components/hooks/useAPI";
-import {
-	getPostsFailure,
-	getPostsRequest,
-	getPostsSuccess,
-} from "../features/posts/postsActions";
 
 const PostService = () => {
 	const api = useAPI();
@@ -20,7 +15,6 @@ const PostService = () => {
 	};
 
 	const GetPostsByAuthorId = (id) => {
-		console.log(id);
 		return api.getWithParams("Post/GetPostsByAuthorId", {
 			id: id,
 		});

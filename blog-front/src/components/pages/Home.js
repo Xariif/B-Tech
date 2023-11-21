@@ -10,12 +10,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import useAPI from "../hooks/useAPI";
 import { Paper } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import {
-	getPostsFailure,
-	getPostsRequest,
-	getPostsSuccess,
-} from "../../features/posts/postsActions";
-import { createToast } from "../../features/toasts/toastsActions";
+
 import NotFound from "./NotFound";
 export default function Home() {
 	const {
@@ -27,27 +22,18 @@ export default function Home() {
 	} = useAuth0();
 
 	const { GetPosts } = PostService();
-	const dispatch = useDispatch();
 
-	const posts = useSelector((state) => state.posts);
+	const posts = {
+		loading: true,
+	};
+	// useSelector((state) => state.posts);
 
 	useEffect(() => {
-		dispatch(getPostsRequest());
 		GetPosts()
 			.then((data) => {
 				dispatch(getPostsSuccess(data));
 			})
-			.catch((error) => {
-				dispatch(getPostsFailure(error));
-				dispatch(
-					createToast({
-						message: error.message,
-						type: "error",
-						timeout: 5000,
-						severity: "error",
-					})
-				);
-			});
+			.catch((error) => {});
 	}, []);
 
 	if (posts.loading) return <Loading />;

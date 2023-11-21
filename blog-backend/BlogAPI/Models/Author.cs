@@ -9,7 +9,6 @@ namespace BlogAPI.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public required ObjectId Id { get; set; }
 
-        [BsonRepresentation(BsonType.ObjectId)]
         public required string UserId { get; set; } 
 
         public string? Desciption { get; set; }

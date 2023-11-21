@@ -20,39 +20,18 @@ import { useUser } from "./components/hooks/useUser";
 import Admin from "./components/pages/Admin";
 import Loading from "./components/ui/Loading";
 import PostMenager from "./components/pages/PostMenager/PostMenager";
+import AppRoutes from "./routes/AppRoutes";
 
 function App() {
-	return (
-		<Routes>
-			<Route path="/" element={<Layout content={<Outlet />} />}>
-				<Route path="/" element={<Home />} />
-				<Route path="/top" element={<Top />} />
-				<Route path="/newest" element={<Newest />} />
-				<Route path="/contact" element={<Contact />} />
-				<Route path="/unauthorized" element={<Unauthorized />} />
-				<Route element={<ProtectedRoute allowedPermissions={["admin"]} />}>
-					<Route path="/admin" element={<Admin />} />
-				</Route>
-				<Route
-					element={<ProtectedRoute allowedPermissions={["author", "admin"]} />}
-				>
-					<Route path="/post/menager" element={<PostMenager />} />
-				</Route>
-
-				<Route path="/post/:id" element={<PostWrapper />} />
-				<Route path="/author/:id" element={<AuthorWrapper />} />
-				<Route path="/search/:term" element={<Search />} />
-				<Route path="*" exact={true} element={<NotFound />} />
-			</Route>
-		</Routes>
-	);
+	return <AppRoutes />;
 }
 
 const ProtectedRoute = ({ allowedPermissions }) => {
-	const { user, isLoading } = useUser();
-	const { isAuthenticated } = useAuth0();
+	const { user } = useUser();
+	const { isAuthenticated, isLoading } = useAuth0();
 	const location = useLocation();
-	if (isLoading) {
+
+	if (isLoading || !user) {
 		return <Loading />;
 	}
 

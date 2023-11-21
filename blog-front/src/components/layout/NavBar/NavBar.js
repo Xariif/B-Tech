@@ -15,8 +15,6 @@ import BoltIcon from "@mui/icons-material/Bolt";
 import theme from "../../../theme";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { createToast } from "../../../features/toasts/toastsActions";
 import {
 	CompareSharp,
 	Logout,

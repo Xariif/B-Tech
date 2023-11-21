@@ -12,7 +12,6 @@ import {
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import Autocomplete from "@mui/material/Autocomplete";
 import MenuItem from "@mui/material/MenuItem";
-import { createToast } from "../../../../features/toasts/toastsActions";
 
 const NewPost = () => {
 	const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
@@ -122,6 +121,7 @@ const NewPost = () => {
 		whiteSpace: "nowrap",
 		width: 1,
 	});
+
 	return (
 		<Paper sx={{ p: 2 }}>
 			<Typography variant="h4">New Post</Typography>

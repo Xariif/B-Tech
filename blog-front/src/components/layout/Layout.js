@@ -17,7 +17,6 @@ import {
 } from "@mui/material";
 import NavBar from "./NavBar/NavBar";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import Toasts from "./Toasts";
 
 export function Layout(props) {
 	return (
@@ -25,9 +24,9 @@ export function Layout(props) {
 			<CssBaseline />
 
 			<NavBar />
+
 			<Container maxWidth="lg">
 				<Box sx={{ my: 2, p: 0 }}>{props.content}</Box>
-				<Toasts />
 			</Container>
 
 			<Footer />

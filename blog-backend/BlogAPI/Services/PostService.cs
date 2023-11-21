@@ -71,15 +71,15 @@ namespace BlogAPI.Services
 
         public async Task<List<PostDTO>> GetPostsByAuthorIdAsync(string id)
         {
-            var filter = Builders<Post>.Filter.Eq("AuthorId",BsonObjectId.Parse(id));
+            var filter = Builders<Post>.Filter.Eq("AuthorId",id);
             var cursor = await _postCollection.FindAsync(filter);
             var posts = await cursor.ToListAsync();
 
 
-			if (posts == null)
+			if (posts.Count == 0)
 				return new List<PostDTO>();
 
-            var filterAuthor = Builders<Author>.Filter.Eq("AuthorId", BsonObjectId.Parse(id));
+            var filterAuthor = Builders<Author>.Filter.Eq("AuthorId", id);
             var cursorAuthor = await _authorCollection.FindAsync(filterAuthor);
 
 			var author =await GetByIdAsync(_userCollection, posts[0].AuthorId);
@@ -170,6 +170,8 @@ namespace BlogAPI.Services
 
 			await _postCollection.ReplaceOneAsync(filter, post);
         }
+
+
 
 
         public async Task DeletePost(string id)

@@ -3,6 +3,7 @@ using BlogAPI.DTOs.Author;
 using BlogAPI.Models;
 using Microsoft.DotNet.Scaffolding.Shared.CodeModifier.CodeChange;
 using Microsoft.OpenApi.Models;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using RestSharp;
 using System.Net.Http.Headers;
@@ -49,6 +50,37 @@ namespace BlogAPI.Services
             };
         }
 
+        public async Task<List<User>> GetAllUsersAsync()
+        {
+            var filter = Builders<User>.Filter.Empty;
+
+            var cursor =await _userCollection.FindAsync(filter);
+
+            var users = await cursor.ToListAsync();
+
+            return users;
+        }
+
+        public async Task GetAllUsersAuth0()
+        {
+       
+
+            var builder = WebApplication.CreateBuilder();
+
+            string managementApiToken = builder.Configuration["Auth0:ManagmentToken"];
+
+            var requestUrl = $"https://dev-uasjfxeuwrj58j4g.us.auth0.com/api/v2/users/";
+
+            var request = new HttpRequestMessage(HttpMethod.Delete, requestUrl);
+            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", managementApiToken);
+
+            HttpResponseMessage response = await client.SendAsync(request);
+
+            if (!response.IsSuccessStatusCode)
+                throw new Exception();
+
+
+        }
         public async Task UpdateUserAsync(UserDTO updateUser)
         {
             var user = await GetByIdAsync(_userCollection, updateUser.UserId) ?? throw new ArgumentException("Author not found");
@@ -142,6 +174,38 @@ namespace BlogAPI.Services
             if (!response.IsSuccessStatusCode)
                 throw new Exception();
 
+        }
+
+        public async Task CreateAuthorInDbAsync(string userId)
+        {
+            var author = new Author()
+
+            {
+                Id = ObjectId.GenerateNewId(),
+                UserId = userId,
+                Desciption = null,
+                SocialMedia = null,
+            };
+        
+
+            var filter = Builders<Author>.Filter.Where(x => x.UserId == userId);
+            var res = await _authorCollection.Find(filter).ToListAsync();
+            if (res.Any())
+            {
+                throw new ArgumentException("Author with same id already exist.");
+            }
+
+            await _authorCollection.InsertOneAsync(author);
+        }
+        public async Task DeleteAuthorFromDbAsync(string userId)
+        {
+        
+            var filter = Builders<Author>.Filter.Where(x => x.UserId == userId);
+            var res = await _authorCollection.DeleteOneAsync(filter);
+            if (res.DeletedCount == 0)
+            {
+                throw new ArgumentException("Author with this id dont exist.");
+            }                       
         }
     }
 }

@@ -29,7 +29,7 @@ namespace BlogAPI.Controllers
         }
 
         //unlike the post
-        [HttpPost("RemoveLikeFromPost")]
+        [HttpDelete("RemoveLikeFromPost")]
         public async Task<IActionResult> RemoveLikeFromPost(string postId)
         {
             try

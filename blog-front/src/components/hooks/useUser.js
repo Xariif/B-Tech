@@ -4,21 +4,23 @@ import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 
 export const useUser = () => {
-	const { getAccessTokenSilently } = useAuth0();
+	const { getAccessTokenSilently, isAuthenticated } = useAuth0();
 	const [user, setUser] = useState(null);
-	const [isLoading, setIsLoading] = useState(true);
 	useEffect(() => {
+		if (!isAuthenticated) {
+			return;
+		}
+
 		getAccessTokenSilently()
 			.then((token) => {
 				const decodedUser = jwtDecode(token);
 				setUser(decodedUser);
-				setIsLoading(false);
 			})
 			.catch((err) => {
 				console.error(err);
-				setIsLoading(false);
+				setUser(false);
 			});
-	}, []);
+	}, [isAuthenticated]);
 
-	return { user, isLoading };
+	return { user };
 };

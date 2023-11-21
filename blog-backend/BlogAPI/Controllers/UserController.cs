@@ -92,34 +92,52 @@ namespace BlogAPI.Controllers
         }
 
 
-        [HttpPut("GiveRole")]
+        [HttpPost("CreateAuthor")]
         [Authorize(Policy ="admin")]
-        public async Task<ActionResult> GiveRole(string roleId, string userId)
+        public async Task<ActionResult> GiveRole(string userId)
         {
             try
-            { 
-                await _userService.GiveRole(userId,roleId);
-                return Ok("Role assigned");
+            {                
+                await _userService.GiveRole(userId, "rol_mEDYNSt4dPqgXNz7");
+                await _userService.CreateAuthorInDbAsync(userId);
+                return Ok("New author created");
             }
             catch (Exception ex)
             {
                 return HandleError(ex);
             }
         }
-        [HttpPut("RemoveRole")]
+        [HttpDelete("DeleteAuthor")]
         [Authorize(Policy = "admin")]
-        public async Task<ActionResult> RemoveRole(string roleId, string userId)
+        public async Task<ActionResult> RemoveRole(string userId)
         {
             try
             {
-                await _userService.RemoveRole(userId, roleId);
-                return Ok("Role removed");
+                await _userService.RemoveRole(userId, "rol_mEDYNSt4dPqgXNz7");
+                return Ok("Author deleted");
             }
             catch (Exception ex)
             {
                 return HandleError(ex);
             }
         }
+
+        [HttpGet("GetAllUsers")]
+        [Authorize(Policy = "admin")]
+        public async Task<ActionResult> GetAllUsers()
+        {
+            try
+            {
+                var res  =await _userService.GetAllUsersAsync();
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
+        }
+
+
     }
 }
 

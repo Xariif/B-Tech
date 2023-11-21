@@ -18,7 +18,7 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(builder =>
     {
         builder
-            .WithOrigins("http://localhost:3000", "https://localhost:7007", "https://localhost:7007/signin-google", "https://accounts.google.com", "https://localhost:7007/signin-oidc")
+            .WithOrigins("http://localhost:3000", "https://localhost:7007")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
@@ -28,11 +28,8 @@ builder.Services.AddCors(options =>
 
 
 
-builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    }).AddJwtBearer(options =>
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
     {
         options.Authority = domain;
         options.Audience = builder.Configuration["Auth0:Audience"];
@@ -44,13 +41,15 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization(options =>
 {
-   
-    options.AddPolicy("user", x => x.RequireClaim("permissions", "read:posts","comment:posts"));
 
-    options.AddPolicy("author", x => x.RequireClaim("permissions", "write:posts","delete:posts"));
+    options.AddPolicy("user", x => x.RequireClaim("permissions", "read:posts", "comment:posts"));
 
-    options.AddPolicy("admin", x => x.RequireClaim("permissions","admin"));
+    options.AddPolicy("author", x => x.RequireClaim("permissions", "write:posts", "delete:posts"));
 
+    options.AddPolicy("admin", x => x.RequireClaim("permissions", "admin"));
+
+//  options.AddPolicy("read:messages", policy => policy.Requirements.Add(new 
+//  HasScopeRequirement("read:messages", domain)));
 });
 
 builder.Services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
