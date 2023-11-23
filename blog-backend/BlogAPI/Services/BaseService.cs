@@ -1,7 +1,12 @@
-﻿using System.Xml.Linq;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Xml.Linq;
+using Amazon.Runtime.Internal;
 using BlogAPI.Models;
+using Microsoft.Azure.KeyVault;
 using MongoDB.Bson;
 using MongoDB.Driver;
+
+
 namespace BlogAPI.Services
 {
     public class BaseService
@@ -14,6 +19,8 @@ namespace BlogAPI.Services
         protected IMongoCollection<Post> _postCollection;
         protected IMongoCollection<PostLike> _postLikeCollection;
         protected IMongoCollection<Models.File> _fileCollection;
+
+
 
 
 
@@ -61,6 +68,25 @@ namespace BlogAPI.Services
             var res = await cursor.FirstOrDefaultAsync();
 
             return res;
+        }
+
+
+        public async Task<string> GetToken()
+        {
+           
+            var token = Environment.GetEnvironmentVariable("token");
+            if (token == null)
+            {
+                var client = new RestClient("https://{yourDomain}/oauth/token");
+                var request = new RestRequest(Method.POST);
+                request.AddHeader("content-type", "application/x-www-form-urlencoded");
+                request.AddParameter("application/x-www-form-urlencoded", "grant_type=client_credentials&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET&audience=YOUR_API_IDENTIFIER", ParameterType.RequestBody);
+                IRestResponse response = client.Execute(request);
+            }
+
+          
+
+            return "";
         }
 
     }
