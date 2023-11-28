@@ -30,8 +30,8 @@ namespace BlogAPI.Models
 		public int Likes { get; set; } = 0;
 
 		public int Dislikes { get; set; } = 0;
-
-        public bool Approved{ get; set; }  
+		public bool IsDraft { get; set; } = true;
+		public bool Approved { get; set; } = false;
 
         public List<Comment> Comments { get; set; } = new List<Comment>();	
     }

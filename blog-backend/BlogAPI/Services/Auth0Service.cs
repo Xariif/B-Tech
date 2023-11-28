@@ -1,8 +1,9 @@
-﻿using BlogAPI.Models;
+﻿using Auth0.ManagementApi.Models;
 using BlogAPI.Repositories;
 using MongoDB.Driver;
+using Newtonsoft.Json;
 using RestSharp;
-using System.Text;
+using User = Auth0.ManagementApi.Models.User;
 
 namespace BlogAPI.Services
 {
@@ -10,127 +11,82 @@ namespace BlogAPI.Services
     {
         static HttpClient client = new HttpClient();
 
+        Auth0Repository _repository = new Auth0Repository();
 
-   
-
-
-
-
-
-
-
-
-        public async Task DeleteUserAsync(string userId)
+        public async Task<bool> DeleteUserAsync(string userId)
         {
-            var filter = Builders<User>.Filter.Where(x => x.UserId == userId);
+            var filter = Builders<Models.User>.Filter.Where(x => x.UserId == userId);
             await _userCollection.DeleteOneAsync(filter);
 
-            var builder = WebApplication.CreateBuilder();
+            var res = await _repository.DeleteAsync($"/api/v2/users/{userId}");
 
-            string managementApiToken = builder.Configuration["Auth0:ManagmentToken"];
+            if (!res.IsSuccessful)
+                throw new Exception(res.ErrorMessage);
 
-            var requestUrl = $"https://dev-uasjfxeuwrj58j4g.us.auth0.com/api/v2/users/{userId}";
-
-            var request = new HttpRequestMessage(HttpMethod.Delete, requestUrl);
-            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", managementApiToken);
-
-            HttpResponseMessage response = await client.SendAsync(request);
-
-            if (!response.IsSuccessStatusCode)
-                throw new Exception();
+            return res.IsSuccessful;
         }
 
 
-        public async Task GiveRole(string userId, string roleId)
+
+        public async Task<bool> GiveRoleAsync(string userId, string roleId)
         {
-            var builder = WebApplication.CreateBuilder();
-
-
-            string managementApiToken = builder.Configuration["Auth0:ManagmentToken"];
-
-            string[] roleIds = { roleId }; // Replace with the role IDs
-
-            var requestUrl = $"https://dev-uasjfxeuwrj58j4g.us.auth0.com/api/v2/users/{userId}/roles";
-
-            var rolesPayload = new { roles = roleIds };
+            var rolesPayload = new { roles = roleId };
 
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(rolesPayload);
 
-            var request = new HttpRequestMessage(HttpMethod.Post, requestUrl);
-            request.Content = new StringContent(json, Encoding.UTF8, "application/json");
-            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", managementApiToken);
-
-            HttpResponseMessage response = await client.SendAsync(request);
-
-            if (!response.IsSuccessStatusCode)
-                throw new Exception();
-
-        }
-        public async Task RemoveRole(string userId, string roleId)
-        {
-            var builder = WebApplication.CreateBuilder();
-
-
-            string managementApiToken = builder.Configuration["Auth0:ManagmentToken"];
-
-
-            string[] roleIds = { roleId };
-
-            var requestUrl = $"https://dev-uasjfxeuwrj58j4g.us.auth0.com/api/v2/users/{userId}/roles";
-
-            var rolesPayload = new { roles = roleIds };
-
-            var json = Newtonsoft.Json.JsonConvert.SerializeObject(rolesPayload);
-
-            var request = new HttpRequestMessage(HttpMethod.Delete, requestUrl);
-            request.Content = new StringContent(json, Encoding.UTF8, "application/json");
-            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", managementApiToken);
-
-            HttpResponseMessage response = await client.SendAsync(request);
-
-            if (!response.IsSuccessStatusCode)
-                throw new Exception();
-
-        }
-
-        public async Task GetAllUsersAuth0Async()
-        {
-
-
-            var builder = WebApplication.CreateBuilder();
-
-            string managementApiToken = builder.Configuration["Auth0:ManagmentToken"];
-
-            var requestUrl = $"https://dev-uasjfxeuwrj58j4g.us.auth0.com/api/v2/users/";
-
-            var request = new HttpRequestMessage(HttpMethod.Delete, requestUrl);
-            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", managementApiToken);
-
-            HttpResponseMessage response = await client.SendAsync(request);
-
-            if (!response.IsSuccessStatusCode)
-                throw new Exception();
-
-
-        }
-
-
-
-
-        public async Task<List<Auth0.ManagementApi.Models.User>> GetUsersAsync()
-        {
             var headers = new List<HeaderParameter>();
+
             headers.Add(new HeaderParameter("Content-Type", "application/json"));
-            
 
-          // var res  =await _repository.GetAsync("",headers);
+            var res = await _repository.PostAsync($"/api/v2/users/{userId}/roles", headers, json);
+
+            if (!res.IsSuccessful)
+                throw new Exception(res.ErrorMessage);
+
+            return res.IsSuccessful;
+        }
 
 
-            var test = "1";
+        public async Task<bool> RemoveRoleAsync(string userId, string roleId)
+        {
+            var rolesPayload = new { roles = roleId };
 
-            throw new Exception();
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(rolesPayload);
 
+            var headers = new List<HeaderParameter>();
 
+            headers.Add(new HeaderParameter("Content-Type", "application/json"));
+
+            var res = await _repository.DeleteAsync($"/api/v2/users/{userId}/roles", headers, json);
+
+            if (!res.IsSuccessful)
+                throw new Exception(res.ErrorMessage);
+
+            return res.IsSuccessful;
+        }
+
+        public async Task<List<Role>> GetUserRolesAsync(string userId)
+        {
+            var res = await _repository.GetAsync($"/api/v2/users/{userId}/roles");
+
+            if (!res.IsSuccessful)
+                throw new Exception(res.ErrorMessage);
+
+            var roles = JsonConvert.DeserializeObject<List<Role>>(res.Content);
+
+            return roles;
+        }
+
+        public async Task<List<User>> GetUsersAsync()
+        {
+            var res = await _repository.GetAsync("/api/v2/users");
+
+            if (!res.IsSuccessful)
+                throw new Exception(res.ErrorMessage);
+
+            var users = JsonConvert.DeserializeObject<List<User>>(res?.Content);
+
+            return users;
         }
     }
 }

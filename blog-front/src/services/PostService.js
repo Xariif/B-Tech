@@ -4,8 +4,12 @@ import useAPI from "../components/hooks/useAPI";
 const PostService = () => {
 	const api = useAPI();
 
-	const GetPosts = () => {
-		return api.get("Post/GetPosts");
+	const GetApprovedPosts = () => {
+		return api.get("Post/GetApprovedPosts");
+	};
+
+	const GetPostWaitingForApproval = () => {
+		return api.getWithParams("Post/GetPostGetPostWaitingForApprovalById");
 	};
 
 	const GetPostById = (id) => {
@@ -28,12 +32,19 @@ const PostService = () => {
 		return api.put("Post/UpdatePost", post);
 	};
 
+	const AcceptPost = (id) => {
+		return api.put("Post/AcceptPost", {
+			id: id,
+		});
+	};
+
 	const DeletePost = (id) => {
 		return api.delete("Post/DeletePost", id);
 	};
 
 	return {
-		GetPosts,
+		GetApprovedPosts,
+		GetPostWaitingForApproval,
 		GetPostById,
 		CreatePost,
 		UpdatePost,

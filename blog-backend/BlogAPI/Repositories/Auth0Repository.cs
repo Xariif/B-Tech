@@ -3,6 +3,7 @@ using Auth0.ManagementApi.Models;
 using BlogAPI.Factory;
 using BlogAPI.Interfaces.Repositories;
 using BlogAPI.Models;
+using BlogAPI.Utils;
 using BlogAPI.Utils.Auth0;
 using RestSharp;
 using System.Text.Json;
@@ -12,15 +13,13 @@ namespace BlogAPI.Repositories
 {
     public class Auth0Repository
     {
-        private readonly IConfigurationRoot _configuration;
+        private readonly IConfigurationRoot _configuration = ConfigUtils.GetConfig();
         private Auth0Factory _restSharpFactory;
 
 
-        public Auth0Repository(IConfigurationRoot configuration)
+        public Auth0Repository()
         {
-            _configuration = configuration;
-            var baseUrl = _configuration["Auth0:Domain"]; 
-            _restSharpFactory = new Auth0Factory(baseUrl, configuration);            
+            _restSharpFactory = new Auth0Factory("https://dev-uasjfxeuwrj58j4g.us.auth0.com", _configuration);
         }
 
 

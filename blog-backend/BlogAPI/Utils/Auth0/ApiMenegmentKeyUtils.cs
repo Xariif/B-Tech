@@ -16,9 +16,8 @@ namespace BlogAPI.Utils.Auth0
 
         public static async Task<AccessToken> GetTokenAsync(RestClient client,IConfigurationRoot configuration)
         {
-           var isExpired =  IsAccessTokenExpired(_accessToken);
 
-            if (!isExpired)
+            if (_accessToken != null  && !IsAccessTokenExpired(_accessToken))
             {
                 return _accessToken;
             }
@@ -59,5 +58,9 @@ namespace BlogAPI.Utils.Auth0
 
             return true;
         }
+
+
+
+      
     }
 }

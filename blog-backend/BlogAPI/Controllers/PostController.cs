@@ -19,13 +19,28 @@ namespace BlogAPI.Controllers
             _postService = postService;
         }
 
-        [HttpGet("GetPosts")]
+        [HttpGet("GetApprovedPosts")]
         [AllowAnonymous]
         public async Task<ActionResult<List<Post>>> GetApprovedPosts()
         {
             try
             {
                 var result = await _postService.GetApprovedPosts();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
+        }
+
+        [HttpGet("GetPostWaitingForApproval")]
+        [Authorize(Roles ="admin")]
+        public async Task<ActionResult<List<Post>>> GetPostWaitingForApproval()
+        {
+            try
+            {
+                var result = await _postService.GetPostWaitingForApproval();
                 return Ok(result);
             }
             catch (Exception ex)
@@ -65,6 +80,7 @@ namespace BlogAPI.Controllers
             }
         }
 
+  
 
 
         [HttpPost("CreatePost")]
@@ -106,7 +122,7 @@ namespace BlogAPI.Controllers
         }
 
         [HttpPut("AcceptPost")]
-        [Authorize(Policy ="author")]
+        [Authorize(Policy ="admin")]
         public async Task<ActionResult> AcceptPost(string id)
         {
             try
