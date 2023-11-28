@@ -21,8 +21,9 @@ namespace BlogAPI.Services
         protected IMongoCollection<Models.File> _fileCollection;
 
 
+        protected IConfigurationRoot _configuration;
 
-
+        
 
         public BaseService()
         {
@@ -30,9 +31,9 @@ namespace BlogAPI.Services
             var builder = new ConfigurationBuilder();
             builder.AddJsonFile("appsettings.json", optional: false);
 
-            var configuration = builder.Build();
-            var connectionURI = configuration["MongoDB:ConnectionURI1"];
-            var databaseName = configuration["MongoDB:DatabaseName1"];
+            _configuration = builder.Build();           
+            var connectionURI = _configuration["MongoDB:ConnectionURI1"];
+            var databaseName = _configuration["MongoDB:DatabaseName1"];
 
 
             var settings = MongoClientSettings.FromConnectionString(connectionURI);
@@ -71,23 +72,7 @@ namespace BlogAPI.Services
         }
 
 
-        public async Task<string> GetToken()
-        {
-           
-            var token = Environment.GetEnvironmentVariable("token");
-            if (token == null)
-            {
-                var client = new RestClient("https://{yourDomain}/oauth/token");
-                var request = new RestRequest(Method.POST);
-                request.AddHeader("content-type", "application/x-www-form-urlencoded");
-                request.AddParameter("application/x-www-form-urlencoded", "grant_type=client_credentials&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET&audience=YOUR_API_IDENTIFIER", ParameterType.RequestBody);
-                IRestResponse response = client.Execute(request);
-            }
-
-          
-
-            return "";
-        }
+    
 
     }
 }

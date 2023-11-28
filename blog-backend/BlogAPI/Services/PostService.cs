@@ -7,7 +7,9 @@ namespace BlogAPI.Services
 {
 	public class PostService : BaseService
 	{
-		public async Task<List<PostDTO>> GetApprovedPosts()
+      
+
+        public async Task<List<PostDTO>> GetApprovedPosts()
 		{
 			var filter = Builders<Post>.Filter.Eq("Approved", true);
 

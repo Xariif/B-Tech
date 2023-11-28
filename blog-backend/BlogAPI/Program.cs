@@ -1,4 +1,5 @@
 using BlogAPI.Extensions;
+using BlogAPI.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
@@ -6,12 +7,15 @@ using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var domain = $"https://{builder.Configuration["Auth0:Domain"]}/";
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddApplicationServices();
+
+builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
+builder.Services.AddSingleton<Auth0Repository>();
+
 
 builder.Services.AddCors(options =>
 {
@@ -31,7 +35,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.Authority = domain;
+        options.Authority = builder.Configuration["Auth0:Domain"];
         options.Audience = builder.Configuration["Auth0:Audience"];
         options.TokenValidationParameters = new TokenValidationParameters
         {

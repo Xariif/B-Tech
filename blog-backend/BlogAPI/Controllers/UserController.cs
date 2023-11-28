@@ -1,9 +1,5 @@
 ﻿using BlogAPI.DTOs.Author;
-
-using BlogAPI.Models;
 using BlogAPI.Services;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,6 +14,7 @@ namespace BlogAPI.Controllers
         public UserController(UserService userService, IWebHostEnvironment env) : base(env)
         {
             _userService = userService;
+
         }
 
         [HttpGet("GetUserByUserId")]
@@ -26,6 +23,7 @@ namespace BlogAPI.Controllers
         {
             try
             {
+
                 return await _userService.GetUserByUserIdAsync(userId);
 
             }
@@ -51,9 +49,9 @@ namespace BlogAPI.Controllers
             }
         }
 
-        
+
         [HttpPut("UpdateUser")]
-        [Authorize(Policy ="user")]
+        [Authorize(Policy = "user")]
         public async Task<ActionResult> UpdateUserAsync(UserDTO userDTO)
         {
             try
@@ -72,17 +70,17 @@ namespace BlogAPI.Controllers
         }
 
         [HttpDelete("DeleteUser")]
-        [Authorize(Policy ="user")]
+        [Authorize(Policy = "user")]
         public async Task<ActionResult> DeleteUserAsync(string userId)
         {
             try
-            {           
+            {
 
 
-                if (User?.Identity?.Name != userId)
-                    throw new UnauthorizedAccessException();
+                //   if (User?.Identity?.Name != userId)
+                //      throw new UnauthorizedAccessException();
 
-                await _userService.DeleteUserAsync(userId);
+                //  await _userService.DeleteUserAsync(userId);
                 return Ok("Author Deleted");
             }
             catch (Exception ex)
@@ -93,13 +91,13 @@ namespace BlogAPI.Controllers
 
 
         [HttpPost("CreateAuthor")]
-        [Authorize(Policy ="admin")]
+        [Authorize(Policy = "admin")]
         public async Task<ActionResult> GiveRole(string userId)
         {
             try
-            {                
-                await _userService.GiveRole(userId, "rol_mEDYNSt4dPqgXNz7");
-                await _userService.CreateAuthorInDbAsync(userId);
+            {
+                //   await _aut.GiveRole(userId, "rol_mEDYNSt4dPqgXNz7");
+                //await _userService.CreateAuthorInDbAsync(userId);
                 return Ok("New author created");
             }
             catch (Exception ex)
@@ -113,7 +111,7 @@ namespace BlogAPI.Controllers
         {
             try
             {
-                await _userService.RemoveRole(userId, "rol_mEDYNSt4dPqgXNz7");
+                //   await _userService.RemoveRole(userId, "rol_mEDYNSt4dPqgXNz7");
                 return Ok("Author deleted");
             }
             catch (Exception ex)
@@ -128,7 +126,7 @@ namespace BlogAPI.Controllers
         {
             try
             {
-                var res  =await _userService.GetAllUsersAsync();
+                var res = await _userService.GetAllUsersAsync();
                 return Ok(res);
             }
             catch (Exception ex)
@@ -137,7 +135,20 @@ namespace BlogAPI.Controllers
             }
         }
 
+        [HttpGet("TestGetUsers")]
+        [AllowAnonymous]
+        public async Task<ActionResult> TestGetUsers()
+        {
+            try
+            {
 
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
+        }
     }
 }
 

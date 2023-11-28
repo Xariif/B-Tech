@@ -1,6 +1,7 @@
 ﻿using Auth0.ManagementApi.Models;
 using BlogAPI.DTOs.Author;
 using BlogAPI.Models;
+using BlogAPI.Repositories;
 using Microsoft.DotNet.Scaffolding.Shared.CodeModifier.CodeChange;
 using Microsoft.OpenApi.Models;
 using MongoDB.Bson;
@@ -15,7 +16,7 @@ namespace BlogAPI.Services
 {
     public class UserService : BaseService
     {
-        static HttpClient client = new HttpClient();
+      
 
         public async Task<UserDTO> GetUserByUserIdAsync(string id)
         {
@@ -60,27 +61,7 @@ namespace BlogAPI.Services
 
             return users;
         }
-
-        public async Task GetAllUsersAuth0()
-        {
-       
-
-            var builder = WebApplication.CreateBuilder();
-
-            string managementApiToken = builder.Configuration["Auth0:ManagmentToken"];
-
-            var requestUrl = $"https://dev-uasjfxeuwrj58j4g.us.auth0.com/api/v2/users/";
-
-            var request = new HttpRequestMessage(HttpMethod.Delete, requestUrl);
-            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", managementApiToken);
-
-            HttpResponseMessage response = await client.SendAsync(request);
-
-            if (!response.IsSuccessStatusCode)
-                throw new Exception();
-
-
-        }
+          
         public async Task UpdateUserAsync(UserDTO updateUser)
         {
             var user = await GetByIdAsync(_userCollection, updateUser.UserId) ?? throw new ArgumentException("Author not found");
@@ -101,80 +82,7 @@ namespace BlogAPI.Services
 
             await _userCollection.ReplaceOneAsync(filter, user);
         }
-
-
-        public async Task DeleteUserAsync(string userId)
-        {
-            var filter = Builders<User>.Filter.Where(x => x.UserId == userId);
-            await _userCollection.DeleteOneAsync(filter);
-
-            var builder = WebApplication.CreateBuilder();
-
-            string managementApiToken = builder.Configuration["Auth0:ManagmentToken"];
-
-            var requestUrl = $"https://dev-uasjfxeuwrj58j4g.us.auth0.com/api/v2/users/{userId}";
-
-            var request = new HttpRequestMessage(HttpMethod.Delete, requestUrl);
-            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", managementApiToken);
-
-            HttpResponseMessage response = await client.SendAsync(request);
-
-            if (!response.IsSuccessStatusCode)
-                throw new Exception();
-        }
-
-
-        public async Task GiveRole(string userId, string roleId)
-        {
-            var builder = WebApplication.CreateBuilder();
-                       
-
-            string managementApiToken = builder.Configuration["Auth0:ManagmentToken"];
-
-            string[] roleIds = { roleId }; // Replace with the role IDs
-
-            var requestUrl = $"https://dev-uasjfxeuwrj58j4g.us.auth0.com/api/v2/users/{userId}/roles";
-
-            var rolesPayload = new { roles = roleIds };
-
-            var json = Newtonsoft.Json.JsonConvert.SerializeObject(rolesPayload);
-
-            var request = new HttpRequestMessage(HttpMethod.Post, requestUrl);
-            request.Content = new StringContent(json, Encoding.UTF8, "application/json");
-            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", managementApiToken);
-
-            HttpResponseMessage response = await client.SendAsync(request);
-
-            if (!response.IsSuccessStatusCode)
-                throw new Exception();
-
-        }
-        public async Task RemoveRole(string userId, string roleId)
-        {
-            var builder = WebApplication.CreateBuilder();
-
-
-            string managementApiToken = builder.Configuration["Auth0:ManagmentToken"];
-
-
-            string[] roleIds = { roleId }; 
-
-            var requestUrl = $"https://dev-uasjfxeuwrj58j4g.us.auth0.com/api/v2/users/{userId}/roles";
-
-            var rolesPayload = new { roles = roleIds };
-
-            var json = Newtonsoft.Json.JsonConvert.SerializeObject(rolesPayload);
-
-            var request = new HttpRequestMessage(HttpMethod.Delete, requestUrl);
-            request.Content = new StringContent(json, Encoding.UTF8, "application/json");
-            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", managementApiToken);
-
-            HttpResponseMessage response = await client.SendAsync(request);
-
-            if (!response.IsSuccessStatusCode)
-                throw new Exception();
-
-        }
+          
 
         public async Task CreateAuthorInDbAsync(string userId)
         {
