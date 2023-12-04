@@ -7,6 +7,6 @@
 
         public required string AuthorId { get; set; }
         public required string Category { get; set; }
-        public required string Tag { get; set; }
+        public required List<string> Tags { get; set; }
     }
 }

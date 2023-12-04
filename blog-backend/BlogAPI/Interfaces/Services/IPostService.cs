@@ -1,26 +1,34 @@
 ﻿using BlogAPI.DTOs.Post;
+using BlogAPI.Models;
 
 namespace BlogAPI.Interfaces.Services
 {
     public interface IPostService
     {
-        public Task<List<PostDTO>> GetApprovedPosts();
-        public Task<List<PostDTO>> GetApprovedPostsByCategory(string category);
-        public Task<PostDTO> GetApprovedPostById(string postId);
-        public Task<List<PostDTO>> GetApprovedPostsByAuthorId(string authorId);
+        Task<IEnumerable<Post>> GetAllPostsAsync();
 
-        public Task<List<PostDTO>> GetPostWaitingForApproval();
+        Task<Post?> GetPostByIdAsync(string postId);
 
-        public Task<List<PostDTO>> GetDraftPostsByAuthrId(string authorId);
-        public Task<PostDTO> GetDraftPostByAuthor (string authorId);
+        Task<IEnumerable<Post>> GetPostsByAuthorIdAsync(string authorId);
 
-        public Task CreatePostDraft(PostDTO postDTO);
-        public Task UpdatePostDraft(PostDTO postDTO);
-        public Task DeletePostDraft(string postId); 
+        Task<IEnumerable<Post>> GetPostsByCategoryAsync(string category);
 
-        public Task SendPostToApprove(string postId);
+        Task<IEnumerable<Post>> GetPostsByTagAsync(string tag);
 
-        public Task ApprovePost(string postId);
-        public Task RejestPost(string postId);
+        Task<IEnumerable<Post>> GetPostsByStatusAsync(Status status);
+
+        Task<IEnumerable<Post>> GetPostsByDateRangeAsync(DateTime startDate, DateTime endDate);
+
+        Task<Post> CreatePostAsync(Post newPost);
+
+        Task UpdatePostAsync(string postId, Post updatedPost);
+
+        Task DeletePostAsync(string postId);
+
+        Task IncrementViewsAsync(string postId);
+
+        Task IncrementLikesAsync(string postId);
+
+        Task IncrementDislikesAsync(string postId);
     }
 }

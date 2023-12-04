@@ -9,7 +9,7 @@ const PostService = () => {
 	};
 
 	const GetPostWaitingForApproval = () => {
-		return api.getWithParams("Post/GetPostGetPostWaitingForApprovalById");
+		return api.get("Post/GetPostWaitingForApproval");
 	};
 
 	const GetPostById = (id) => {
@@ -38,6 +38,11 @@ const PostService = () => {
 		});
 	};
 
+	const RejectPost = (id) => {
+		return api.put("Post/RejectPost", {
+			id: id,
+		});
+	};
 	const DeletePost = (id) => {
 		return api.delete("Post/DeletePost", id);
 	};

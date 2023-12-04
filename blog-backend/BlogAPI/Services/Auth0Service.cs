@@ -1,4 +1,5 @@
 ﻿using Auth0.ManagementApi.Models;
+using BlogAPI.Interfaces.Repositories;
 using BlogAPI.Repositories;
 using MongoDB.Driver;
 using Newtonsoft.Json;
@@ -7,16 +8,24 @@ using User = Auth0.ManagementApi.Models.User;
 
 namespace BlogAPI.Services
 {
-    public class Auth0Service : BaseService
+    public class Auth0Service 
     {
         static HttpClient client = new HttpClient();
 
         Auth0Repository _repository = new Auth0Repository();
 
+
+        private readonly UserRepository _userRepository;
+
+        public Auth0Service(UserRepository userRepository)
+        {
+            _userRepository = userRepository;
+        }
+
+
         public async Task<bool> DeleteUserAsync(string userId)
         {
-            var filter = Builders<Models.User>.Filter.Where(x => x.UserId == userId);
-            await _userCollection.DeleteOneAsync(filter);
+            await _userRepository.DeleteAsync(userId);
 
             var res = await _repository.DeleteAsync($"/api/v2/users/{userId}");
 
@@ -34,9 +43,10 @@ namespace BlogAPI.Services
 
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(rolesPayload);
 
-            var headers = new List<HeaderParameter>();
-
-            headers.Add(new HeaderParameter("Content-Type", "application/json"));
+            var headers = new List<HeaderParameter>
+            {
+                new HeaderParameter("Content-Type", "application/json")
+            };
 
             var res = await _repository.PostAsync($"/api/v2/users/{userId}/roles", headers, json);
 
@@ -53,9 +63,10 @@ namespace BlogAPI.Services
 
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(rolesPayload);
 
-            var headers = new List<HeaderParameter>();
-
-            headers.Add(new HeaderParameter("Content-Type", "application/json"));
+            var headers = new List<HeaderParameter>
+            {
+                new HeaderParameter("Content-Type", "application/json")
+            };
 
             var res = await _repository.DeleteAsync($"/api/v2/users/{userId}/roles", headers, json);
 

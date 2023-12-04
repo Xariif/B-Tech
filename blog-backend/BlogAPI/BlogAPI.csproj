@@ -28,4 +28,14 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.10" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Interfaces\DataBase\" />
+    <None Remove="Models\Helpers\" />
+    <None Remove="DTOs\PostLike\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Interfaces\DataBase\" />
+    <Folder Include="Models\Helpers\" />
+    <Folder Include="DTOs\PostLike\" />
+  </ItemGroup>
 </Project>

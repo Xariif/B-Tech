@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BlogAPI.Controllers
 {
-    
+    [ApiController]
+    [Route("api/[controller]")]
+    [Authorize(Policy = "admin")]
     public class Auth0Controller : BaseController
     {
         private readonly Auth0Service _auth0Service;
@@ -14,15 +16,12 @@ namespace BlogAPI.Controllers
             _auth0Service = auth0Service;
         }
 
-
-
         [HttpGet("GetUsers")]
         public async Task<ActionResult> GetUsers()
         {
             try
             {
                 var res = await _auth0Service.GetUsersAsync();
-
                 return Ok(res);
             }
             catch (Exception)
@@ -51,7 +50,6 @@ namespace BlogAPI.Controllers
             try
             {
                 await _auth0Service.RemoveRoleAsync(userId, roleId);
-
                 return Ok("Role removed");
             }
             catch (Exception)
@@ -66,7 +64,6 @@ namespace BlogAPI.Controllers
             try
             {
                 await _auth0Service.GiveRoleAsync(userId, roleId);
-
                 return Ok("Role given");
             }
             catch (Exception)

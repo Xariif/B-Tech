@@ -21,7 +21,7 @@ export default function Home() {
 		isLoading,
 	} = useAuth0();
 
-	const { GetPosts } = PostService();
+	const { GetApprovedPosts } = PostService();
 
 	const posts = {
 		loading: true,
@@ -29,8 +29,9 @@ export default function Home() {
 	// useSelector((state) => state.posts);
 
 	useEffect(() => {
-		GetPosts()
+		GetApprovedPosts()
 			.then((data) => {
+				console.log(data);
 				dispatch(getPostsSuccess(data));
 			})
 			.catch((error) => {});

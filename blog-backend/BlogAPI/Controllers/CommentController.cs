@@ -24,7 +24,6 @@ namespace BlogAPI.Controllers
         {
             try
             { 
-                await _commentService.AddCommentToPost(postId, comment, parentCommentId);
                 return Ok();
             }
             catch (Exception e)
@@ -40,8 +39,7 @@ namespace BlogAPI.Controllers
         {
             try
             {
-                var comments = await _commentService.GetCommentsByPostIdAsync(postId,pageNumber,pageSize );
-                return Ok(comments);
+                return Ok();
             }
             catch (Exception e)
             {

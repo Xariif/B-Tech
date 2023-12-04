@@ -1,4 +1,6 @@
 using BlogAPI.Extensions;
+using BlogAPI.Interfaces.DataBase;
+using BlogAPI.Models;
 using BlogAPI.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -11,11 +13,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
 builder.Services.AddApplicationServices();
 
-builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
-builder.Services.AddSingleton<Auth0Repository>();
-
+builder.Services.Configure<ConnectionSetting>(options =>
+{
+    options.ConnectionString = builder.Configuration["MongoDB:ConnectionURI1"];
+    options.DataBase = builder.Configuration["MongoDB:DatabaseName1"];
+});
+builder.Services.AddTransient<IDataBaseContext, DataBaseContext>();
 
 builder.Services.AddCors(options =>
 {
@@ -28,9 +35,6 @@ builder.Services.AddCors(options =>
             .AllowCredentials();
     });
 });
-
-
-
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -47,13 +51,8 @@ builder.Services.AddAuthorization(options =>
 {
 
     options.AddPolicy("user", x => x.RequireClaim("permissions", "read:posts", "comment:posts"));
-
     options.AddPolicy("author", x => x.RequireClaim("permissions", "write:posts", "delete:posts"));
-
     options.AddPolicy("admin", x => x.RequireClaim("permissions", "admin"));
-
-//  options.AddPolicy("read:messages", policy => policy.Requirements.Add(new 
-//  HasScopeRequirement("read:messages", domain)));
 });
 
 builder.Services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
@@ -82,7 +81,6 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
 
 app.UseDefaultFiles();
 app.UseStaticFiles();

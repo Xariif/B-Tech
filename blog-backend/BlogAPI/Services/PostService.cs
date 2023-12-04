@@ -1,4 +1,5 @@
 ﻿using BlogAPI.DTOs.Post;
+using BlogAPI.Interfaces.Repositories;
 using BlogAPI.Interfaces.Services;
 using BlogAPI.Models;
 using MongoDB.Bson;
@@ -6,74 +7,88 @@ using MongoDB.Driver;
 
 namespace BlogAPI.Services
 {
-    public class PostService : BaseService, IPostService
+    public class PostService : IPostService
     {
-        async Task IPostService.ApprovePost(string postId)
-        {
-            var filter = Builders<Post>.Filter.Eq(x => x.Id, ObjectId.Parse(postId));
-            var update = Builders<Post>.Update.Set(x => x.Approved, true);
+        private readonly PostRepository _postRepository;
 
-            await _postCollection.UpdateOneAsync(filter, update);
+        public PostService(PostRepository postRepository)
+        {
+            _postRepository = postRepository;
         }
 
-        Task IPostService.CreatePostDraft(PostDTO postDTO)
+        public async Task<Post?> GetPostByIdAsync(string postId)
         {
-            throw new NotImplementedException();
+            return await _postRepository.FindByIdAsync(postId)!;
         }
 
-        Task IPostService.DeletePostDraft(string postId)
+        public async Task<IEnumerable<Post>> GetPostsByCategoryAsync(string category)
         {
-            throw new NotImplementedException();
+            return await _postRepository.GetPostsByCategoryAsync(category);
         }
 
-        Task<PostDTO> IPostService.GetApprovedPostById(string postId)
+        public async Task<IEnumerable<Post>> GetPostsByTagAsync(string tag)
         {
-            throw new NotImplementedException();
+            return await _postRepository.GetPostsByTagAsync(tag);
         }
 
-        Task<List<PostDTO>> IPostService.GetApprovedPosts()
+        public async Task<IEnumerable<Post>> GetPostsByStatusAsync(Status status)
         {
-            throw new NotImplementedException();
+            return await _postRepository.GetPostsByStatusAsync(status);
         }
 
-        Task<List<PostDTO>> IPostService.GetApprovedPostsByAuthorId(string authorId)
+        public async Task<IEnumerable<Post>> GetPostsByDateRangeAsync(DateTime startDate, DateTime endDate)
         {
-            throw new NotImplementedException();
+            return await _postRepository.GetPostsByDateRangeAsync(startDate, endDate);
         }
 
-        Task<List<PostDTO>> IPostService.GetApprovedPostsByCategory(string category)
+        public async Task<Post> CreatePostAsync(Post newPost)
         {
-            throw new NotImplementedException();
+            await _postRepository.CreateAsync(newPost);
+            return newPost;
         }
 
-        Task<PostDTO> IPostService.GetDraftPostByAuthor(string authorId)
+        public async Task UpdatePostAsync(string postId, Post updatedPost)
         {
-            throw new NotImplementedException();
+            var existingPost = await _postRepository.FindByIdAsync(postId);
+            if (existingPost == null)
+                throw new Exception("Post doesn't exist");
+
+            updatedPost.Id = existingPost.Id;
+            await _postRepository.UpdateAsync(postId, updatedPost);
         }
 
-        Task<List<PostDTO>> IPostService.GetDraftPostsByAuthrId(string authorId)
+        public async Task DeletePostAsync(string postId)
         {
-            throw new NotImplementedException();
+            var existingPost = await _postRepository.FindByIdAsync(postId);
+            if (existingPost == null)
+                throw new Exception("Post doesn't exist");
+
+            await _postRepository.DeleteAsync(postId);
         }
 
-        Task<List<PostDTO>> IPostService.GetPostWaitingForApproval()
+        public async Task IncrementViewsAsync(string postId)
         {
-            throw new NotImplementedException();
+            await _postRepository.IncrementViewsAsync(postId);
         }
 
-        Task IPostService.RejestPost(string postId)
+        public async Task IncrementLikesAsync(string postId)
         {
-            throw new NotImplementedException();
+            await _postRepository.IncrementLikesAsync(postId);
         }
 
-        Task IPostService.SendPostToApprove(string postId)
+        public async Task IncrementDislikesAsync(string postId)
         {
-            throw new NotImplementedException();
+            await _postRepository.IncrementDislikesAsync(postId);
         }
 
-        Task IPostService.UpdatePostDraft(PostDTO postDTO)
+        public async Task<IEnumerable<Post>> GetAllPostsAsync()
         {
-            throw new NotImplementedException();
+            return await _postRepository.FindAllAsync();
+        }
+
+        public async Task<IEnumerable<Post>> GetPostsByAuthorIdAsync(string authorId)
+        {
+            return await _postRepository.GetPostsByAuthorIdAsync(authorId);
         }
     }
 }

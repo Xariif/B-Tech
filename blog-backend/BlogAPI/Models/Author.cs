@@ -11,7 +11,7 @@ namespace BlogAPI.Models
 
         public required string UserId { get; set; } 
 
-        public string? Desciption { get; set; }
+        public string? Description { get; set; }
 
         public SocialMedia? SocialMedia { get; set; }
 
