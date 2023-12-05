@@ -1,0 +1,53 @@
+.header {
+	display: flex;
+	align-items: center;
+	background-color: var(--surface-card);
+}
+
+.logo a {
+	display: flex;
+	align-items: center;
+	text-decoration: none;
+	font-size: 18px;
+	font-weight: bold;
+	color: var(--text-color);
+	white-space: nowrap;
+	transition: all 0.2s ease-in-out;
+}
+
+.logo a i {
+	margin-right: 10px;
+}
+
+.menu a {
+	text-decoration: none;
+	color: var(--text-color);
+	text-transform: uppercase;
+	margin: 0 1rem;
+	display: inline;
+	transition: all 0.2s ease-in-out;
+}
+
+.menu {
+	color: var(--text-color);
+}
+
+.menu i {
+	transition: all 0.2s ease-in-out;
+}
+
+.menu a:last-child {
+	margin-right: 0;
+}
+
+.menu a:hover,
+.logo a:hover,
+i:hover {
+	color: var(--primary-color);
+}
+
+@media only screen and (max-width: 750px) {
+	#search {
+		display: none;
+	}
+}

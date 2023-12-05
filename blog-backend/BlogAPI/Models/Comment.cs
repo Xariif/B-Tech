@@ -9,25 +9,16 @@ namespace BlogAPI.Models
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public ObjectId Id { get; set; }
-
+        public required ObjectId Id { get; set; }
         [BsonRepresentation(BsonType.ObjectId)]
-        public ObjectId PostId { get; set; }
-
+        public required ObjectId PostId { get; set; }
         [BsonRepresentation(BsonType.ObjectId)]
-        public ObjectId? UserId { get; set; }
-
-        public bool Edited { get; set; } = false;
-
-        public string? AuthorName { get; set; }
-
-        public DateTime CreatedAt { get; set; }
-
+        public required ObjectId UserId { get; set; }
+        public required bool Edited { get; set; } = false;
+        public required string AuthorName { get; set; }
+        public required DateTime CreatedAt { get; set; }
         public required string Description { get; set; }
-
-        public int Likes { get; set; } = 0;
-
+        public required int Likes { get; set; } = 0;
         public int Dislikes { get; set; } = 0;
-
     }
 }

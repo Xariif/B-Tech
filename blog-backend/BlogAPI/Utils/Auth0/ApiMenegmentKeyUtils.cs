@@ -7,7 +7,7 @@ namespace BlogAPI.Utils.Auth0
 {
     public static class ApiMenegmentKeyUtils
     {
-        private static AccessToken _accessToken;
+        private static AccessToken? _accessToken;
 
         public static void SetAccessToken(AccessToken accessToken)
         {
@@ -23,9 +23,9 @@ namespace BlogAPI.Utils.Auth0
             }
 
 
-            string clientId = configuration["Auth0:M2MClientId"];
-            string clientSecret = configuration["Auth0:ClientSecret"];
-            string managementAudience = configuration["Auth0:Domain"] + "/api/v2/";
+            string? clientId =  configuration["Auth0:M2MClientId"];
+            string? clientSecret = configuration["Auth0:ClientSecret"];
+            string? managementAudience = configuration["Auth0:Domain"] + "/api/v2/";
 
 
 
@@ -36,14 +36,14 @@ namespace BlogAPI.Utils.Auth0
             request.AddParameter("audience", managementAudience);
             request.AddParameter("grant_type", "client_credentials");
 
-            var response = await client.ExecuteAsync<AccessToken>(request);
+            RestResponse<AccessToken>? response = await client.ExecuteAsync<AccessToken>(request);
 
             if (!response.IsSuccessful)
                 throw new Exception("Bad request");
 
-            _accessToken = response?.Data;
+            _accessToken = response.Data;
 
-            return response?.Data;
+            return response.Data ?? throw new Exception(response.ErrorMessage);
         }
         private static bool IsAccessTokenExpired(AccessToken accessToken)
         {
@@ -51,7 +51,7 @@ namespace BlogAPI.Utils.Auth0
             var tokenHandler = new JwtSecurityTokenHandler();
 
 
-          var token =   tokenHandler.ReadJwtToken(accessToken.access_token);
+            var token = tokenHandler.ReadJwtToken(accessToken.access_token);
 
             if(token.ValidTo >= DateTime.UtcNow)
                 return false;

@@ -8,20 +8,11 @@ namespace BlogAPI.Models
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public required ObjectId Id { get; set; }
-
         public required string UserId { get; set; }
-
         public required string Name { get; set; }
-
         public required string Surname { get; set; }
-
-        public string? Email { get; set; }
-
+        public required string Email { get; set; }
         public int? Phone { get; set; }
-
         public DateTime ActiveFrom { get; set; }
-
-        public string? Description { get; set; } 
-
     }
 }

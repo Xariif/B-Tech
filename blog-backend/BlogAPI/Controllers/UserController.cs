@@ -1,4 +1,5 @@
 ﻿using BlogAPI.DTOs.Author;
+using BlogAPI.DTOs.User;
 using BlogAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,9 +16,9 @@ namespace BlogAPI.Controllers
         public UserController(UserService userService, IWebHostEnvironment env) : base(env)
         {
             _userService = userService;
-
         }
 
+        [Authorize (Policy = "admin")]
         [HttpGet("GetUserByUserId")]
         public async Task<ActionResult<UserDTO>> GetUserByUserIdAsync(string userId)
         {
@@ -32,7 +33,7 @@ namespace BlogAPI.Controllers
         }
 
         [HttpPut("UpdateUser")]
-        public async Task<ActionResult> UpdateUserAsync(UserDTO userDTO)
+        public async Task<ActionResult> UpdateUserAsync(UpdateUserDTO userDTO)
         {
             try
             {
@@ -65,6 +66,7 @@ namespace BlogAPI.Controllers
             }
         }
 
+        [Authorize(Policy = "admin")]
         [HttpGet("GetAllUsers")]
         public async Task<ActionResult> GetAllUsers()
         {

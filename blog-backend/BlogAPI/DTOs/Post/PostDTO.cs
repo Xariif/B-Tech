@@ -6,6 +6,8 @@ namespace BlogAPI.DTOs.Post
     public class PostDTO
     {
         public string? Id { get; set; }
+        public string? MainParentId { get; set; }
+
         public string? Title { get; set; }
         public Models.File? Image { get; set; }
         public string? Content { get; set; }
@@ -15,8 +17,6 @@ namespace BlogAPI.DTOs.Post
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; } = DateTime.Now;
         public Status Status { get; set; }
-
-
     }
 }
 

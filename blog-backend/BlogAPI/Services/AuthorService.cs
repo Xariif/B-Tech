@@ -1,4 +1,5 @@
 ﻿using System;
+using BlogAPI.DTOs.Author;
 using BlogAPI.Interfaces.Repositories;
 using BlogAPI.Models;
 using MongoDB.Bson;
@@ -15,20 +16,22 @@ namespace BlogAPI.Services
             _authorRepository = authorRepository;
         }
 
+      
 
-        public async Task CreateAuthorAsync(string userId)
+
+        public async Task CreateAuthorAsync(CreateAuthorDTO authorDTO)
         {
             var author = new Author()
 
             {
                 Id = ObjectId.GenerateNewId(),
-                UserId = userId,
+                UserId = authorDTO.UserId,
                 Description = null,
                 SocialMedia = null,
             };
 
 
-            var res = await _authorRepository.FindByIdAsync(userId);
+            var res = await _authorRepository.FindByIdAsync(author.UserId);
             if (res != null)
             {
                 throw new ArgumentException("Author with same id already exist.");

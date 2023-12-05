@@ -19,8 +19,8 @@ builder.Services.AddApplicationServices();
 
 builder.Services.Configure<ConnectionSetting>(options =>
 {
-    options.ConnectionString = builder.Configuration["MongoDB:ConnectionURI1"];
-    options.DataBase = builder.Configuration["MongoDB:DatabaseName1"];
+    options.ConnectionString = builder.Configuration["MongoDB:ConnectionURI1"] ?? throw new Exception("MongoDB:ConnectionURI1");
+    options.DataBase = builder.Configuration["MongoDB:DatabaseName1"] ?? throw new Exception("MongoDB:DatabaseName1");
 });
 builder.Services.AddTransient<IDataBaseContext, DataBaseContext>();
 

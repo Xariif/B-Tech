@@ -14,7 +14,7 @@ namespace BlogAPI.Repositories
     public class Auth0Repository
     {
         private readonly IConfigurationRoot _configuration = ConfigUtils.GetConfig();
-        private Auth0Factory _restSharpFactory;
+        private readonly Auth0Factory _restSharpFactory;
 
 
         public Auth0Repository()

@@ -29,7 +29,7 @@ namespace BlogAPI.Factory
             {
                 foreach (var header in headers)
                 {
-                    request.AddHeader(header.Name, header.Value.ToString());
+                    request.AddHeader(header?.Name, header.Value.ToString());
                 }
             }
 
@@ -39,6 +39,11 @@ namespace BlogAPI.Factory
             }
 
             var response = await _client.ExecuteAsync(request);
+
+
+
+            if (!response.IsSuccessful)
+                throw new Exception(response.ErrorMessage);
 
             return response;
         }

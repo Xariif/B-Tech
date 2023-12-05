@@ -10,11 +10,7 @@ namespace BlogAPI.Services
 {
     public class Auth0Service 
     {
-        static HttpClient client = new HttpClient();
-
-        Auth0Repository _repository = new Auth0Repository();
-
-
+        readonly Auth0Repository _auth0Repository = new();
         private readonly UserRepository _userRepository;
 
         public Auth0Service(UserRepository userRepository)
@@ -22,25 +18,21 @@ namespace BlogAPI.Services
             _userRepository = userRepository;
         }
 
-
         public async Task<bool> DeleteUserAsync(string userId)
         {
             await _userRepository.DeleteAsync(userId);
 
-            var res = await _repository.DeleteAsync($"/api/v2/users/{userId}");
+            var res = await _auth0Repository.DeleteAsync($"/api/v2/users/{userId}");
 
             if (!res.IsSuccessful)
                 throw new Exception(res.ErrorMessage);
 
             return res.IsSuccessful;
         }
-
-
 
         public async Task<bool> GiveRoleAsync(string userId, string roleId)
         {
             var rolesPayload = new { roles = roleId };
-
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(rolesPayload);
 
             var headers = new List<HeaderParameter>
@@ -48,19 +40,17 @@ namespace BlogAPI.Services
                 new HeaderParameter("Content-Type", "application/json")
             };
 
-            var res = await _repository.PostAsync($"/api/v2/users/{userId}/roles", headers, json);
+            var res = await _auth0Repository.PostAsync($"/api/v2/users/{userId}/roles", headers, json);
 
             if (!res.IsSuccessful)
                 throw new Exception(res.ErrorMessage);
 
             return res.IsSuccessful;
         }
-
 
         public async Task<bool> RemoveRoleAsync(string userId, string roleId)
         {
             var rolesPayload = new { roles = roleId };
-
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(rolesPayload);
 
             var headers = new List<HeaderParameter>
@@ -68,7 +58,7 @@ namespace BlogAPI.Services
                 new HeaderParameter("Content-Type", "application/json")
             };
 
-            var res = await _repository.DeleteAsync($"/api/v2/users/{userId}/roles", headers, json);
+            var res = await _auth0Repository.DeleteAsync($"/api/v2/users/{userId}/roles", headers, json);
 
             if (!res.IsSuccessful)
                 throw new Exception(res.ErrorMessage);
@@ -76,26 +66,24 @@ namespace BlogAPI.Services
             return res.IsSuccessful;
         }
 
-        public async Task<List<Role>> GetUserRolesAsync(string userId)
+        public async Task<List<Role>?> GetUserRolesAsync(string userId)
         {
-            var res = await _repository.GetAsync($"/api/v2/users/{userId}/roles");
+            var res = await _auth0Repository.GetAsync($"/api/v2/users/{userId}/roles");
+            var roles = new List<Role>();
 
-            if (!res.IsSuccessful)
-                throw new Exception(res.ErrorMessage);
-
-            var roles = JsonConvert.DeserializeObject<List<Role>>(res.Content);
+            if (res.Content != null)
+                roles = JsonConvert.DeserializeObject<List<Role>>(res.Content);
 
             return roles;
         }
 
-        public async Task<List<User>> GetUsersAsync()
+        public async Task<List<User>?> GetUsersAsync()
         {
-            var res = await _repository.GetAsync("/api/v2/users");
+            var res = await _auth0Repository.GetAsync("/api/v2/users");
+            var users = new List<User>();
 
-            if (!res.IsSuccessful)
-                throw new Exception(res.ErrorMessage);
-
-            var users = JsonConvert.DeserializeObject<List<User>>(res?.Content);
+            if(res.Content!= null)
+                 users = JsonConvert.DeserializeObject<List<User>>(res.Content);
 
             return users;
         }

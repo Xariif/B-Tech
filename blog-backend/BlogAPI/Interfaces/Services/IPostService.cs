@@ -9,7 +9,7 @@ namespace BlogAPI.Interfaces.Services
 
         Task<Post?> GetPostByIdAsync(string postId);
 
-        Task<IEnumerable<Post>> GetPostsByAuthorIdAsync(string authorId);
+        Task<IEnumerable<Post>> GetApprovedPostsByAuthorIdAsync(string authorId);
 
         Task<IEnumerable<Post>> GetPostsByCategoryAsync(string category);
 
@@ -21,7 +21,9 @@ namespace BlogAPI.Interfaces.Services
 
         Task<Post> CreatePostAsync(Post newPost);
 
-        Task UpdatePostAsync(string postId, Post updatedPost);
+        Task UpdateDraftPostAsync(string postId, Post updatedPost);
+
+        Task UpdateAcceptedPostAsync(string postId, Post updatedPost);
 
         Task DeletePostAsync(string postId);
 

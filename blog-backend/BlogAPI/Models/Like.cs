@@ -8,18 +8,13 @@ namespace BlogAPI.Models
 	{
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public ObjectId Id { get; set; }
-
+        public required ObjectId Id { get; set; }
         [BsonRepresentation(BsonType.ObjectId)]
-        public ObjectId UserId { get; set; }
-
+        public required ObjectId UserId { get; set; }
         [BsonRepresentation(BsonType.ObjectId)]
-        public ObjectId ItemId { get; set; }
-
-		public bool IsLiked { get; set; }
-
-        public LikeType Type { get; set; }
-
+        public required ObjectId ItemId { get; set; }
+		public required bool IsLiked { get; set; }
+        public required LikeType Type { get; set; }
     }
 
     public enum LikeType

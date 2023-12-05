@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BlogAPI.Controllers
 {
     [ApiController]
+    [Authorize(Roles = "author")]
     [Route("api/[controller]")]
 
     public class PostController : BaseController
@@ -25,7 +26,37 @@ namespace BlogAPI.Controllers
         {
             try
             {
-                var result = await _postService.GetPostsByStatusAsync(Status.Aproved);
+                var test = User.Claims;
+
+                var result = await _postService.GetPostsByStatusAndAuthorIdAsync(Status.Aproved, "");
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
+        }
+
+        [HttpGet("GetDraftPosts")]
+        public async Task<ActionResult<List<Post>>> GetDraftPosts()
+        {
+            try
+            {
+                var result = await _postService.GetPostsByStatusAndAuthorIdAsync(Status.Drafts, "");
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
+        }
+
+        [HttpGet("GetRejectedPosts")]
+        public async Task<ActionResult<List<Post>>> GetRejectedPosts()
+        {
+            try
+            {
+                var result = await _postService.GetPostsByStatusAndAuthorIdAsync(Status.Rejected, "");
                 return Ok(result);
             }
             catch (Exception ex)
@@ -47,30 +78,15 @@ namespace BlogAPI.Controllers
             {
                 return HandleError(ex);
             }
-        }
+        }     
 
-        [HttpGet("GetPostById")]
-        [AllowAnonymous]
-        public async Task<ActionResult<Post>> GetPostById(string id)
-        {
-            try
-            {
-                var res = await _postService.GetPostByIdAsync(id);
-                return Ok(res);
-            }
-            catch (Exception ex)
-            {
-                return HandleError(ex);
-            }
-        }
-
-        [HttpGet("GetPostsByAuthorId")]
-        public async Task<ActionResult<Post>> GetPostByAuthorId(string id)
+        [HttpGet("GetApprovedPostsByAuthorId")]
+        public async Task<ActionResult<Post>> GetApprovedPostsByAuthorId(string id)
         {
             try
             {
 
-                var res = await _postService.GetPostsByAuthorIdAsync(id);
+                var res = await _postService.GetApprovedPostsByAuthorIdAsync(id);
                 return Ok(res);
             }
             catch (Exception ex)
@@ -80,7 +96,6 @@ namespace BlogAPI.Controllers
         }
 
         [HttpPost("CreatePost")]
-        [Authorize(Policy = "author")]
         public async Task<ActionResult> CreatePost(NewPostDTO newPost)
         {
             try
@@ -88,12 +103,13 @@ namespace BlogAPI.Controllers
                 if (User?.Identity?.Name != newPost.AuthorId)
                     throw new UnauthorizedAccessException();
 
-                Post post = new Post()
+                Post post = new()
                 {
                     AuthorId = newPost.AuthorId,
                     Category = newPost.Category,
                     Content = newPost.Content,
                     CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow,
                     Id = MongoDB.Bson.ObjectId.GenerateNewId(),
                     MainParentId = null,
                     Status = Status.Drafts,
@@ -110,32 +126,18 @@ namespace BlogAPI.Controllers
             }
         }
 
-        [HttpPut("UpdatePost")]
+        [HttpPut("UpdateDraftPost")]
         [Authorize(Policy = "author")]
-        public async Task<ActionResult> UpdatePost(PostDTO updatePost)
+        public async Task<ActionResult> UpdateDraftPost(PostDTO postDTO)
         {
             try
             {
+                if (User?.Identity?.Name != postDTO.AuthorId)
+                    throw new UnauthorizedAccessException();         
 
-                if (User?.Identity?.Name != updatePost.AuthorId)
-                    throw new UnauthorizedAccessException();
-
-                Post post = new Post()
+                if (postDTO?.Id != null)
                 {
-                    AuthorId = updatePost?.AuthorId,
-                    Category = updatePost?.Category,
-                    Content = updatePost?.Content,
-                    CreatedAt = updatePost?.CreatedAt ?? DateTime.UtcNow,
-                    Tags = updatePost?.Tags,
-                    Id = MongoDB.Bson.ObjectId.Parse(updatePost?.Id),
-                    MainParentId = null,
-                    Status = (Status)(updatePost?.Status ?? 0),
-                    Title = updatePost?.Title
-                };
-
-                if (updatePost?.Id != null)
-                {
-                    await _postService.UpdatePostAsync(updatePost.Id, post);
+                    await _postService.UpdateDraftPostAsync(postDTO);
                 }
                 return Ok("Post updated");
             }
@@ -145,13 +147,16 @@ namespace BlogAPI.Controllers
             }
         }
 
+        //update accepted post - create a new copy with toconfirm status and search if exist then remove first one
+
+        //przy accept main parent id = null  chyba
+
         [HttpPut("AcceptPost")]
         [Authorize(Policy = "admin")]
         public async Task<ActionResult> AcceptPost(string id)
         {
             try
             {
-
                 var post = await _postService.GetPostByIdAsync(id) ?? throw new Exception("Post doesn't exist");
                 post.Status = Status.Aproved;
 

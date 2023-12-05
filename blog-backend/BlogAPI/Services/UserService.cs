@@ -1,5 +1,6 @@
 ﻿using Auth0.ManagementApi.Models;
 using BlogAPI.DTOs.Author;
+using BlogAPI.DTOs.User;
 using BlogAPI.Interfaces.Repositories;
 using BlogAPI.Models;
 using BlogAPI.Repositories;
@@ -25,19 +26,18 @@ namespace BlogAPI.Services
         }
 
 
-        public async Task<UserDTO> GetUserByUserIdAsync(string id)
+        public async Task<UserDTO> GetUserByUserIdAsync(string userId)
         {
-            var user = await _userRepository.FindByIdAsync(id) ?? throw new ArgumentException("User not found");
+            var user = await _userRepository.FindByUserIdAsync(userId) ?? throw new ArgumentException("User not found");
             return new UserDTO
-            {
+            {              
+                Id = user.Id.ToString(),
                 UserId = user.UserId,
                 Name = user.Name,
                 Surname = user.Surname,
-                Description = user.Description,
                 ActiveFrom = user.ActiveFrom,
                 Email = user.Email,
-                Phone = user.Phone,
-
+                Phone = user.Phone
             };
         }
 
@@ -48,21 +48,21 @@ namespace BlogAPI.Services
             return await _userRepository.FindAllAsync();
         }
           
-        public async Task UpdateUserAsync(UserDTO updateUser)
+        public async Task UpdateUserAsync(UpdateUserDTO updateUser)
         {
-            var user = await _userRepository.FindByIdAsync(updateUser.UserId) ?? throw new ArgumentException("Author not found");
+            var user = await _userRepository.FindByUserIdAsync(updateUser.UserId) ?? throw new ArgumentException("User not found");
             user = new User
             {
                 Id = user.Id,
                 UserId = updateUser.UserId,
-                Name = updateUser.Name ?? throw new ArgumentException("Name is required"),
-                Surname = updateUser.Surname ?? throw new ArgumentException("Surname is required"),
-                Description = updateUser.Description,
-                ActiveFrom = updateUser.ActiveFrom,
+                Name = updateUser.Name ,
+                Surname = updateUser.Surname,
+                ActiveFrom = user.ActiveFrom,
                 Email = updateUser.Email,
                 Phone = updateUser.Phone,
             };
 
+         
 
             var filter = Builders<User>.Filter.Where(x => x.UserId == user.UserId);
 

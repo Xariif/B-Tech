@@ -1,10 +1,13 @@
 ﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace BlogAPI.Models
 {
     public class File
     {
-        public ObjectId Id { get; set; }
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public required ObjectId Id { get; set; }
         public required string Name { get; set; }
         public required string Type { get; set; }
         public required long Size { get; set; }
@@ -13,7 +16,9 @@ namespace BlogAPI.Models
 
     public class FileData
     {
-        public ObjectId Id { get; set; }
-        public required string FileString { get; set; }
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public required ObjectId Id { get; set; }
+        public required byte[] File{ get; set; }
     }
 }

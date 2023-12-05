@@ -2,6 +2,7 @@
 using BlogAPI.Interfaces.Repositories;
 using BlogAPI.Interfaces.Services;
 using BlogAPI.Models;
+using BlogAPI.Repositories;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -31,6 +32,11 @@ namespace BlogAPI.Services
             return await _postRepository.GetPostsByTagAsync(tag);
         }
 
+        public async Task<IEnumerable<Post>> GetPostsByStatusAndAuthorIdAsync(Status status, string authorId)
+        {
+            return await _postRepository.GetPostsByStatusAndAuthorIdAsync(status, authorId);
+        }
+
         public async Task<IEnumerable<Post>> GetPostsByStatusAsync(Status status)
         {
             return await _postRepository.GetPostsByStatusAsync(status);
@@ -47,22 +53,60 @@ namespace BlogAPI.Services
             return newPost;
         }
 
-        public async Task UpdatePostAsync(string postId, Post updatedPost)
+        public async Task UpdateDraftPostAsync(PostDTO updatedPost)
         {
-            var existingPost = await _postRepository.FindByIdAsync(postId);
-            if (existingPost == null)
-                throw new Exception("Post doesn't exist");
+           var post  = await GetPostByIdAsync(updatedPost.Id) ?? throw new Exception("Post doesn't exist");
 
-            updatedPost.Id = existingPost.Id;
-            await _postRepository.UpdateAsync(postId, updatedPost);
+            Post updated = new()
+            {
+                Id = post.Id,
+                AuthorId = post.AuthorId,
+                Title = updatedPost.Title,
+                UpdatedAt = DateTime.UtcNow,
+                Views = post.Views,
+                Category = updatedPost.Category,
+                Content = updatedPost.Content,
+                Tags = updatedPost.Tags,
+                CreatedAt = post.CreatedAt,
+                Image = updatedPost.Image,
+                Likes = post.Likes,
+                Dislikes = post.Dislikes,
+                MainParentId = post.MainParentId,
+                Status = Status.Drafts
+            };
+
+            await _postRepository.UpdateAsync(updated.Id.ToString(), updated);
         }
+
+        public async Task UpdateAcceptedPostAsync(PostDTO updatedPost)
+        {
+            var post = await GetPostByIdAsync(updatedPost.Id) ?? throw new Exception("Post doesn't exist");
+
+            Post updated = new()
+            {
+                Id = post.Id,
+                AuthorId = post.AuthorId,
+                Title = updatedPost.Title,
+                UpdatedAt = DateTime.UtcNow,
+                Views = post.Views,
+                Category = updatedPost.Category,
+                Content = updatedPost.Content,
+                Tags = updatedPost.Tags,
+                CreatedAt = post.CreatedAt,
+                Image = updatedPost.Image,
+                Likes = post.Likes,
+                Dislikes = post.Dislikes,
+                MainParentId = post.MainParentId,
+                Status = Status.Drafts
+            };
+
+            await _postRepository.UpdateAsync(updated.Id.ToString(), updated);
+        }
+
 
         public async Task DeletePostAsync(string postId)
         {
-            var existingPost = await _postRepository.FindByIdAsync(postId);
-            if (existingPost == null)
-                throw new Exception("Post doesn't exist");
-
+            _ = await _postRepository.FindByIdAsync(postId) ?? throw new Exception("Post doesn't exist");
             await _postRepository.DeleteAsync(postId);
         }
 
@@ -86,9 +130,9 @@ namespace BlogAPI.Services
             return await _postRepository.FindAllAsync();
         }
 
-        public async Task<IEnumerable<Post>> GetPostsByAuthorIdAsync(string authorId)
+        public async Task<IEnumerable<Post>> GetApprovedPostsByAuthorIdAsync(string authorId)
         {
-            return await _postRepository.GetPostsByAuthorIdAsync(authorId);
+            return await _postRepository.GetApprovedPostsByAuthorIdAsync(authorId);
         }
     }
 }
