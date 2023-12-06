@@ -1,6 +1,6 @@
 ﻿namespace BlogAPI.DTOs.Post
 {
-    public class NewPostDTO
+    public class NewPostDto
     {
         public required string Title { get; set; }
         public required string Content { get; set; }

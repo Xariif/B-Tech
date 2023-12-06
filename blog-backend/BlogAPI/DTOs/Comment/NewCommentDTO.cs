@@ -1,6 +1,6 @@
 ﻿namespace BlogAPI.DTOs.Comment
 {
-    public class NewCommentDTO
+    public class NewCommentDto
     {
         public required string PostId { get; set; }
         public required string AuthorId { get; set; }

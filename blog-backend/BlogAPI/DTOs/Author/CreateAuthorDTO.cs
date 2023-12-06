@@ -3,7 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace BlogAPI.DTOs.Author
 {
-    public class CreateAuthorDTO
+    public class CreateAuthorDto
     {
         public required string UserId { get; set; }
         public required string Name { get; set; }

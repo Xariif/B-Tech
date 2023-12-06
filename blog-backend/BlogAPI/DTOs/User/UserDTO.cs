@@ -2,9 +2,8 @@
 
 namespace BlogAPI.DTOs.Author
 {
-    public class UserDTO
+    public class UserDto
     {
-        [Required(ErrorMessage = "Id is required")]
         public required string Id { get; set; }
         public required string UserId { get; set; }
         public required string Name { get; set; }

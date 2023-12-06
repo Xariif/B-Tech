@@ -12,7 +12,7 @@ namespace BlogAPI.Controllers
     [Route("api/[controller]")]
     public class AuthorController : BaseController
     {
-        private readonly AuthorService _authorService;
+   private readonly AuthorService _authorService;
 
         public AuthorController(AuthorService authorService, IWebHostEnvironment env) : base(env)
         {
@@ -20,7 +20,7 @@ namespace BlogAPI.Controllers
         }
 
         [HttpGet("GetAuthorById")]
-        public async Task<ActionResult<AuthorDTO>> GetAuthorById(string id)
+        public async Task<ActionResult<AuthorDto>> GetAuthorById(string id)
         {
             try
             {
@@ -36,11 +36,11 @@ namespace BlogAPI.Controllers
 
 
         [HttpPost("CreateAuthor")]
-        public async Task<ActionResult> CreateAuthor(CreateAuthorDTO newAuthorDTO)
+        public async Task<ActionResult> CreateAuthor(CreateAuthorDto newAuthorDto)
         {
             try
             {
-                await _authorService.CreateAuthorAsync(newAuthorDTO);
+                await _authorService.CreateAuthorAsync(newAuthorDto);
                 return Ok("Author created");
             }
             catch (ArgumentException ex)
@@ -53,11 +53,11 @@ namespace BlogAPI.Controllers
 
 
         [HttpPut("UpdateAuthor")]
-        public async Task<ActionResult> UpdateAuthor(AuthorDTO authorDTO)
+        public async Task<ActionResult> UpdateAuthor(AuthorDto authorDto)
         {
             try
             {
-                await _authorService.UpdateAuthorAsync(authorDTO);
+                await _authorService.UpdateAuthorAsync(authorDto);
                 return Ok("Author updated");
             }
             catch (Exception ex)
@@ -79,6 +79,7 @@ namespace BlogAPI.Controllers
                 return HandleError(ex);
             }
         }
+
     }
 }
 

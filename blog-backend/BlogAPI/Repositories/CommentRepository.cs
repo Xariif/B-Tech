@@ -1,13 +1,15 @@
-﻿using BlogAPI.Interfaces.DataBase;
+﻿using BlogAPI.Contexts;
 using BlogAPI.Interfaces.Repositories;
 using BlogAPI.Models;
 
 namespace BlogAPI.Repositories
 {
-    public class CommentRepository : BaseRepository<Comment>
+    public class CommentRepository : BaseRepository
     {
-        public CommentRepository(IDataBaseContext context) : base(context)
+        public CommentRepository(MongoDataBaseContext context) : base(context)
         {
         }
+
+      
     }
 }

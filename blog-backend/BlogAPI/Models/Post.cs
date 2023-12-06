@@ -8,12 +8,12 @@ namespace BlogAPI.Models
 		[BsonId]
 		[BsonRepresentation(BsonType.ObjectId)]
 		public required ObjectId Id { get; set; }
-		public required string MainParentId { get; set; }
-		public required string Title { get; set; }
+		public required string? MainParentId { get; set; }
+		public required string? Title { get; set; }
 		public File? Image { get; set; }
-		public required string Content { get; set; }
+		public required string? Content { get; set; }
 		public required string AuthorId { get; set; }
-		public required string Category { get; set; }
+		public required string? Category { get; set; }
 		public required List<string>? Tags { get; set; }
 		public required DateTime CreatedAt { get; set; }
         public required DateTime UpdatedAt { get; set; }

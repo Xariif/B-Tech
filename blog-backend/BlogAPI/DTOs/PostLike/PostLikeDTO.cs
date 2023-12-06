@@ -4,7 +4,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace BlogAPI.DTOs.PostLike
 {
-	public class PostLikeDTO
+	public class PostLikeDto
 	{
       
             public string Id { get; set; }

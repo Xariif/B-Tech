@@ -32,7 +32,7 @@ namespace BlogAPI.Controllers
             }
             else if (_env.IsDevelopment())
             {
-                return StatusCode(500, new { ErrorMessage = exception.Message, StackTrace = exception.StackTrace });
+                return StatusCode(500, new { ErrorMessage = exception.Message, exception.StackTrace });
             }
             else
             {

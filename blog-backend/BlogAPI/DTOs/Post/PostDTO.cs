@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis.Operations;
 
 namespace BlogAPI.DTOs.Post
 {
-    public class PostDTO
+    public class PostDto
     {
         public string? Id { get; set; }
         public string? MainParentId { get; set; }

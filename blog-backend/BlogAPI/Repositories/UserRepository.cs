@@ -1,18 +1,18 @@
-﻿using BlogAPI.Interfaces.DataBase;
+﻿using BlogAPI.Contexts;
 using BlogAPI.Interfaces.Repositories;
 using BlogAPI.Models;
 using MongoDB.Driver;
 
 namespace BlogAPI.Repositories
 {
-    public class UserRepository : BaseRepository<User>
+    public class UserRepository : BaseRepository
     {
-        public UserRepository(IDataBaseContext context) : base(context)
+        public UserRepository(MongoDataBaseContext context) : base(context)
         {
         }
 
-        public async Task<User> FindByUserIdAsync(string userId) =>
-             await _dbCollection.Find(Builders<User>.Filter.Eq(user => user.UserId, userId)).FirstOrDefaultAsync();
+        public Task<User> FindByUserIdAsync(string userId) =>
+             _context.Users.Find(Builders<User>.Filter.Eq(user => user.UserId, userId)).FirstOrDefaultAsync();
 
     }
 }

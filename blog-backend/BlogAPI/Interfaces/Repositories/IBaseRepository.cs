@@ -7,11 +7,11 @@ namespace BlogAPI.Interfaces.Repositories
 {
     public interface IBaseRepository
     {
-        Task<List<T>> FindAllAsync<T>();
+        Task<IEnumerable<T>> FindAllAsync<T>();
 
-        Task<T?> FindByIdAsync<T>(string id);
+        Task<T> FindByIdAsync<T>(string id);
 
-        Task CreateAsync<TDocument>(TDocument newItem);
+        Task InsertOneAsync<TDocument>(TDocument newItem);
             
         Task<ReplaceOneResult> UpdateAsync<TDocument>(string id, TDocument updatedItem);
 

@@ -96,7 +96,7 @@ namespace BlogAPI.Controllers
         }
 
         [HttpPost("CreatePost")]
-        public async Task<ActionResult> CreatePost(NewPostDTO newPost)
+        public async Task<ActionResult> CreatePost(NewPostDto newPost)
         {
             try
             {
@@ -128,16 +128,16 @@ namespace BlogAPI.Controllers
 
         [HttpPut("UpdateDraftPost")]
         [Authorize(Policy = "author")]
-        public async Task<ActionResult> UpdateDraftPost(PostDTO postDTO)
+        public async Task<ActionResult> UpdateDraftPost(PostDto postDto)
         {
             try
             {
-                if (User?.Identity?.Name != postDTO.AuthorId)
+                if (User?.Identity?.Name != postDto.AuthorId)
                     throw new UnauthorizedAccessException();         
 
-                if (postDTO?.Id != null)
+                if (postDto?.Id != null)
                 {
-                    await _postService.UpdateDraftPostAsync(postDTO);
+                    await _postService.UpdateDraftPostAsync(postDto);
                 }
                 return Ok("Post updated");
             }
@@ -157,10 +157,7 @@ namespace BlogAPI.Controllers
         {
             try
             {
-                var post = await _postService.GetPostByIdAsync(id) ?? throw new Exception("Post doesn't exist");
-                post.Status = Status.Aproved;
-
-                await _postService.UpdatePostAsync(id, post);
+                await _postService.RejectPostAsync(id);
                 return Ok("Post updated");
             }
             catch (Exception ex)
@@ -175,11 +172,7 @@ namespace BlogAPI.Controllers
         {
             try
             {
-
-                var post = await _postService.GetPostByIdAsync(id) ?? throw new Exception("Post not found");
-                post.Status = Status.Rejected;
-
-                await _postService.UpdatePostAsync(id, post);
+                await _postService.RejectPostAsync(id);
                 return Ok("Post updated");
             }
             catch (Exception ex)

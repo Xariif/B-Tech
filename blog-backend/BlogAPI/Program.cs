@@ -1,11 +1,11 @@
 using BlogAPI.Extensions;
-using BlogAPI.Interfaces.DataBase;
 using BlogAPI.Models;
 using BlogAPI.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using BlogAPI.Contexts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +22,7 @@ builder.Services.Configure<ConnectionSetting>(options =>
     options.ConnectionString = builder.Configuration["MongoDB:ConnectionURI1"] ?? throw new Exception("MongoDB:ConnectionURI1");
     options.DataBase = builder.Configuration["MongoDB:DatabaseName1"] ?? throw new Exception("MongoDB:DatabaseName1");
 });
-builder.Services.AddTransient<IDataBaseContext, DataBaseContext>();
+builder.Services.AddTransient<MongoDataBaseContext>();
 
 builder.Services.AddCors(options =>
 {

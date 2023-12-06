@@ -1,12 +1,11 @@
 ﻿using BlogAPI.Models;
 
-namespace BlogAPI.DTOs.Author
+namespace BlogAPI.DTOs.Author;
+
+public class AuthorDto
 {
-    public class AuthorDTO
-    {
-        public required string Id { get; set; }  
-        public string? Description { get; set; }
-        public required DateTime ActiveFrom { get; set; }
-        public SocialMedia? SocialMedia { get; set; }
-    }
+    public string? Id { get; set; }
+    public string? Description { get; set; }
+    public SocialMedia? SocialMedia { get; set; }
+    public string? UserId { get; set; }
 }

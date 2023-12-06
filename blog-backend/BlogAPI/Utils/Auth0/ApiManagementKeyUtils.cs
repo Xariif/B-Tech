@@ -1,11 +1,10 @@
-﻿using Auth0.ManagementApi.Models;
-using BlogAPI.Models;
+﻿using BlogAPI.Models;
 using RestSharp;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace BlogAPI.Utils.Auth0
 {
-    public static class ApiMenegmentKeyUtils
+    public static class ApiManagementKeyUtils
     {
         private static AccessToken? _accessToken;
 
@@ -51,7 +50,7 @@ namespace BlogAPI.Utils.Auth0
             var tokenHandler = new JwtSecurityTokenHandler();
 
 
-            var token = tokenHandler.ReadJwtToken(accessToken.access_token);
+            var token = tokenHandler.ReadJwtToken(accessToken.Token);
 
             if(token.ValidTo >= DateTime.UtcNow)
                 return false;

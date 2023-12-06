@@ -3,8 +3,8 @@ namespace BlogAPI.Extensions
 {
 	public class ConnectionSetting
 	{
-		public string ConnectionString { get; set; }
-		public string DataBase { get; set; }
+		public required string ConnectionString { get; set; }
+		public required string DataBase { get; set; }
 	}
 }
 

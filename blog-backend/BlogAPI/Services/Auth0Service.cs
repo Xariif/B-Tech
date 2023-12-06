@@ -4,7 +4,6 @@ using BlogAPI.Repositories;
 using MongoDB.Driver;
 using Newtonsoft.Json;
 using RestSharp;
-using User = Auth0.ManagementApi.Models.User;
 
 namespace BlogAPI.Services
 {

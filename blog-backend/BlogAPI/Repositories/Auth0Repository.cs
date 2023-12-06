@@ -23,24 +23,24 @@ namespace BlogAPI.Repositories
         }
 
 
-        public async Task<RestResponse> GetAsync(string endpoint, List<HeaderParameter>? headers = null, object? body = null)
+        public Task<RestResponse> GetAsync(string endpoint, List<HeaderParameter>? headers = null, object? body = null)
         {
-            return await _restSharpFactory.RequestAsync(endpoint,Method.Get, headers,body);
+            return _restSharpFactory.RequestAsync(endpoint,Method.Get, headers,body);
         }
 
-        public async Task<RestResponse> PostAsync(string endpoint, List<HeaderParameter>? headers = null, object? body = null)
+        public Task<RestResponse> PostAsync(string endpoint, List<HeaderParameter>? headers = null, object? body = null)
         {
-            return await _restSharpFactory.RequestAsync(endpoint, Method.Post, headers, body);
+            return _restSharpFactory.RequestAsync(endpoint, Method.Post, headers, body);
         }
 
-        public async Task<RestResponse> PutAsync(string endpoint, List<HeaderParameter>? headers = null, object? body = null)
+        public Task<RestResponse> PutAsync(string endpoint, List<HeaderParameter>? headers = null, object? body = null)
         {
-            return await _restSharpFactory.RequestAsync(endpoint, Method.Put, headers, body);
+            return _restSharpFactory.RequestAsync(endpoint, Method.Put, headers, body);
         }
 
-        public async Task<RestResponse> DeleteAsync(string endpoint, List<HeaderParameter>? headers = null, object? body = null)
+        public Task<RestResponse> DeleteAsync(string endpoint, List<HeaderParameter>? headers = null, object? body = null)
         {
-            return await _restSharpFactory.RequestAsync(endpoint, Method.Delete, headers, body);
+            return _restSharpFactory.RequestAsync(endpoint, Method.Delete, headers, body);
         }
     }
 }

@@ -6,7 +6,7 @@ namespace BlogAPI.Contexts
 {
 	public class MongoDataBaseContext
 	{
-		public readonly IMongoDatabase _db;
+		public readonly IMongoDatabase Db;
 		public MongoDataBaseContext(IConfiguration configuration)
 		{
 			var connectionString = configuration.GetSection("MongoDB").GetSection("ConnectionURI1").Value;
@@ -15,20 +15,20 @@ namespace BlogAPI.Contexts
 			var clientSettings =  MongoClientSettings.FromUrl(new MongoUrl(connectionString));
 			var mongoClient = new MongoClient(clientSettings);
 
-			_db = mongoClient.GetDatabase(databaseName);
+			Db = mongoClient.GetDatabase(databaseName);
         }
 
 		public IMongoCollection<T> GetCollection<T>(string collectionName)
 		{
-			return _db.GetCollection<T>(collectionName);
+			return Db.GetCollection<T>(collectionName);
 		}
 
-		public IMongoCollection<User> Users => _db.GetCollection<User>("User");
-        public IMongoCollection<Post> Posts => _db.GetCollection<Post>("Post");
-        public IMongoCollection<Models.File> Files => _db.GetCollection<Models.File>("File");
-        public IMongoCollection<Comment> Comments => _db.GetCollection<Comment>("Comment");
-        public IMongoCollection<Like> Likes => _db.GetCollection<Like>("Like");
-        public IMongoCollection<Author> Authors => _db.GetCollection<Author>("Author");
+		public IMongoCollection<User> Users => Db.GetCollection<User>("User");
+        public IMongoCollection<Post> Posts => Db.GetCollection<Post>("Post");
+        public IMongoCollection<Models.File> Files => Db.GetCollection<Models.File>("File");
+        public IMongoCollection<Comment> Comments => Db.GetCollection<Comment>("Comment");
+        public IMongoCollection<Like> Likes => Db.GetCollection<Like>("Like");
+        public IMongoCollection<Author> Authors => Db.GetCollection<Author>("Author");
     }
 }
 
