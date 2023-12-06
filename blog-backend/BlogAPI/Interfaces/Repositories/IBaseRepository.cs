@@ -5,15 +5,15 @@ using MongoDB.Driver;
 
 namespace BlogAPI.Interfaces.Repositories
 {
-    public interface IBaseRepository<TDocument>
+    public interface IBaseRepository
     {
-        Task<List<TDocument>> FindAllAsync();
+        Task<List<T>> FindAllAsync<T>();
 
-        Task<TDocument?> FindByIdAsync(string id);
+        Task<T?> FindByIdAsync<T>(string id);
 
-        Task CreateAsync(TDocument newItem);
+        Task CreateAsync<TDocument>(TDocument newItem);
             
-        Task<ReplaceOneResult> UpdateAsync(string id, TDocument updatedItem);
+        Task<ReplaceOneResult> UpdateAsync<TDocument>(string id, TDocument updatedItem);
 
         Task<DeleteResult> DeleteAsync(string id);
 

@@ -1,20 +1,20 @@
-﻿using BlogAPI.Interfaces.DataBase;
+﻿using BlogAPI.Contexts;
 using MongoDB.Driver;
 namespace BlogAPI.Interfaces.Repositories
 {
-    public class BaseRepository<T> : IBaseRepository<T>
+    public class BaseRepository: IBaseRepository
     {
-        protected readonly IDataBaseContext _mongoContext;
-        protected IMongoCollection<T> _dbCollection;
+        protected readonly MongoDataBaseContext _context;
+        protected IMongoDatabase _db;
 
-        protected BaseRepository(IDataBaseContext context)
+        protected BaseRepository(MongoDataBaseContext context)
         {
-            _mongoContext = context;
-            _dbCollection = _mongoContext.GetCollection<T>(typeof(T).Name);
+            _context = context;
+            _db = context._db;
         }
 
         public async Task<List<T>> FindAllAsync() =>
-            await _dbCollection.Find(_ => true).ToListAsync();
+            await _db.Find(_ => true).ToListAsync();
 
         public async Task<T?> FindByIdAsync(string id) =>
             await _dbCollection.Find(Builders<T>.Filter.Eq("_id", id)).FirstOrDefaultAsync();
