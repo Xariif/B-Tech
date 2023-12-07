@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq.Expressions;
-using Auth0.ManagementApi.Models;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 
 namespace BlogAPI.Interfaces.Repositories
 {
@@ -12,7 +9,7 @@ namespace BlogAPI.Interfaces.Repositories
         Task<T> FindByIdAsync<T>(string id);
 
         Task InsertOneAsync<TDocument>(TDocument newItem);
-            
+
         Task<ReplaceOneResult> UpdateAsync<TDocument>(string id, TDocument updatedItem);
 
         Task<DeleteResult> DeleteAsync(string id);

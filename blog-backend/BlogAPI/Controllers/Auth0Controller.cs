@@ -16,7 +16,7 @@ namespace BlogAPI.Controllers
             _auth0Service = auth0Service;
         }
 
-       
+
 
         [HttpGet("GetUserRoles")]
         public async Task<ActionResult> GetUserRoles(string userId)

@@ -1,13 +1,12 @@
 ﻿using BlogAPI.Contexts;
-using BlogAPI.Interfaces.Repositories;
 using BlogAPI.Models;
 using MongoDB.Driver;
 
 namespace BlogAPI.Repositories
 {
-    public class UserRepository : BaseRepository
+    public class UsersRepository : BaseRepository
     {
-        public UserRepository(MongoDataBaseContext context) : base(context)
+        public UsersRepository(MongoDataBaseContext context) : base(context)
         {
         }
 

@@ -1,21 +1,18 @@
-﻿using BlogAPI.DTOs.Author;
+﻿using BlogAPI.DTOs.Authors;
 using BlogAPI.Models;
 using BlogAPI.Repositories;
 using MongoDB.Bson;
 
 namespace BlogAPI.Services
 {
-    public class AuthorService
+    public class AuthorsService
     {
-        private readonly AuthorRepository _authorRepository;
+        private readonly AuthorsRepository _authorsRepository;
 
-        public AuthorService(AuthorRepository authorRepository)
+        public AuthorsService(AuthorsRepository authorsRepository)
         {
-            _authorRepository = authorRepository;
+            _authorsRepository = authorsRepository;
         }
-
-      
-
 
         public async Task CreateAuthorAsync(string userId)
         {
@@ -29,34 +26,33 @@ namespace BlogAPI.Services
             };
 
 
-            var res = await _authorRepository.FindFirstByIdAsync<Authors>(author.UserId);
+            var res = await _authorsRepository.FindFirstByIdAsync<Authors>(author.UserId);
             if (res != null)
             {
                 throw new ArgumentException("Author with same id already exist.");
             }
 
-            await _authorRepository.InsertOneAsync(author);
+            await _authorsRepository.InsertOneAsync(author);
         }
 
-        public async Task<AuthorDto> GetAuthorByIdAsync(string id)
+        public async Task<AuthorsDTO> GetAuthorByIdAsync(string id)
         {
-            var author = await _authorRepository.FindFirstByIdAsync<Authors>(id) ?? throw new ArgumentException("Author not found");
-            return new AuthorDto
+            var author = await _authorsRepository.FindFirstByIdAsync<Authors>(id) ?? throw new ArgumentException("Author not found");
+            return new AuthorsDTO
             {
                 Id = author.Id.ToString(),
                 UserId = author.UserId,
                 Description = author.Description,
                 SocialMedia = author.SocialMedia,
-                
             };
         }
 
-        public async Task UpdateAuthorAsync(AuthorDto authorDto)
+        public async Task UpdateAuthorAsync(AuthorsDTO authorDto)
         {
             if (authorDto.Id == null)
-               throw new ArgumentException("Id is null");
+                throw new ArgumentException("Id is null");
 
-            var author = await _authorRepository.FindFirstByIdAsync<Authors>(authorDto.Id) ?? throw new ArgumentException("Author not found");
+            var author = await _authorsRepository.FindFirstByIdAsync<Authors>(authorDto.Id) ?? throw new ArgumentException("Author not found");
             author = new Authors
             {
                 Id = author.Id,
@@ -65,13 +61,13 @@ namespace BlogAPI.Services
                 SocialMedia = authorDto.SocialMedia
             };
 
-            await _authorRepository.UpdateAsync(author.Id.ToString(),author);
-            
+            await _authorsRepository.UpdateAsync(author.Id.ToString(), author);
+
         }
 
         public async Task DeleteAuthorAsync(string userId)
         {
-            await _authorRepository.DeleteAsync(userId);
+            await _authorsRepository.DeleteAsync(userId);
         }
     }
 }

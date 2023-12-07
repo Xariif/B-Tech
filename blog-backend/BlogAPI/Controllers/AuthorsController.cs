@@ -1,4 +1,5 @@
-﻿using BlogAPI.Services;
+﻿using BlogAPI.DTOs.Authors;
+using BlogAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,22 +8,22 @@ namespace BlogAPI.Controllers
     [ApiController]
     [Authorize(Roles = "admin")]
     [Route("api/[controller]")]
-    public class AuthorController : BaseController
+    public class AuthorsController : BaseController
     {
-   private readonly AuthorService _authorService;
+        private readonly AuthorsService _authorsService;
 
-        public AuthorController(AuthorService authorService, IWebHostEnvironment env) : base(env)
+        public AuthorsController(AuthorsService authorsService, IWebHostEnvironment env) : base(env)
         {
-            _authorService = authorService;
+            _authorsService = authorsService;
         }
 
         [AllowAnonymous]
         [HttpGet("GetAuthorById")]
-        public async Task<ActionResult<AuthorDto>> GetAuthorById(string id)
+        public async Task<ActionResult<AuthorsDTO>> GetAuthorById(string id)
         {
             try
             {
-                return await _authorService.GetAuthorByIdAsync(id);
+                return await _authorsService.GetAuthorByIdAsync(id);
 
             }
             catch (Exception ex)
@@ -33,11 +34,11 @@ namespace BlogAPI.Controllers
         }
 
         [HttpPost("CreateAuthor")]
-        public async Task<ActionResult> CreateAuthor(CreateAuthorDto newAuthorDto)
+        public async Task<ActionResult> CreateAuthor(string newAuthorUserId)
         {
             try
             {
-                await _authorService.CreateAuthorAsync(newAuthorDto);
+                await _authorsService.CreateAuthorAsync(newAuthorUserId);
                 return Ok("Author created");
             }
             catch (ArgumentException ex)
@@ -48,13 +49,13 @@ namespace BlogAPI.Controllers
         }
 
 
-        [Authorize(Roles ="author")]
+        [Authorize(Roles = "author")]
         [HttpPut("UpdateAuthor")]
-        public async Task<ActionResult> UpdateAuthor(AuthorDto authorDto)
+        public async Task<ActionResult> UpdateAuthor(AuthorsDTO authorDto)
         {
             try
             {
-                await _authorService.UpdateAuthorAsync(authorDto);
+                await _authorsService.UpdateAuthorAsync(authorDto);
                 return Ok("Author updated");
             }
             catch (Exception ex)
@@ -68,7 +69,7 @@ namespace BlogAPI.Controllers
         {
             try
             {
-                await _authorService.DeleteAuthorAsync(id);
+                await _authorsService.DeleteAuthorAsync(id);
                 return Ok("Author Deleted");
             }
             catch (Exception ex)

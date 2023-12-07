@@ -1,25 +1,23 @@
 ﻿using Auth0.ManagementApi.Models;
-using BlogAPI.Interfaces.Repositories;
 using BlogAPI.Repositories;
-using MongoDB.Driver;
 using Newtonsoft.Json;
 using RestSharp;
 
 namespace BlogAPI.Services
 {
-    public class Auth0Service 
+    public class Auth0Service
     {
         readonly Auth0Repository _auth0Repository = new();
-        private readonly UserRepository _userRepository;
+        private readonly UsersRepository _usersRepository;
 
-        public Auth0Service(UserRepository userRepository)
+        public Auth0Service(UsersRepository usersRepository)
         {
-            _userRepository = userRepository;
+            _usersRepository = usersRepository;
         }
 
         public async Task<bool> DeleteUserAsync(string userId)
         {
-            await _userRepository.DeleteAsync(userId);
+            await _usersRepository.DeleteAsync(userId);
 
             var res = await _auth0Repository.DeleteAsync($"/api/v2/users/{userId}");
 
@@ -81,8 +79,8 @@ namespace BlogAPI.Services
             var res = await _auth0Repository.GetAsync("/api/v2/users");
             var users = new List<User>();
 
-            if(res.Content!= null)
-                 users = JsonConvert.DeserializeObject<List<User>>(res.Content);
+            if (res.Content != null)
+                users = JsonConvert.DeserializeObject<List<User>>(res.Content);
 
             return users;
         }

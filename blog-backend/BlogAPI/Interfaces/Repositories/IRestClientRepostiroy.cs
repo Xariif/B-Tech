@@ -1,6 +1,4 @@
-﻿using RestSharp;
-
-namespace BlogAPI.Interfaces.Repositories
+﻿namespace BlogAPI.Interfaces.Repositories
 {
     public interface IRestClientRepostiroy
     {

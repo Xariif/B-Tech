@@ -13,16 +13,16 @@ namespace BlogAPI.Utils.Auth0
             _accessToken = accessToken;
         }
 
-        public static async Task<AccessToken> GetTokenAsync(RestClient client,IConfigurationRoot configuration)
+        public static async Task<AccessToken> GetTokenAsync(RestClient client, IConfigurationRoot configuration)
         {
 
-            if (_accessToken != null  && !IsAccessTokenExpired(_accessToken))
+            if (_accessToken != null && !IsAccessTokenExpired(_accessToken))
             {
                 return _accessToken;
             }
 
 
-            string? clientId =  configuration["Auth0:M2MClientId"];
+            string? clientId = configuration["Auth0:M2MClientId"];
             string? clientSecret = configuration["Auth0:ClientSecret"];
             string? managementAudience = configuration["Auth0:Domain"] + "/api/v2/";
 
@@ -52,7 +52,7 @@ namespace BlogAPI.Utils.Auth0
 
             var token = tokenHandler.ReadJwtToken(accessToken.Token);
 
-            if(token.ValidTo >= DateTime.UtcNow)
+            if (token.ValidTo >= DateTime.UtcNow)
                 return false;
 
             return true;
@@ -60,6 +60,6 @@ namespace BlogAPI.Utils.Auth0
 
 
 
-      
+
     }
 }

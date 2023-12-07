@@ -1,23 +1,21 @@
-﻿using BlogAPI.Interfaces.Repositories;
-using BlogAPI.Repositories;
+﻿using BlogAPI.Repositories;
 using BlogAPI.Services;
-using RestSharp;
 
 namespace BlogAPI.Extensions
 {
     public static class ApplicationServiceExtensions
     {
-        public static IServiceCollection AddApplicationServices(this IServiceCollection services )
+        public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            services.AddScoped<PostService>();
-            services.AddScoped<UserService>();
+            services.AddScoped<PostsService>();
+            services.AddScoped<UsersService>();
             services.AddScoped<Auth0Service>();
 
-            services.AddScoped<PostRepository>();
-            services.AddScoped<UserRepository>();
+            services.AddScoped<PostsRepository>();
+            services.AddScoped<UsersRepository>();
             services.AddScoped<Auth0Repository>();
 
-            
+
 
 
             return services;

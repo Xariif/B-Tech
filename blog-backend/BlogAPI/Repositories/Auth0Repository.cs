@@ -1,13 +1,6 @@
-﻿using Amazon.Runtime.Internal;
-using Auth0.ManagementApi.Models;
-using BlogAPI.Factory;
-using BlogAPI.Interfaces.Repositories;
-using BlogAPI.Models;
+﻿using BlogAPI.Factory;
 using BlogAPI.Utils;
-using BlogAPI.Utils.Auth0;
 using RestSharp;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace BlogAPI.Repositories
 {
@@ -25,7 +18,7 @@ namespace BlogAPI.Repositories
 
         public Task<RestResponse> GetAsync(string endpoint, List<HeaderParameter>? headers = null, object? body = null)
         {
-            return _restSharpFactory.RequestAsync(endpoint,Method.Get, headers,body);
+            return _restSharpFactory.RequestAsync(endpoint, Method.Get, headers, body);
         }
 
         public Task<RestResponse> PostAsync(string endpoint, List<HeaderParameter>? headers = null, object? body = null)

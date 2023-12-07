@@ -31,6 +31,5 @@
   <ItemGroup>
     <Folder Include="Models\Helpers\" />
     <Folder Include="Contexts\" />
-    <Folder Include="DTOs\" />
   </ItemGroup>
 </Project>

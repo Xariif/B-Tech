@@ -1,11 +1,9 @@
+using BlogAPI.Contexts;
 using BlogAPI.Extensions;
-using BlogAPI.Models;
-using BlogAPI.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
-using BlogAPI.Contexts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,7 +41,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.Audience = builder.Configuration["Auth0:Audience"];
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            NameClaimType = ClaimTypes.NameIdentifier,            
+            NameClaimType = ClaimTypes.NameIdentifier,
         };
     });
 

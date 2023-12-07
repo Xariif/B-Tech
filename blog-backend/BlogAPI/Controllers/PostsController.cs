@@ -1,9 +1,9 @@
-﻿using BlogAPI.DTOs.Author;
-using BlogAPI.DTOs.Post;
+﻿using BlogAPI.DTOs.Posts;
 using BlogAPI.Models;
 using BlogAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 
 namespace BlogAPI.Controllers
 {
@@ -11,13 +11,13 @@ namespace BlogAPI.Controllers
     [Authorize(Roles = "author")]
     [Route("api/[controller]")]
 
-    public class PostController : BaseController
+    public class PostsController : BaseController
     {
-        private readonly PostService _postService;
+        private readonly PostsService _postsService;
 
-        public PostController(PostService postService, IWebHostEnvironment env) : base(env)
+        public PostsController(PostsService postsService, IWebHostEnvironment env) : base(env)
         {
-            _postService = postService;
+            _postsService = postsService;
         }
 
         [HttpGet("GetApprovedPosts")]
@@ -26,7 +26,7 @@ namespace BlogAPI.Controllers
         {
             try
             {
-                var result = await _postService.GetPostsByStatusAsync(Status.Aproved);
+                var result = await _postsService.GetPostsByStatusAsync(Status.Aproved);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -45,7 +45,7 @@ namespace BlogAPI.Controllers
 
 
 
-                var result = await _postService.GetPostsByStatusAndUserIdAsync(Status.Draft, userId);
+                var result = await _postsService.GetPostsByStatusAndUserIdAsync(Status.Draft, userId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -59,7 +59,7 @@ namespace BlogAPI.Controllers
         {
             try
             {
-                var result = await _postService.GetPostsByStatusAndUserIdAsync(Status.Rejected, "");
+                var result = await _postsService.GetPostsByStatusAndUserIdAsync(Status.Rejected, "");
                 return Ok(result);
             }
             catch (Exception ex)
@@ -74,14 +74,14 @@ namespace BlogAPI.Controllers
         {
             try
             {
-                var result = await _postService.GetPostsByStatusAsync(Status.ToConfirm);
+                var result = await _postsService.GetPostsByStatusAsync(Status.ToConfirm);
                 return Ok(result);
             }
             catch (Exception ex)
             {
                 return HandleError(ex);
             }
-        }     
+        }
 
         [HttpGet("GetApprovedPostsByAuthorId")]
         public async Task<ActionResult<Posts>> GetApprovedPostsByAuthorId(string id)
@@ -89,7 +89,7 @@ namespace BlogAPI.Controllers
             try
             {
 
-                var res = await _postService.GetApprovedPostsByAuthorIdAsync(id);
+                var res = await _postsService.GetApprovedPostsByAuthorIdAsync(id);
                 return Ok(res);
             }
             catch (Exception ex)
@@ -99,7 +99,7 @@ namespace BlogAPI.Controllers
         }
 
         [HttpPost("CreatePost")]
-        public async Task<ActionResult> CreatePost(NewPostDto newPost)
+        public async Task<ActionResult> CreatePost(PostsDTO newPost)
         {
             try
             {
@@ -108,19 +108,18 @@ namespace BlogAPI.Controllers
 
                 Posts post = new()
                 {
-                    AuthorId = newPost.AuthorId,
+                    AuthorId = ObjectId.Parse(newPost.AuthorId),
                     Category = newPost.Category,
                     Content = newPost.Content,
                     CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow,
                     Id = MongoDB.Bson.ObjectId.GenerateNewId(),
                     MainParentId = null,
-                    Status = Status.Drafts,
+                    Status = Status.Draft,
                     Tags = newPost.Tags,
                     Title = newPost.Title
                 };
 
-                await _postService.CreatePostAsync(post);
+                await _postsService.CreatePostAsync(post);
                 return Ok("Post created");
             }
             catch (Exception ex)
@@ -131,16 +130,16 @@ namespace BlogAPI.Controllers
 
         [HttpPut("UpdateDraftPost")]
         [Authorize(Policy = "author")]
-        public async Task<ActionResult> UpdateDraftPost(PostDto postDto)
+        public async Task<ActionResult> UpdateDraftPost(PostsDTO postDto)
         {
             try
             {
                 if (User?.Identity?.Name != postDto.AuthorId)
-                    throw new UnauthorizedAccessException();         
+                    throw new UnauthorizedAccessException();
 
                 if (postDto?.Id != null)
                 {
-                    await _postService.UpdateDraftPostAsync(postDto);
+                    await _postsService.UpdateDraftPostAsync(postDto);
                 }
                 return Ok("Post updated");
             }
@@ -150,9 +149,7 @@ namespace BlogAPI.Controllers
             }
         }
 
-        //update accepted post - create a new copy with toconfirm status and search if exist then remove first one
 
-        //przy accept main parent id = null  chyba
 
         [HttpPut("AcceptPost")]
         [Authorize(Policy = "admin")]
@@ -160,7 +157,7 @@ namespace BlogAPI.Controllers
         {
             try
             {
-                await _postService.RejectPostAsync(id);
+                await _postsService.RejectPostAsync(id);
                 return Ok("Post updated");
             }
             catch (Exception ex)
@@ -175,7 +172,7 @@ namespace BlogAPI.Controllers
         {
             try
             {
-                await _postService.RejectPostAsync(id);
+                await _postsService.RejectPostAsync(id);
                 return Ok("Post updated");
             }
             catch (Exception ex)
@@ -190,7 +187,7 @@ namespace BlogAPI.Controllers
         {
             try
             {
-                await _postService.DeletePostAsync(id);
+                await _postsService.DeletePostAsync(id);
                 return Ok("Post deleted");
             }
             catch (Exception ex)

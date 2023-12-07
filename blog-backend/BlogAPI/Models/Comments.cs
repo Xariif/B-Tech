@@ -1,5 +1,4 @@
-﻿using System;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace BlogAPI.Models
@@ -17,6 +16,6 @@ namespace BlogAPI.Models
         public required string Content { get; set; }
         public required int Likes { get; set; } = 0;
         public int Dislikes { get; set; } = 0;
-        public required DateTime CreatedAt { get; set;}
+        public required DateTime CreatedAt { get; set; }
     }
 }

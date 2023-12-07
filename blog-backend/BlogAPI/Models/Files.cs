@@ -9,7 +9,7 @@ namespace BlogAPI.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public required ObjectId Id { get; set; }
         public required int Length { get; set; }
-        public required int ChunkSize{ get; set; }
+        public required int ChunkSize { get; set; }
         public required DateTime UploadDate { get; set; }
         public required string FileName { get; set; }
         public required Metadata Metadata { get; set; }

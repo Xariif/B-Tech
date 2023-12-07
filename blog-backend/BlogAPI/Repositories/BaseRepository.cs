@@ -17,11 +17,11 @@ namespace BlogAPI.Repositories
         }
 
 
-         public  Task<List<T>> FindAllAsync<T>()
-         {
+        public Task<List<T>> FindAllAsync<T>()
+        {
 
             return _db.GetCollection<T>(typeof(T).Name).FindAsync(_ => true).Result.ToListAsync();
-         }
+        }
 
 
         public Task<List<T>> FindAllAsync<T>(FilterDefinition<T> filter)
@@ -43,7 +43,7 @@ namespace BlogAPI.Repositories
 
         public Task<ReplaceOneResult> UpdateAsync<T>(string id, T updatedItem)
         {
-            return  _db.GetCollection<T>(typeof(T).Name).ReplaceOneAsync(Builders<T>.Filter.Eq("_id", ObjectId.Parse(id)), updatedItem);
+            return _db.GetCollection<T>(typeof(T).Name).ReplaceOneAsync(Builders<T>.Filter.Eq("_id", ObjectId.Parse(id)), updatedItem);
         }
 
         public Task<DeleteResult> DeleteAsync(string id)

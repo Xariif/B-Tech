@@ -1,5 +1,4 @@
-﻿using BlogAPI.DTOs.Post;
-using BlogAPI.Models;
+﻿using BlogAPI.Models;
 
 namespace BlogAPI.Interfaces.Services
 {

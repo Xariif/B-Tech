@@ -1,5 +1,4 @@
-﻿using BlogAPI.DTOs.Author;
-using BlogAPI.DTOs.User;
+﻿using BlogAPI.DTOs.Users;
 using BlogAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,23 +8,23 @@ namespace BlogAPI.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize(Policy = "user")]
-public class UserController : BaseController
+public class UsersController : BaseController
 {
-    private readonly UserService _userService;
+    private readonly UsersService _usersService;
     private readonly Auth0Service _auth0Service;
-    public UserController(UserService userService, Auth0Service auth0Service,IWebHostEnvironment env) : base(env)
+    public UsersController(UsersService usersService, Auth0Service auth0Service, IWebHostEnvironment env) : base(env)
     {
-        _userService = userService;
+        _usersService = usersService;
         _auth0Service = auth0Service;
     }
 
     [Authorize(Policy = "admin")]
     [HttpGet("GetUserByUserId")]
-    public async Task<ActionResult<UserDto>> GetUserByUserIdAsync(string userId)
+    public async Task<ActionResult<UsersDTO>> GetUserByUserIdAsync(string userId)
     {
         try
         {
-            return await _userService.GetUserByUserIdAsync(userId);
+            return await _usersService.GetUserByUserIdAsync(userId);
         }
         catch (Exception ex)
         {
@@ -34,13 +33,13 @@ public class UserController : BaseController
     }
 
     [HttpPut("UpdateUser")]
-    public async Task<ActionResult> UpdateUserAsync(UpdateUserDto userDto)
+    public async Task<ActionResult> UpdateUserAsync(UsersDTO userDto)
     {
         try
         {
             var userId = User?.Identity?.Name ?? throw new UnauthorizedAccessException();
 
-            await _userService.UpdateUserAsync(userId,userDto);
+            await _usersService.UpdateUserAsync(userId, userDto);
             return Ok("User updated");
         }
         catch (Exception ex)
@@ -56,7 +55,7 @@ public class UserController : BaseController
         {
             var userId = User?.Identity?.Name ?? throw new UnauthorizedAccessException();
 
-            await _userService.DeleteUserAsync(userId);
+            await _usersService.DeleteUserAsync(userId);
             await _auth0Service.DeleteUserAsync(userId);
             return Ok("Author Deleted");
         }
@@ -72,7 +71,7 @@ public class UserController : BaseController
     {
         try
         {
-            var res = await _userService.GetAllUsersAsync();
+            var res = await _usersService.GetAllUsersAsync();
             return Ok(res);
         }
         catch (Exception ex)

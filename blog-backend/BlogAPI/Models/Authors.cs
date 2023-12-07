@@ -1,5 +1,5 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace BlogAPI.Models
 {
@@ -8,7 +8,7 @@ namespace BlogAPI.Models
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public required ObjectId Id { get; set; }
-        public required string UserId { get; set; } 
+        public required string UserId { get; set; }
         public string? Description { get; set; }
         public SocialMedia? SocialMedia { get; set; }
     }
