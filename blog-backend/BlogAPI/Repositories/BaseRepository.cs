@@ -31,7 +31,7 @@ namespace BlogAPI.Repositories
         }
 
 
-        public Task<T> FindByIdAsync<T>(string id)
+        public Task<T> FindFirstByIdAsync<T>(string id)
         {
             return _db.GetCollection<T>(typeof(T).Name).Find(Builders<T>.Filter.Eq("_id", id)).FirstOrDefaultAsync();
         }
@@ -48,7 +48,7 @@ namespace BlogAPI.Repositories
 
         public Task<DeleteResult> DeleteAsync(string id)
         {
-            return _db.GetCollection<User>(nameof(User)).DeleteOneAsync(Builders<User>.Filter.Eq("_id", id));
+            return _db.GetCollection<Users>(nameof(Users)).DeleteOneAsync(Builders<Users>.Filter.Eq("_id", id));
         }
     }
 }

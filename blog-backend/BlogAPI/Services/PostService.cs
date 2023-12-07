@@ -19,63 +19,63 @@ namespace BlogAPI.Services
 			_authorRepository = authorRepository;
 		}
 
-		public async Task<Post?> GetPostByIdAsync(string postId)
+		public async Task<Posts?> GetPostByIdAsync(string postId)
 		{
-			return await _postRepository.FindFirstByIdAsync<Post>(postId)!;
+			return await _postRepository.FindFirstByIdAsync<Posts>(postId)!;
 		}
 
-        public async Task<IEnumerable<Post>> GetApprovedPostsByAuthorIdAsync(string authorId)
+        public async Task<IEnumerable<Posts>> GetApprovedPostsByAuthorIdAsync(string authorId)
         {
-            var filter = Builders<Post>.Filter.Eq(post => post.AuthorId, authorId)
-                      & Builders<Post>.Filter.Eq(x => x.Status, Status.Aproved);
+            var filter = Builders<Posts>.Filter.Eq(post => post.AuthorId, authorId)
+                      & Builders<Posts>.Filter.Eq(x => x.Status, Status.Aproved);
 
             return await _postRepository.FindAllAsync(filter);
         }
 
-        public async Task<IEnumerable<Post>> GetApprovedPostsByCategoryAsync(string category)
+        public async Task<IEnumerable<Posts>> GetApprovedPostsByCategoryAsync(string category)
 		{
-			var filter = Builders<Post>.Filter.Eq(post => post.Category, category)
-					& Builders<Post>.Filter.Eq(x => x.Status, Status.Aproved);
+			var filter = Builders<Posts>.Filter.Eq(post => post.Category, category)
+					& Builders<Posts>.Filter.Eq(x => x.Status, Status.Aproved);
 
 			return await _postRepository.FindAllAsync(filter);
 		}
 
-		public async Task<IEnumerable<Post>> GetApprovedPostsByTagAsync(string tag)
+		public async Task<IEnumerable<Posts>> GetApprovedPostsByTagAsync(string tag)
 		{
-			var filter = Builders<Post>.Filter.AnyEq(x => x.Tags, tag)
-								& Builders<Post>.Filter.Eq(x => x.Status, Status.Aproved);
+			var filter = Builders<Posts>.Filter.AnyEq(x => x.Tags, tag)
+								& Builders<Posts>.Filter.Eq(x => x.Status, Status.Aproved);
 
 			return await _postRepository.FindAllAsync(filter);
 		}
 
-		public async Task<IEnumerable<Post>> GetPostsByStatusAndUserIdAsync(Status status, string userId)
+		public async Task<IEnumerable<Posts>> GetPostsByStatusAndUserIdAsync(Status status, string userId)
 		{
-			var author = await _authorRepository.FindFirstByIdAsync<Author>(userId);
+			var author = await _authorRepository.FindFirstByIdAsync<Authors>(userId);
 
-			var filter = Builders<Post>.Filter.Eq(post => post.Status, status) &
-						Builders<Post>.Filter.Eq(post => post.AuthorId, author.Id);
+			var filter = Builders<Posts>.Filter.Eq(post => post.Status, status) &
+						Builders<Posts>.Filter.Eq(post => post.AuthorId, author.Id);
 
 			return await _postRepository.FindAllAsync(filter);
 
 		}
 
-		public async Task<IEnumerable<Post>> GetPostsByStatusAsync(Status status)
+		public async Task<IEnumerable<Posts>> GetPostsByStatusAsync(Status status)
 		{
-			var filter = Builders<Post>.Filter.Eq(post => post.Status, status);
+			var filter = Builders<Posts>.Filter.Eq(post => post.Status, status);
 
 			return await _postRepository.FindAllAsync(filter);
 		}
 
-		public async Task<IEnumerable<Post>> GetApprovedPostsByDateRangeAsync(DateTime startDate, DateTime endDate)
+		public async Task<IEnumerable<Posts>> GetApprovedPostsByDateRangeAsync(DateTime startDate, DateTime endDate)
 		{
-			var filter = Builders<Post>.Filter.Gte(post => post.CreatedAt, startDate) &
-						Builders<Post>.Filter.Lte(post => post.CreatedAt, endDate);
+			var filter = Builders<Posts>.Filter.Gte(post => post.CreatedAt, startDate) &
+						Builders<Posts>.Filter.Lte(post => post.CreatedAt, endDate);
 
 
 			return await _postRepository.FindAllAsync(filter);
 		}
 
-		public async Task CreatePostAsync(Post newPost)
+		public async Task CreatePostAsync(Posts newPost)
 		{
 			await _postRepository.InsertOneAsync(newPost);
 		}
@@ -87,7 +87,7 @@ namespace BlogAPI.Services
 
 			var post  = await GetPostByIdAsync(updatedPost.Id) ?? throw new Exception("Post doesn't exist");
 
-			Post updated = new()
+			Posts updated = new()
 			{
 				Id = post.Id,
 				AuthorId = post.AuthorId,
@@ -114,7 +114,7 @@ namespace BlogAPI.Services
 				throw new Exception("Id is null");
 			var post = await GetPostByIdAsync(updatedPost.Id) ?? throw new Exception("Post doesn't exist");
 
-			Post updated = new()
+			Posts updated = new()
 			{
 				Id = post.Id,
 				AuthorId = post.AuthorId,
@@ -139,7 +139,7 @@ namespace BlogAPI.Services
 		{
 			var post = await GetPostByIdAsync(postId) ?? throw new Exception("Post doesn't exist");
 
-			Post updated = new()
+			Posts updated = new()
 			{
 				Id = post.Id,
 				AuthorId = post.AuthorId,
@@ -164,7 +164,7 @@ namespace BlogAPI.Services
 		{
 			var post = await GetPostByIdAsync(postId) ?? throw new Exception("Post doesn't exist");
 
-			Post updated = new()
+			Posts updated = new()
 			{
 				Id = post.Id,
 				AuthorId = post.AuthorId,

@@ -3,7 +3,7 @@ using MongoDB.Bson;
 
 namespace BlogAPI.Models
 {
-    public class Author
+    public class Authors
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]

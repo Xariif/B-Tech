@@ -4,7 +4,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace BlogAPI.Models
 {
-	public class Like
+	public class Likes
 	{
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
@@ -19,7 +19,6 @@ namespace BlogAPI.Models
 
     public enum LikeType
     {
-        Author,
         Post,
         Comment
     }

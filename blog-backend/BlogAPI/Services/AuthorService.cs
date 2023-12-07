@@ -19,7 +19,7 @@ namespace BlogAPI.Services
 
         public async Task CreateAuthorAsync(string userId)
         {
-            var author = new Author()
+            var author = new Authors()
 
             {
                 Id = ObjectId.GenerateNewId(),
@@ -29,7 +29,7 @@ namespace BlogAPI.Services
             };
 
 
-            var res = await _authorRepository.FindByIdAsync<Author>(author.UserId);
+            var res = await _authorRepository.FindFirstByIdAsync<Authors>(author.UserId);
             if (res != null)
             {
                 throw new ArgumentException("Author with same id already exist.");
@@ -40,7 +40,7 @@ namespace BlogAPI.Services
 
         public async Task<AuthorDto> GetAuthorByIdAsync(string id)
         {
-            var author = await _authorRepository.FindByIdAsync<Author>(id) ?? throw new ArgumentException("Author not found");
+            var author = await _authorRepository.FindFirstByIdAsync<Authors>(id) ?? throw new ArgumentException("Author not found");
             return new AuthorDto
             {
                 Id = author.Id.ToString(),
@@ -56,8 +56,8 @@ namespace BlogAPI.Services
             if (authorDto.Id == null)
                throw new ArgumentException("Id is null");
 
-            var author = await _authorRepository.FindByIdAsync<Author>(authorDto.Id) ?? throw new ArgumentException("Author not found");
-            author = new Author
+            var author = await _authorRepository.FindFirstByIdAsync<Authors>(authorDto.Id) ?? throw new ArgumentException("Author not found");
+            author = new Authors
             {
                 Id = author.Id,
                 UserId = author.UserId,

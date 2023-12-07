@@ -38,7 +38,7 @@ public class UserController : BaseController
     {
         try
         {
-            var userId = User?.Identity?.Name ?? throw new Exception();
+            var userId = User?.Identity?.Name ?? throw new UnauthorizedAccessException();
 
             await _userService.UpdateUserAsync(userId,userDto);
             return Ok("User updated");

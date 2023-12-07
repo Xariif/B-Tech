@@ -1,7 +1,7 @@
 ﻿using BlogAPI.DTOs.Author;
 using BlogAPI.DTOs.User;
 using BlogAPI.Repositories;
-using User = BlogAPI.Models.User;
+using Users = BlogAPI.Models.Users;
 
 namespace BlogAPI.Services
 {
@@ -35,7 +35,7 @@ namespace BlogAPI.Services
         public Task<List<UserDto>> GetAllUsersAsync()
         {
 
-         var users  = _userRepository.FindAllAsync<User>();
+         var users  = _userRepository.FindAllAsync<Users>();
          var usersDto = users.Result.Select(user => new UserDto
              {
                  Id = user.Id.ToString(),
@@ -68,7 +68,7 @@ namespace BlogAPI.Services
                 Email = user.Email
             };
             
-             await _userRepository.UpdateAsync<User>(user.Id.ToString(), user);
+             await _userRepository.UpdateAsync<Users>(user.Id.ToString(), user);
         }
           
 

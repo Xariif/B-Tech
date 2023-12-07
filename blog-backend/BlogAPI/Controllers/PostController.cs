@@ -22,7 +22,7 @@ namespace BlogAPI.Controllers
 
         [HttpGet("GetApprovedPosts")]
         [AllowAnonymous]
-        public async Task<ActionResult<List<Post>>> GetApprovedPosts()
+        public async Task<ActionResult<List<Posts>>> GetApprovedPosts()
         {
             try
             {
@@ -36,7 +36,7 @@ namespace BlogAPI.Controllers
         }
 
         [HttpGet("GetDraftPosts")]
-        public async Task<ActionResult<List<Post>>> GetDraftPosts()
+        public async Task<ActionResult<List<Posts>>> GetDraftPosts()
         {
             try
             {
@@ -45,7 +45,7 @@ namespace BlogAPI.Controllers
 
 
 
-                var result = await _postService.GetPostsByStatusAndUserIdAsync(Status.Drafts, userId);
+                var result = await _postService.GetPostsByStatusAndUserIdAsync(Status.Draft, userId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -55,7 +55,7 @@ namespace BlogAPI.Controllers
         }
 
         [HttpGet("GetRejectedPosts")]
-        public async Task<ActionResult<List<Post>>> GetRejectedPosts()
+        public async Task<ActionResult<List<Posts>>> GetRejectedPosts()
         {
             try
             {
@@ -70,7 +70,7 @@ namespace BlogAPI.Controllers
 
         [HttpGet("GetPostWaitingForApproval")]
         [Authorize(Roles = "admin")]
-        public async Task<ActionResult<List<Post>>> GetPostWaitingForApproval()
+        public async Task<ActionResult<List<Posts>>> GetPostWaitingForApproval()
         {
             try
             {
@@ -84,7 +84,7 @@ namespace BlogAPI.Controllers
         }     
 
         [HttpGet("GetApprovedPostsByAuthorId")]
-        public async Task<ActionResult<Post>> GetApprovedPostsByAuthorId(string id)
+        public async Task<ActionResult<Posts>> GetApprovedPostsByAuthorId(string id)
         {
             try
             {
@@ -106,7 +106,7 @@ namespace BlogAPI.Controllers
                 if (User?.Identity?.Name != newPost.AuthorId)
                     throw new UnauthorizedAccessException();
 
-                Post post = new()
+                Posts post = new()
                 {
                     AuthorId = newPost.AuthorId,
                     Category = newPost.Category,

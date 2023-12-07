@@ -26,9 +26,11 @@
   <ItemGroup>
     <None Remove="Models\Helpers\" />
     <None Remove="Contexts\" />
+    <None Remove="DTOs\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\Helpers\" />
     <Folder Include="Contexts\" />
+    <Folder Include="DTOs\" />
   </ItemGroup>
 </Project>

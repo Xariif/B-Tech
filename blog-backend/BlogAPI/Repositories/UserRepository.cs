@@ -11,8 +11,8 @@ namespace BlogAPI.Repositories
         {
         }
 
-        public Task<User> FindByUserIdAsync(string userId) =>
-             _context.Users.Find(Builders<User>.Filter.Eq(user => user.UserId, userId)).FirstOrDefaultAsync();
+        public Task<Users> FindByUserIdAsync(string userId) =>
+             _context.Users.Find(Builders<Users>.Filter.Eq(user => user.UserId, userId)).FirstOrDefaultAsync();
 
     }
 }

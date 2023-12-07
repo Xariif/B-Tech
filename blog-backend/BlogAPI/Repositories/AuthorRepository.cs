@@ -12,9 +12,9 @@ namespace BlogAPI.Repositories
         {
         }
 
-        public Task<Author> GetAuthorByUserIdAsync(string userId)
+        public Task<Authors> GetAuthorByUserIdAsync(string userId)
         {
-            return  _context.Authors.Find(Builders<Author>.Filter.Eq(author => author.UserId, userId)).FirstOrDefaultAsync();
+            return  _context.Authors.Find(Builders<Authors>.Filter.Eq(author => author.UserId, userId)).FirstOrDefaultAsync();
             
         }
     }

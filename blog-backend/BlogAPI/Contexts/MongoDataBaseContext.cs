@@ -23,12 +23,13 @@ namespace BlogAPI.Contexts
 			return Db.GetCollection<T>(collectionName);
 		}
 
-		public IMongoCollection<User> Users => Db.GetCollection<User>("User");
-        public IMongoCollection<Post> Posts => Db.GetCollection<Post>("Post");
-        public IMongoCollection<Models.File> Files => Db.GetCollection<Models.File>("File");
-        public IMongoCollection<Comment> Comments => Db.GetCollection<Comment>("Comment");
-        public IMongoCollection<Like> Likes => Db.GetCollection<Like>("Like");
-        public IMongoCollection<Author> Authors => Db.GetCollection<Author>("Author");
+		public IMongoCollection<Users> Users => Db.GetCollection<Users>("Users");
+        public IMongoCollection<Authors> Authors => Db.GetCollection<Authors>("Authors");
+        public IMongoCollection<Posts> Posts => Db.GetCollection<Posts>("Posts");
+        public IMongoCollection<Comments> Comments => Db.GetCollection<Comments>("Comments");
+        public IMongoCollection<Likes> Likes => Db.GetCollection<Likes>("Likes");
+        public IMongoCollection<Files> Files => Db.GetCollection<Files>("Files");
+        public IMongoCollection<Chunks> Chunks => Db.GetCollection<Chunks>("Chunks");
     }
 }
 

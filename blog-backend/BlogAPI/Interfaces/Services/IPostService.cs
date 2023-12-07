@@ -5,25 +5,25 @@ namespace BlogAPI.Interfaces.Services
 {
     public interface IPostService
     {
-        Task<IEnumerable<Post>> GetAllPostsAsync();
+        Task<IEnumerable<Posts>> GetAllPostsAsync();
 
-        Task<Post?> GetPostByIdAsync(string postId);
+        Task<Posts?> GetPostByIdAsync(string postId);
 
-        Task<IEnumerable<Post>> GetApprovedPostsByAuthorIdAsync(string authorId);
+        Task<IEnumerable<Posts>> GetApprovedPostsByAuthorIdAsync(string authorId);
 
-        Task<IEnumerable<Post>> GetPostsByCategoryAsync(string category);
+        Task<IEnumerable<Posts>> GetPostsByCategoryAsync(string category);
 
-        Task<IEnumerable<Post>> GetPostsByTagAsync(string tag);
+        Task<IEnumerable<Posts>> GetPostsByTagAsync(string tag);
 
-        Task<IEnumerable<Post>> GetPostsByStatusAsync(Status status);
+        Task<IEnumerable<Posts>> GetPostsByStatusAsync(Status status);
 
-        Task<IEnumerable<Post>> GetPostsByDateRangeAsync(DateTime startDate, DateTime endDate);
+        Task<IEnumerable<Posts>> GetPostsByDateRangeAsync(DateTime startDate, DateTime endDate);
 
-        Task<Post> CreatePostAsync(Post newPost);
+        Task<Posts> CreatePostAsync(Posts newPost);
 
-        Task UpdateDraftPostAsync(string postId, Post updatedPost);
+        Task UpdateDraftPostAsync(string postId, Posts updatedPost);
 
-        Task UpdateAcceptedPostAsync(string postId, Post updatedPost);
+        Task UpdateAcceptedPostAsync(string postId, Posts updatedPost);
 
         Task DeletePostAsync(string postId);
 

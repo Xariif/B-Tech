@@ -1,8 +1,4 @@
-﻿using BlogAPI.DTOs.Author;
-
-using BlogAPI.Models;
-using BlogAPI.Services;
-using Microsoft.AspNetCore.Authentication;
+﻿using BlogAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
