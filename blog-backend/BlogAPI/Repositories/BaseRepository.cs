@@ -2,6 +2,7 @@
 using BlogAPI.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using MongoDB.Driver.GridFS;
 
 namespace BlogAPI.Repositories
 {
@@ -9,24 +10,23 @@ namespace BlogAPI.Repositories
     {
         protected readonly MongoDataBaseContext _context;
         protected readonly IMongoDatabase _db;
-
+        protected readonly GridFSBucket _bucket;
         protected BaseRepository(MongoDataBaseContext context)
         {
             _context = context;
             _db = context.Db;
+            _bucket = new GridFSBucket(_db);
         }
 
 
         public Task<List<T>> FindAllAsync<T>()
         {
-
             return _db.GetCollection<T>(typeof(T).Name).FindAsync(_ => true).Result.ToListAsync();
         }
 
 
         public Task<List<T>> FindAllAsync<T>(FilterDefinition<T> filter)
         {
-
             return _db.GetCollection<T>(typeof(T).Name).FindAsync(filter).Result.ToListAsync();
         }
 

@@ -31,11 +31,11 @@ namespace BlogAPI.Services
 
 
 
-        public Task<List<UsersDTO>> GetAllUsersAsync()
+        public async Task<List<UsersDTO>> GetAllUsersAsync()
         {
 
-            var users = _usersRepository.FindAllAsync<Users>();
-            var usersDto = users.Result.Select(user => new UsersDTO
+            var users = await _usersRepository.FindAllAsync<Users>();
+            var usersDto = users.Select(user => new UsersDTO
             {
                 Id = user.Id.ToString(),
                 UserId = user.UserId,
@@ -48,7 +48,7 @@ namespace BlogAPI.Services
                 .ToList();
 
 
-            return Task.FromResult(usersDto);
+            return usersDto;
         }
 
         public async Task UpdateUserAsync(string userId, UsersDTO updateUser)

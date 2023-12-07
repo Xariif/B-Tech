@@ -1,4 +1,5 @@
 ﻿using BlogAPI.Contexts;
+using MongoDB.Bson;
 
 namespace BlogAPI.Repositories
 {
@@ -7,5 +8,13 @@ namespace BlogAPI.Repositories
         public FilesRepository(MongoDataBaseContext context) : base(context)
         {
         }
+
+
+        public async Task<ObjectId> UploadFileAsync(string fileName, Stream fileStream)
+        {
+            return await _bucket.UploadFromStreamAsync(fileName, fileStream);
+        }
+
+
     }
 }

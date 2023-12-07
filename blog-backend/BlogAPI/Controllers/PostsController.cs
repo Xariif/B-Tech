@@ -40,10 +40,7 @@ namespace BlogAPI.Controllers
         {
             try
             {
-                var userId = User?.Identity?.Name;
-
-
-
+                var userId = User.Identity.Name;
 
                 var result = await _postsService.GetPostsByStatusAndUserIdAsync(Status.Draft, userId);
                 return Ok(result);
