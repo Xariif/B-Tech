@@ -25,12 +25,10 @@
 
   <ItemGroup>
     <None Remove="Models\Helpers\" />
-    <None Remove="DTOs\PostLike\" />
     <None Remove="Contexts\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\Helpers\" />
-    <Folder Include="DTOs\PostLike\" />
     <Folder Include="Contexts\" />
   </ItemGroup>
 </Project>

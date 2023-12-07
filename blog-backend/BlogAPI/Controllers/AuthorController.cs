@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BlogAPI.Controllers
 {
     [ApiController]
+    [Authorize(Roles = "admin")]
     [Route("api/[controller]")]
     public class AuthorController : BaseController
     {
@@ -19,6 +20,7 @@ namespace BlogAPI.Controllers
             _authorService = authorService;
         }
 
+        [AllowAnonymous]
         [HttpGet("GetAuthorById")]
         public async Task<ActionResult<AuthorDto>> GetAuthorById(string id)
         {
@@ -33,7 +35,6 @@ namespace BlogAPI.Controllers
             }
 
         }
-
 
         [HttpPost("CreateAuthor")]
         public async Task<ActionResult> CreateAuthor(CreateAuthorDto newAuthorDto)
@@ -51,7 +52,7 @@ namespace BlogAPI.Controllers
         }
 
 
-
+        [Authorize(Roles ="author")]
         [HttpPut("UpdateAuthor")]
         public async Task<ActionResult> UpdateAuthor(AuthorDto authorDto)
         {

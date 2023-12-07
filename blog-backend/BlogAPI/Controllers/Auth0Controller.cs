@@ -16,19 +16,7 @@ namespace BlogAPI.Controllers
             _auth0Service = auth0Service;
         }
 
-        [HttpGet("GetUsers")]
-        public async Task<ActionResult> GetUsers()
-        {
-            try
-            {
-                var res = await _auth0Service.GetUsersAsync();
-                return Ok(res);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
+       
 
         [HttpGet("GetUserRoles")]
         public async Task<ActionResult> GetUserRoles(string userId)

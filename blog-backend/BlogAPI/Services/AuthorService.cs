@@ -17,15 +17,15 @@ namespace BlogAPI.Services
       
 
 
-        public async Task CreateAuthorAsync(CreateAuthorDto authorDto)
+        public async Task CreateAuthorAsync(string userId)
         {
             var author = new Author()
 
             {
                 Id = ObjectId.GenerateNewId(),
-                UserId = authorDto.UserId,
+                UserId = userId,
                 Description = null,
-                SocialMedia = null,
+                SocialMedia = new SocialMedia(),
             };
 
 

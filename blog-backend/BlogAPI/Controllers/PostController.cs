@@ -26,9 +26,7 @@ namespace BlogAPI.Controllers
         {
             try
             {
-                var test = User.Claims;
-
-                var result = await _postService.GetPostsByStatusAndAuthorIdAsync(Status.Aproved, "");
+                var result = await _postService.GetPostsByStatusAsync(Status.Aproved);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -42,7 +40,12 @@ namespace BlogAPI.Controllers
         {
             try
             {
-                var result = await _postService.GetPostsByStatusAndAuthorIdAsync(Status.Drafts, "");
+                var userId = User?.Identity?.Name;
+
+
+
+
+                var result = await _postService.GetPostsByStatusAndUserIdAsync(Status.Drafts, userId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -56,7 +59,7 @@ namespace BlogAPI.Controllers
         {
             try
             {
-                var result = await _postService.GetPostsByStatusAndAuthorIdAsync(Status.Rejected, "");
+                var result = await _postService.GetPostsByStatusAndUserIdAsync(Status.Rejected, "");
                 return Ok(result);
             }
             catch (Exception ex)

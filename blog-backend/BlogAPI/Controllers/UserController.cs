@@ -12,10 +12,11 @@ namespace BlogAPI.Controllers;
 public class UserController : BaseController
 {
     private readonly UserService _userService;
-
-    public UserController(UserService userService, IWebHostEnvironment env) : base(env)
+    private readonly Auth0Service _auth0Service;
+    public UserController(UserService userService, Auth0Service auth0Service,IWebHostEnvironment env) : base(env)
     {
         _userService = userService;
+        _auth0Service = auth0Service;
     }
 
     [Authorize(Policy = "admin")]
@@ -37,7 +38,9 @@ public class UserController : BaseController
     {
         try
         {
-            await _userService.UpdateUserAsync(User.Identity.Name ,userDto);
+            var userId = User?.Identity?.Name ?? throw new Exception();
+
+            await _userService.UpdateUserAsync(userId,userDto);
             return Ok("User updated");
         }
         catch (Exception ex)
@@ -47,12 +50,14 @@ public class UserController : BaseController
     }
 
     [HttpDelete("DeleteUser")]
-    public async Task<ActionResult> DeleteUserAsync(string userId)
+    public async Task<ActionResult> DeleteUserAsync()
     {
         try
         {
-      
+            var userId = User?.Identity?.Name ?? throw new UnauthorizedAccessException();
+
             await _userService.DeleteUserAsync(userId);
+            await _auth0Service.DeleteUserAsync(userId);
             return Ok("Author Deleted");
         }
         catch (Exception ex)

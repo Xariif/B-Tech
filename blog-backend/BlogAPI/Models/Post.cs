@@ -28,7 +28,7 @@ namespace BlogAPI.Models
 	{
 		Aproved,
 		Rejected,
-		Drafts,
+		Draft,
 		ToConfirm
 	}
 }

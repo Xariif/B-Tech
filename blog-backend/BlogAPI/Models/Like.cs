@@ -19,6 +19,7 @@ namespace BlogAPI.Models
 
     public enum LikeType
     {
+        Author,
         Post,
         Comment
     }
