@@ -1,6 +1,4 @@
-﻿using BlogAPI.Models;
-
-namespace BlogAPI.DTOs.Posts
+﻿namespace BlogAPI.DTOs.Posts
 {
     public class PostsDTO
     {
@@ -13,9 +11,9 @@ namespace BlogAPI.DTOs.Posts
         public List<string>? Tags { get; set; }
         public DateTime CreatedAt { get; set; }
         public Status Status { get; set; }
-        public DateTime LastUpdatedAt { get; set; }
         public int Views { get; set; } = 0;
         public int Likes { get; set; } = 0;
         public int Dislikes { get; set; } = 0;
+        public string MainPhotoId { get; set; }
     }
 }

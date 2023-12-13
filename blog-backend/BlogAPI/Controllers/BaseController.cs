@@ -6,6 +6,7 @@ namespace BlogAPI.Controllers
     {
         private readonly IWebHostEnvironment _env;
 
+
         public BaseController(IWebHostEnvironment env)
         {
             _env = env;

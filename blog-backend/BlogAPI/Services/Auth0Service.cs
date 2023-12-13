@@ -15,11 +15,9 @@ namespace BlogAPI.Services
             _usersRepository = usersRepository;
         }
 
-        public async Task<bool> DeleteUserAsync(string userId)
+        public async Task<bool> DeleteUserAsync(string auth0Id)
         {
-            await _usersRepository.DeleteAsync(userId);
-
-            var res = await _auth0Repository.DeleteAsync($"/api/v2/users/{userId}");
+            var res = await _auth0Repository.DeleteAsync($"/api/v2/users/{auth0Id}");
 
             if (!res.IsSuccessful)
                 throw new Exception(res.ErrorMessage);
@@ -27,7 +25,35 @@ namespace BlogAPI.Services
             return res.IsSuccessful;
         }
 
-        public async Task<bool> GiveRoleAsync(string userId, string roleId)
+        public async Task<bool> DeleteUserConnectionAsync(string auth0Id)
+        {
+            var res = await _auth0Repository.DeleteAsync($"/api/v2/connections/{auth0Id}/users");
+
+            if (!res.IsSuccessful)
+                throw new Exception(res.ErrorMessage);
+
+            return res.IsSuccessful;
+        }
+
+        public async Task<bool> GiveRoleAsync(string auth0Id, string[] rolesIds)
+        {
+            var rolesPayload = new { roles = rolesIds };
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(rolesPayload);
+
+            var headers = new List<HeaderParameter>
+            {
+                new HeaderParameter("Content-Type", "application/json")
+            };
+
+            var res = await _auth0Repository.PostAsync($"/api/v2/users/{auth0Id}/roles", headers, json);
+
+            if (!res.IsSuccessful)
+                throw new Exception(res.ErrorMessage);
+
+            return res.IsSuccessful;
+        }
+
+        public async Task<bool> RemoveRoleAsync(string auth0Id, string[] roleId)
         {
             var rolesPayload = new { roles = roleId };
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(rolesPayload);
@@ -37,7 +63,7 @@ namespace BlogAPI.Services
                 new HeaderParameter("Content-Type", "application/json")
             };
 
-            var res = await _auth0Repository.PostAsync($"/api/v2/users/{userId}/roles", headers, json);
+            var res = await _auth0Repository.DeleteAsync($"/api/v2/users/{auth0Id}/roles", headers, json);
 
             if (!res.IsSuccessful)
                 throw new Exception(res.ErrorMessage);
@@ -45,27 +71,9 @@ namespace BlogAPI.Services
             return res.IsSuccessful;
         }
 
-        public async Task<bool> RemoveRoleAsync(string userId, string roleId)
+        public async Task<List<Role>?> GetUserRolesAsync(string auth0Id)
         {
-            var rolesPayload = new { roles = roleId };
-            var json = Newtonsoft.Json.JsonConvert.SerializeObject(rolesPayload);
-
-            var headers = new List<HeaderParameter>
-            {
-                new HeaderParameter("Content-Type", "application/json")
-            };
-
-            var res = await _auth0Repository.DeleteAsync($"/api/v2/users/{userId}/roles", headers, json);
-
-            if (!res.IsSuccessful)
-                throw new Exception(res.ErrorMessage);
-
-            return res.IsSuccessful;
-        }
-
-        public async Task<List<Role>?> GetUserRolesAsync(string userId)
-        {
-            var res = await _auth0Repository.GetAsync($"/api/v2/users/{userId}/roles");
+            var res = await _auth0Repository.GetAsync($"/api/v2/users/{auth0Id}/roles");
             var roles = new List<Role>();
 
             if (res.Content != null)

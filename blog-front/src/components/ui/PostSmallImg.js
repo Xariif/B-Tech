@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
 import Tag from "./Tag";
 import { useEffect, useState } from "react";
-import AuthorService from "../../services/AuthorService";
+import { Avatar } from "@mui/material";
 
-export default function PostSmallImg({ postData }) {
+export default function PostSmallImg({ post }) {
+	console.log(post);
 	return (
 		<div
 			className="PostSmallImg"
@@ -22,11 +23,11 @@ export default function PostSmallImg({ postData }) {
 					color: "inherit",
 				}}
 				to={{
-					pathname: "/post/" + postData.id,
+					pathname: "/post/" + post.id,
 				}}
 			>
 				<img
-					src={"https://picsum.photos/seed/" + postData.id + "/1920/1080"}
+					src={"https://picsum.photos/seed/" + post.id + "/1920/1080"}
 					alt="zdjęcie"
 					style={{
 						objectFit: "cover",
@@ -49,7 +50,7 @@ export default function PostSmallImg({ postData }) {
 						fontWeight: "bold",
 					}}
 				>
-					{postData.title}
+					{post.title}
 				</div>
 			</Link>
 			<Link
@@ -61,7 +62,7 @@ export default function PostSmallImg({ postData }) {
 					color: "inherit",
 				}}
 				to={{
-					pathname: "/author/" + postData.authorId,
+					pathname: "/author/" + post.authorId,
 				}}
 			>
 				<Avatar icon="pi pi-user" size="small" shape="circle" />
@@ -72,8 +73,8 @@ export default function PostSmallImg({ postData }) {
 						marginLeft: ".5rem",
 					}}
 				>
-					<div style={{ fontWeight: "bold" }}>{postData.authorName}</div>
-					{new Date(postData.createdAt).toLocaleDateString("en-EN", {
+					<div style={{ fontWeight: "bold" }}>{post.authorName}</div>
+					{new Date(post.createdAt).toLocaleDateString("en-EN", {
 						year: "numeric",
 						month: "long",
 						day: "numeric",

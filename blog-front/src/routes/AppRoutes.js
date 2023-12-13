@@ -20,6 +20,7 @@ import NotFound from "../components/pages/NotFound";
 import Newest from "../components/pages/Newest";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useUser } from "../components/hooks/useUser";
+import { useNotification } from "../components/hooks/useNotification";
 
 export default function AppRoutes() {
 	return (
@@ -58,9 +59,10 @@ const ProtectedRoute = ({ allowedPermissions }) => {
 	const { user } = useUser();
 	const { isAuthenticated, isLoading } = useAuth0();
 	const location = useLocation();
+	const notification = useNotification();
 
 	if (isLoading || !user) {
-		return <Loading />;
+		return null;
 	}
 
 	if (!isAuthenticated) {

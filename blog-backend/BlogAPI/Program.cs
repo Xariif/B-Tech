@@ -1,8 +1,9 @@
 using BlogAPI.Contexts;
 using BlogAPI.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
+using Microsoft.OpenApi.Models;
 using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +11,18 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "ApiPlayground", Version = "v1" });
+    c.AddSecurityDefinition("token", new OpenApiSecurityScheme
+    {
+        Type = SecuritySchemeType.Http,
+        In = ParameterLocation.Header,
+        Name = HeaderNames.Authorization,
+        Scheme = "Bearer"
+    });
+
+});
 
 
 builder.Services.AddApplicationServices();
@@ -45,15 +57,20 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+
+string domain = builder.Configuration["Auth0:Domain"] ?? String.Empty;
+
 builder.Services.AddAuthorization(options =>
 {
 
-    options.AddPolicy("user", x => x.RequireClaim("permissions", "read:posts", "comment:posts"));
-    options.AddPolicy("author", x => x.RequireClaim("permissions", "write:posts", "delete:posts"));
-    options.AddPolicy("admin", x => x.RequireClaim("permissions", "admin"));
+    options.AddPolicy("read:posts", policy => policy.RequireClaim("permissions", "read:posts"));
+    options.AddPolicy("comment:posts", policy => policy.RequireClaim("permissions", "comment:posts"));
+    options.AddPolicy("write:posts", policy => policy.RequireClaim("permissions", "write:posts"));
+    options.AddPolicy("delete:posts", policy => policy.RequireClaim("permissions", "delete:posts"));
+    options.AddPolicy("admin", policy => policy.RequireClaim("permissions", "admin"));
 });
 
-builder.Services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
+
 
 var app = builder.Build();
 

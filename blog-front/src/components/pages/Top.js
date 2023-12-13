@@ -5,27 +5,27 @@ import { ConstructionOutlined } from "@mui/icons-material";
 import { useNotification } from "../hooks/useNotification";
 
 export default function Top() {
-	const toastActions = useNotification();
-	console.log(toastActions);
+	const notification = useNotification();
+
 	return (
 		<>
 			<Button
 				onClick={() => {
-					toastActions.showToast("Success", "success");
+					notification.showToast("Success", "success");
 				}}
 			>
 				succes
 			</Button>
 			<Button
 				onClick={() => {
-					toastActions.showToast("info", "info");
+					notification.showToast("info", "info");
 				}}
 			>
 				info
 			</Button>
 			<Button
 				onClick={() => {
-					toastActions.setLoader(true);
+					notification.setLoader(true);
 				}}
 			>
 				warning

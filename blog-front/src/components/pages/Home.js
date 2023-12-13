@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import PostService from "../../services/PostService";
-import { GetAuthorById } from "../../services/AuthorService";
 import { Link } from "react-router-dom";
 import PostBigImg from "../ui/PostBigImg";
 import PostSmallImg from "../ui/PostSmallImg";
@@ -10,8 +8,10 @@ import { useAuth0 } from "@auth0/auth0-react";
 import useAPI from "../hooks/useAPI";
 import { Paper } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
+import useService from "../../services/posts/useService";
 
 import NotFound from "./NotFound";
+import { useNotification } from "../hooks/useNotification";
 export default function Home() {
 	const {
 		getAccessTokenSilently,
@@ -20,36 +20,38 @@ export default function Home() {
 		getIdTokenClaims,
 		isLoading,
 	} = useAuth0();
+	const notification = useNotification();
+	const postsService = useService();
 
-	const { GetApprovedPosts } = PostService();
-
-	const posts = {
-		loading: true,
-	};
-	// useSelector((state) => state.posts);
+	const [posts, setPosts] = useState([]);
 
 	useEffect(() => {
-		GetApprovedPosts()
-			.then((data) => {
-				console.log(data);
-				dispatch(getPostsSuccess(data));
+		notification.setLoader(true);
+		console.log(notification);
+		postsService
+			.GetApprovedPosts()
+			.then((response) => {
+				setPosts(response);
+				console.log(response);
 			})
-			.catch((error) => {});
+			.finally(() => {
+				notification.setLoader(false);
+			});
 	}, []);
 
-	if (posts.loading) return <Loading />;
-	else if (posts.error) {
-		return <NotFound />;
-	} else
-		return (
-			<Paper>
-				{posts.posts.map((post) => {
-					return (
-						<div key={post.id}>
-							<PostBigImg post={post} />
-						</div>
-					);
-				})}
-			</Paper>
-		);
+	if (posts.lenght === 0) {
+		return null;
+	}
+
+	return (
+		<Paper>
+			{posts.map((post) => {
+				return (
+					<div key={post.id}>
+						<PostBigImg post={post} />
+					</div>
+				);
+			})}
+		</Paper>
+	);
 }

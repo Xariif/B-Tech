@@ -9,12 +9,10 @@ namespace BlogAPI.Services
     public class PostsService
     {
         private readonly PostsRepository _postsRepository;
-        private readonly AuthorsRepository _authorsRepository;
 
-        public PostsService(PostsRepository postsRepository, AuthorsRepository authorsRepository)
+        public PostsService(PostsRepository postsRepository)
         {
             _postsRepository = postsRepository;
-            _authorsRepository = authorsRepository;
         }
 
         public async Task<Posts?> GetPostByIdAsync(string postId)
@@ -46,12 +44,11 @@ namespace BlogAPI.Services
             return await _postsRepository.FindAllAsync(filter);
         }
 
-        public async Task<IEnumerable<Posts>> GetPostsByStatusAndUserIdAsync(Status status, string userId)
+        public async Task<IEnumerable<Posts>> GetPostsByStatusAndAuthorIdAsync(Status status, ObjectId authorId)
         {
-            var author = await _authorsRepository.FindFirstByIdAsync<Authors>(userId);
 
             var filter = Builders<Posts>.Filter.Eq(post => post.Status, status) &
-                      Builders<Posts>.Filter.Eq(post => post.AuthorId, author.Id);
+                      Builders<Posts>.Filter.Eq(post => post.AuthorId, authorId);
 
             return await _postsRepository.FindAllAsync(filter);
 
@@ -73,22 +70,81 @@ namespace BlogAPI.Services
             return await _postsRepository.FindAllAsync(filter);
         }
 
-        public async Task CreatePostAsync(Posts newPost)
+
+
+        public async Task CreateDraftPostAsync(CreateDraftPostDTO newDraftPost, Status status, ObjectId authorId)
         {
-            await _postsRepository.InsertOneAsync(newPost);
+            var post = new Posts
+            {
+                Id = ObjectId.GenerateNewId(),
+                AuthorId = authorId,
+                Category = newDraftPost.Category,
+                Content = newDraftPost.Content,
+                CreatedAt = DateTime.UtcNow,
+                MainParentId = !string.IsNullOrEmpty(newDraftPost.MainParentId) ? ObjectId.Parse(newDraftPost.MainParentId) : null,
+                Status = status,
+                Tags = newDraftPost.Tags,
+                Title = newDraftPost.Title,
+                MainPhotoId = null,
+                Views = 0,
+                Likes = 0,
+                Dislikes = 0
+            };
+
+            if (newDraftPost.MainImage != null)
+            {
+                if (newDraftPost.MainImage.ContentType != "image/jpeg")
+                {
+                    throw new Exception("Invalid image type");
+                }
+
+                var imgId = await _postsRepository.UploadFileAsync(newDraftPost.MainImage.FileName, newDraftPost.MainImage.OpenReadStream());
+                post.MainPhotoId = imgId;
+            }
+
+            await _postsRepository.InsertOneAsync(post);
         }
 
-        public async Task UpdateDraftPostAsync(PostsDTO updatedPost)
-        {
-            if (updatedPost.Id == null)
-                throw new Exception("Id is null");
 
+
+        public async Task CreatePostAsync(CreatePostDTO newPost, Status status, ObjectId authorId)
+        {
+
+            var post = new Posts
+            {
+                Id = ObjectId.GenerateNewId(),
+                AuthorId = authorId,
+                Category = newPost.Category,
+                Content = newPost.Content,
+                CreatedAt = DateTime.UtcNow,
+                MainParentId = !string.IsNullOrEmpty(newPost.MainParentId) ? ObjectId.Parse(newPost.MainParentId) : null,
+                Status = status,
+                Tags = newPost.Tags,
+                Title = newPost.Title,
+                Views = 0,
+                Likes = 0,
+                Dislikes = 0
+            };
+
+            if (newPost.MainImage.ContentType != "image/jpeg")
+            {
+                throw new Exception("Invalid image type");
+
+            }
+            var imgId = await _postsRepository.UploadFileAsync(newPost.MainImage.FileName, newPost.MainImage.OpenReadStream());
+            post.MainPhotoId = imgId;
+
+            await _postsRepository.InsertOneAsync(post);
+        }
+
+        public async Task UpdateDraftPostAsync(UpdatePostDTO updatedPost)
+        {
             var post = await GetPostByIdAsync(updatedPost.Id) ?? throw new Exception("Post doesn't exist");
 
             Posts updated = new()
             {
                 Id = post.Id,
-                MainParentId = post.MainParentId,
+                MainParentId = null,
                 AuthorId = post.AuthorId,
                 Title = updatedPost.Title,
                 Content = updatedPost.Content,
@@ -101,13 +157,22 @@ namespace BlogAPI.Services
                 Status = Status.Draft,
             };
 
+
+
+            if (updatedPost.MainImage != null)
+            {
+                await _postsRepository.DeleteFileAsync(post.MainPhotoId.ToString());
+
+                var imgId = await _postsRepository.UploadFileAsync(updatedPost.MainImage.FileName, updatedPost.MainImage.OpenReadStream());
+                post.MainPhotoId = imgId;
+            }
+
             await _postsRepository.UpdateAsync(updated.Id.ToString(), updated);
         }
 
-        public async Task UpdateAcceptedPostAsync(PostsDTO updatedPost)
+        public async Task UpdateAcceptedPostAsync(UpdatePostDTO updatedPost)
         {
-            if (updatedPost.Id == null)
-                throw new Exception("Id is null");
+
             var post = await GetPostByIdAsync(updatedPost.Id) ?? throw new Exception("Post doesn't exist");
 
             Posts updated = new()
@@ -125,6 +190,16 @@ namespace BlogAPI.Services
                 MainParentId = post.MainParentId,
                 Status = Status.Draft
             };
+
+            //copy
+
+            if (updatedPost.MainImage != null)
+            {
+                await _postsRepository.DeleteFileAsync(post.MainPhotoId.ToString());
+
+                var imgId = await _postsRepository.UploadFileAsync(updatedPost.MainImage.FileName, updatedPost.MainImage.OpenReadStream());
+                post.MainPhotoId = imgId;
+            }
 
             await _postsRepository.UpdateAsync(updated.Id.ToString(), updated);
         }
@@ -156,30 +231,40 @@ namespace BlogAPI.Services
         {
             var post = await GetPostByIdAsync(postId) ?? throw new Exception("Post doesn't exist");
 
-            Posts updated = new()
-            {
-                Id = post.Id,
-                AuthorId = post.AuthorId,
-                Title = post.Title,
-                Views = post.Views,
-                Category = post.Category,
-                Content = post.Content,
-                Tags = post.Tags,
-                CreatedAt = post.CreatedAt,
-                Likes = post.Likes,
-                Dislikes = post.Dislikes,
-                MainParentId = post.MainParentId,
-                Status = Status.Aproved
-            };
+            post.Status = Status.Aproved;
 
-            await _postsRepository.UpdateAsync(updated.Id.ToString(), updated);
+            await _postsRepository.UpdateAsync(post.Id.ToString(), post);
+
+
+            if (post.MainParentId != null)
+            {
+                var oldPost = await GetPostByIdAsync(post.MainParentId.ToString());
+
+                await _postsRepository.DeleteAsync<Posts>(oldPost.Id.ToString());
+                await _postsRepository.DeleteFileAsync(oldPost.MainPhotoId.ToString());
+            }
         }
 
         public async Task DeletePostAsync(string postId)
         {
-            await _postsRepository.DeleteAsync(postId);
+
+            var post = await GetPostByIdAsync(postId) ?? throw new Exception("Post doesn't exist");
+
+            await _postsRepository.DeleteFileAsync(post.MainPhotoId.ToString());
+            await _postsRepository.DeleteAsync<Posts>(postId);
         }
 
+        public async Task<Byte[]> GetPostImageAsync(string photoId)
+        {
 
+            return await _postsRepository.DownloadFileAsync(photoId);
+        }
+
+        public async Task<Posts> GetPostByMainPhotoIdAsync(string photoId)
+        {
+            var filter = Builders<Posts>.Filter.Eq(post => post.MainPhotoId, ObjectId.Parse(photoId));
+
+            return await _postsRepository.FindFirstAsync<Posts>(filter);
+        }
     }
 }

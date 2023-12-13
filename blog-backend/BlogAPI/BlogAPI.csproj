@@ -30,7 +30,6 @@
     <None Remove="DTOs\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\Helpers\" />
     <Folder Include="Contexts\" />
   </ItemGroup>
 </Project>

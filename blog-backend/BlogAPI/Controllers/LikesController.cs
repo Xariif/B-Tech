@@ -9,7 +9,6 @@ namespace BlogAPI.Controllers
         public LikesController(LikesService likesService, IWebHostEnvironment env) : base(env)
         {
             _likesService = likesService;
-
         }
 
     }

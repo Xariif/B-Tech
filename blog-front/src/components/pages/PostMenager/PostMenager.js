@@ -22,6 +22,7 @@ import { useEffect, useState } from "react";
 import NewPost from "./NewPost/NewPost";
 import WaitingPosts from "./WaitingPosts/WaitingPosts";
 import YourPosts from "./YourPosts/YourPosts";
+import DraftPosts from "./DraftPosts/DraftPosts";
 
 export default function PostMenager() {
 	const [value, setValue] = useState("1");
@@ -34,18 +35,23 @@ export default function PostMenager() {
 			<TabContext value={value}>
 				<Box sx={{ borderBottom: 1, borderColor: "divider" }}>
 					<TabList onChange={handleChange} aria-label="lab API tabs example">
-						<Tab label="Your posts" value="1" />
-						<Tab label="Post creator" value="2" />
-						<Tab label="Waiting for approval" value="3" />
+						<Tab label="Approved posts" value="1" />
+						<Tab label="Draft posts" value="2" />
+						<Tab label="Post creator" value="3" />
+						<Tab label="Waiting for approval" value="4" />
 					</TabList>
 				</Box>
+
 				<TabPanel value="1">
 					<YourPosts />
 				</TabPanel>
 				<TabPanel value="2">
-					<NewPost />
+					<DraftPosts />
 				</TabPanel>
 				<TabPanel value="3">
+					<NewPost />
+				</TabPanel>
+				<TabPanel value="4">
 					<WaitingPosts />
 				</TabPanel>
 			</TabContext>

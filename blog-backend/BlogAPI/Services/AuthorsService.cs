@@ -26,7 +26,7 @@ namespace BlogAPI.Services
             };
 
 
-            var res = await _authorsRepository.FindFirstByIdAsync<Authors>(author.UserId);
+            var res = await _authorsRepository.GetAuthorByUserIdAsync(author.UserId);
             if (res != null)
             {
                 throw new ArgumentException("Author with same id already exist.");
@@ -47,12 +47,15 @@ namespace BlogAPI.Services
             };
         }
 
-        public async Task UpdateAuthorAsync(AuthorsDTO authorDto)
+        public async Task<Authors> GetAuthorByUserIdAsync(string userId)
         {
-            if (authorDto.Id == null)
-                throw new ArgumentException("Id is null");
+            return await _authorsRepository.GetAuthorByUserIdAsync(userId) ?? throw new Exception("Author not found");
+        }
 
-            var author = await _authorsRepository.FindFirstByIdAsync<Authors>(authorDto.Id) ?? throw new ArgumentException("Author not found");
+        public async Task UpdateAuthorAsync(ObjectId authorId, UpdateAuthorsDTO authorDto)
+        {
+
+            var author = await _authorsRepository.FindFirstByIdAsync<Authors>(authorId.ToString()) ?? throw new ArgumentException("Author not found");
             author = new Authors
             {
                 Id = author.Id,
@@ -65,9 +68,9 @@ namespace BlogAPI.Services
 
         }
 
-        public async Task DeleteAuthorAsync(string userId)
+        public async Task DeleteAuthorAsync(string authorId)
         {
-            await _authorsRepository.DeleteAsync(userId);
+            await _authorsRepository.DeleteAsync<Authors>(authorId);
         }
     }
 }

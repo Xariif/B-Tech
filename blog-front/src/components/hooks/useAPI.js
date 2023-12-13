@@ -50,8 +50,30 @@ const useAPI = () => {
 
 	const post = async (url, params) => {
 		try {
+			console.log(params);
 			const token = await getToken();
-			const response = await axiosInstance.post(url, {
+			console.log(token);
+			try {
+				const response = await axiosInstance.post(url, {
+					headers: { Authorization: "Bearer " + token },
+				});
+			} catch (error) {
+				console.log(error);
+			}
+			if (response.status !== 200) {
+				throw new Error(`Unexpected response status: ${response.status}`);
+			}
+			return response.data;
+		} catch (error) {
+			console.error(error);
+			throw error;
+		}
+	};
+
+	const put = async (url, params) => {
+		try {
+			const token = await getToken();
+			const response = await axiosInstance.put(url, {
 				headers: { Authorization: "Bearer " + token },
 				params: params,
 			});
@@ -65,19 +87,54 @@ const useAPI = () => {
 		}
 	};
 
-	const put = (url, data) => {
-		return axiosInstance.put(url, { data });
+	const patch = async (url, params) => {
+		try {
+			const token = await getToken();
+			const response = await axiosInstance.patch(url, {
+				headers: { Authorization: "Bearer " + token },
+				params: params,
+			});
+			if (response.status !== 200) {
+				throw new Error(`Unexpected response status: ${response.status}`);
+			}
+			return response.data;
+		} catch (error) {
+			console.error(error);
+			throw error;
+		}
 	};
 
-	const patch = (url, data) => {
-		return axiosInstance.patch(url, { data });
+	const del = async (url, params) => {
+		try {
+			const token = await getToken();
+			const response = await axiosInstance.delete(url, {
+				headers: { Authorization: "Bearer " + token },
+				params: params,
+			});
+			if (response.status !== 200) {
+				throw new Error(`Unexpected response status: ${response.status}`);
+			}
+			return response.data;
+		} catch (error) {
+			console.error(error);
+			throw error;
+		}
 	};
 
-	const del = (url, data) => {
-		return axiosInstance.delete(url, { data });
+	const getImage = async (url, params) => {
+		const token = await getToken();
+		const response = await axiosInstance.get(url, {
+			headers: { Authorization: "Bearer " + token },
+			params: params,
+			responseType: "arraybuffer",
+		});
+		if (response.status !== 200) {
+			throw new Error(`Unexpected response status: ${response.status}`);
+		}
+		return response.data;
 	};
 
-	return { get, post, put, patch, del, getWithParams };
+	return { get, post, put, patch, del, getWithParams, getImage };
 };
 
 export default useAPI;

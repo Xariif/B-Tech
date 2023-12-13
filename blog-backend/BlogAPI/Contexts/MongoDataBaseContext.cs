@@ -27,8 +27,6 @@ namespace BlogAPI.Contexts
         public IMongoCollection<Posts> Posts => Db.GetCollection<Posts>("Posts");
         public IMongoCollection<Comments> Comments => Db.GetCollection<Comments>("Comments");
         public IMongoCollection<Likes> Likes => Db.GetCollection<Likes>("Likes");
-        public IMongoCollection<Files> Files => Db.GetCollection<Files>("Files");
-        public IMongoCollection<Chunks> Chunks => Db.GetCollection<Chunks>("Chunks");
     }
 }
 

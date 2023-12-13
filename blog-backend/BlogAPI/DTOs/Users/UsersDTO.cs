@@ -7,7 +7,7 @@
         public string Surname { get; set; }
         public int? Phone { get; set; }
         public string Email { get; set; }
-        public string UserId { get; set; }
+        public string Auth0Id { get; set; }
         public DateTime ActiveFrom { get; set; }
     }
 }

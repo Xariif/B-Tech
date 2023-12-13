@@ -10,8 +10,8 @@ namespace BlogAPI.Repositories
         {
         }
 
-        public Task<Users> FindByUserIdAsync(string userId) =>
-             _context.Users.Find(Builders<Users>.Filter.Eq(user => user.UserId, userId)).FirstOrDefaultAsync();
+        public Task<Users> FindFirstByAuth0IdAsync(string auth0Id) =>
+             _context.Users.Find(Builders<Users>.Filter.Eq(user => user.Auth0Id, auth0Id)).FirstOrDefaultAsync();
 
     }
 }

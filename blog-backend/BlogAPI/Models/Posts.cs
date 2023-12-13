@@ -15,20 +15,22 @@ namespace BlogAPI.Models
         public required string Category { get; set; }
         public required List<string>? Tags { get; set; }
         public required DateTime CreatedAt { get; set; }
-        public int Views { get; set; } = 0;
-        public int Likes { get; set; } = 0;
-        public int Dislikes { get; set; } = 0;
+        public int Views { get; set; }
+        public int Likes { get; set; }
+        public int Dislikes { get; set; }
         public required Status Status { get; set; }
-
+        public ObjectId? MainPhotoId { get; set; }
     }
 
-    public enum Status
-    {
-        Aproved,
-        Rejected,
-        Draft,
-        ToConfirm
-    }
 }
+
+public enum Status
+{
+    Aproved,
+    Rejected,
+    Draft,
+    ToConfirm
+}
+
 
 

@@ -31,9 +31,8 @@ const reducer = (state = initialState, action) => {
 			return {
 				...state,
 				toast: {
+					...state.toast,
 					show: false,
-					message: "",
-					severity: "success",
 				},
 			};
 
@@ -102,7 +101,7 @@ export const ToastProvider = ({ children }) => {
 
 	return (
 		<ToastContext.Provider value={{ state, showToast, hideToast, setLoader }}>
-			<Toast state={state} hideToast={setLoader} />
+			<Toast state={state} hideToast={hideToast} />
 			<Loader state={state} />
 			{children}
 		</ToastContext.Provider>

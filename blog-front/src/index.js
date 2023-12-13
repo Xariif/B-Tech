@@ -11,6 +11,8 @@ const rootElement = document.getElementById("root");
 
 const root = ReactDOMClient.createRoot(rootElement);
 
+//openid profile email admin comment:posts write:posts delete:posts read:posts
+
 root.render(
 	<Auth0Provider
 		domain="dev-uasjfxeuwrj58j4g.us.auth0.com"
@@ -18,7 +20,7 @@ root.render(
 		authorizationParams={{
 			redirect_uri: window.location.origin,
 			audience: "https://b-tech-api",
-			scope: "openid profile email ",
+			scope: "",
 		}}
 		cacheLocation="localstorage"
 	>

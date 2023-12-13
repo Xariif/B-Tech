@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import PostService from "../../../../services/PostService";
 import { useDispatch } from "react-redux";
 import {
 	Box,
@@ -12,18 +11,21 @@ import {
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import Autocomplete from "@mui/material/Autocomplete";
 import MenuItem from "@mui/material/MenuItem";
-
+import useService from "../../../../services/posts/useService";
+import { useNotification } from "../../../hooks/useNotification";
+import SaveIcon from "@mui/icons-material/Save";
 const NewPost = () => {
+	const postsService = useService();
+	const notification = useNotification();
+
 	const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
-	const { CreatePost } = PostService();
+	const [saveButtonDisabled, setSaveButtonDisabled] = useState(true);
 
 	const [title, setTitle] = useState("");
 	const [category, setCategory] = useState("");
 	const [tags, setTags] = useState([]);
 	const [content, setContent] = useState("");
 	const [file, setFile] = useState(null);
-
-	const dispatch = useDispatch();
 
 	const categories = [
 		{
@@ -108,6 +110,8 @@ const NewPost = () => {
 
 	useEffect(() => {
 		chceckIfSubmitButtonShouldBeDisabled();
+		if (title.trim().length > 0) setSaveButtonDisabled(false);
+		else setSaveButtonDisabled(true);
 	}, [title, category, tags, content, file]);
 
 	const VisuallyHiddenInput = styled("input")({
@@ -132,7 +136,7 @@ const NewPost = () => {
 				sx={{ mt: 2 }}
 				value={title}
 				onChange={(e) => {
-					setTitle(e.target.value);
+					setTitle(e.target.value.trimStart());
 				}}
 			/>
 
@@ -218,30 +222,64 @@ const NewPost = () => {
 				>
 					Cancel
 				</Button>
-				<Button
-					variant="contained"
-					disabled={submitButtonDisabled}
-					onClick={() => {
-						CreatePost({
-							title: title,
-							category: category,
-							tags: tags,
-							content: content,
-							image: file,
-						}).then((res) => {
-							console.log(res);
-						});
-
-						dispatch(
-							createToast({
-								message: "Post created",
-								type: "success",
-							})
-						);
-					}}
-				>
-					Submit
-				</Button>
+				<div>
+					<Button
+						sx={{ mr: 2 }}
+						variant="contained"
+						endIcon={<SaveIcon />}
+						disabled={saveButtonDisabled}
+						onClick={() => {
+							postsService
+								.CreateDraftPost({
+									Title: title,
+									Category: category,
+									Tags: tags,
+									Content: content,
+									MainImage: file,
+								})
+								.then((res) => {
+									console.log(res);
+								})
+								.finally(() => {
+									setTitle("");
+									setCategory("");
+									setTags([]);
+									setContent("");
+									setFile(null);
+								});
+						}}
+					>
+						Save as a draft
+					</Button>
+					<Button
+						variant="contained"
+						disabled={submitButtonDisabled}
+						endIcon={<CloudUploadIcon />}
+						onClick={() => {
+							postsService
+								.CreatePost({
+									Title: title,
+									Category: category,
+									Tags: tags,
+									Content: content,
+									MainImage: file,
+								})
+								.then((res) => {
+									console.log(res);
+								})
+								.finally(() => {
+									setTitle("");
+									setCategory("");
+									setTags([]);
+									setContent("");
+									setFile(null);
+									notification.showToast("Post created", "success");
+								});
+						}}
+					>
+						Submit
+					</Button>
+				</div>
 			</Box>
 		</Paper>
 	);

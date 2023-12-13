@@ -6,7 +6,7 @@ namespace BlogAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Policy = "admin")]
+    [Authorize("admin")]
     public class Auth0Controller : BaseController
     {
         private readonly Auth0Service _auth0Service;
@@ -19,11 +19,11 @@ namespace BlogAPI.Controllers
 
 
         [HttpGet("GetUserRoles")]
-        public async Task<ActionResult> GetUserRoles(string userId)
+        public async Task<ActionResult> GetUserRoles(string auth0Id)
         {
             try
             {
-                var res = await _auth0Service.GetUserRolesAsync(userId);
+                var res = await _auth0Service.GetUserRolesAsync(auth0Id);
                 return Ok(res);
             }
             catch (Exception)
@@ -33,11 +33,11 @@ namespace BlogAPI.Controllers
         }
 
         [HttpDelete("RemoveRole")]
-        public async Task<ActionResult> RemoveRole(string userId, string roleId)
+        public async Task<ActionResult> RemoveRole(string auth0Id, string[] roleId)
         {
             try
             {
-                await _auth0Service.RemoveRoleAsync(userId, roleId);
+                await _auth0Service.RemoveRoleAsync(auth0Id, roleId);
                 return Ok("Role removed");
             }
             catch (Exception)
@@ -47,11 +47,11 @@ namespace BlogAPI.Controllers
         }
 
         [HttpPost("GiveRole")]
-        public async Task<ActionResult> GiveRole(string userId, string roleId)
+        public async Task<ActionResult> GiveRole(string auth0Id, string[] roleId)
         {
             try
             {
-                await _auth0Service.GiveRoleAsync(userId, roleId);
+                await _auth0Service.GiveRoleAsync(auth0Id, roleId);
                 return Ok("Role given");
             }
             catch (Exception)

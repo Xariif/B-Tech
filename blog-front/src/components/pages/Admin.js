@@ -1,14 +1,46 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import UserService from "../../services/UserService";
 import { Table } from "@mui/material";
+import useService from "../../services/users/useService";
+import auth0Service from "../../services/auth0/useService";
+import { useNotification } from "../hooks/useNotification";
 
 export default function Admin() {
-	const userService = UserService();
-
 	const [users, setUsers] = useState([]);
 
-	useEffect(() => {}, []);
+	const notification = useNotification();
+
+	const userService = useService();
+	const auth0 = auth0Service();
+
+	useEffect(() => {
+		notification.setLoader(true);
+		setTimeout(() => {
+			userService
+				.GetAllUsers()
+				.then((response) => {
+					Promise.all(
+						response.map((user) =>
+							auth0.GetUserRoles({ auth0Id: user.auth0Id })
+						)
+					).then((roles) => {
+						const usersWithRoles = response.map((user, index) => ({
+							...user,
+							roles: roles[index],
+						}));
+
+						setUsers(usersWithRoles);
+					});
+				})
+				.finally(() => {
+					notification.setLoader(false);
+				});
+		}, 2000);
+	}, []);
+
+	if (users.length === 0) {
+		return null;
+	}
 
 	return (
 		<>
@@ -17,18 +49,26 @@ export default function Admin() {
 			<Table>
 				<thead>
 					<tr>
-						<th>Id</th>
+						<th>Auth0 Id</th>
 						<th>Email</th>
-						<th>Role</th>
+						<th>Name</th>
+						<th>Roles</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody style={{ textAlign: "center" }}>
 					{users &&
 						users.map((user) => (
-							<tr key={user.userId}>
-								<td>{user.userId}</td>
+							<tr key={user.auth0Id}>
+								<td>{user.auth0Id}</td>
 								<td>{user.email}</td>
-								<td>{user.name}</td>
+								<td>{user.name + " " + user.surname}</td>
+								<td>
+									{user.roles.map((role, index) => (
+										<li key={index}>
+											{role.name} <br></br>
+										</li>
+									))}
+								</td>
 							</tr>
 						))}
 				</tbody>

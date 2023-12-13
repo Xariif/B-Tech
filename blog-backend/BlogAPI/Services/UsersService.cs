@@ -14,21 +14,15 @@ namespace BlogAPI.Services
         }
 
 
-        public async Task<UsersDTO> GetUserByUserIdAsync(string userId)
+        public async Task<Users> GetUserByAuth0IdAsync(string auth0Id)
         {
-            var user = await _usersRepository.FindByUserIdAsync(userId) ?? throw new ArgumentException("User not found");
-            return new UsersDTO
-            {
-                Id = user.Id.ToString(),
-                UserId = user.UserId,
-                Name = user.Name,
-                Surname = user.Surname,
-                ActiveFrom = user.ActiveFrom,
-                Email = user.Email,
-                Phone = user.Phone
-            };
+            return await _usersRepository.FindFirstByAuth0IdAsync(auth0Id) ?? throw new ArgumentException("User not found");
         }
 
+        public async Task<Users> GetUserByIdAsync(string id)
+        {
+            return await _usersRepository.FindFirstByIdAsync<Users>(id) ?? throw new ArgumentException("User not found");
+        }
 
 
         public async Task<List<UsersDTO>> GetAllUsersAsync()
@@ -38,28 +32,26 @@ namespace BlogAPI.Services
             var usersDto = users.Select(user => new UsersDTO
             {
                 Id = user.Id.ToString(),
-                UserId = user.UserId,
+                Auth0Id = user.Auth0Id,
                 Name = user.Name,
                 Surname = user.Surname,
                 ActiveFrom = user.ActiveFrom,
                 Email = user.Email,
                 Phone = user.Phone
-            })
-                .ToList();
+            }).ToList();
 
 
             return usersDto;
         }
 
-        public async Task UpdateUserAsync(string userId, UsersDTO updateUser)
+        public async Task UpdateUserAsync(string userId, UpdateUsersDTO updateUser)
         {
-
-            var user = await _usersRepository.FindByUserIdAsync(userId) ??
+            var user = await _usersRepository.FindFirstByAuth0IdAsync(userId) ??
                        throw new ArgumentException("User not found");
             user = new Users
             {
                 Id = user.Id,
-                UserId = user.UserId,
+                Auth0Id = user.Auth0Id,
                 Name = updateUser.Name,
                 Surname = updateUser.Surname,
                 ActiveFrom = user.ActiveFrom,
@@ -70,11 +62,9 @@ namespace BlogAPI.Services
             await _usersRepository.UpdateAsync<Users>(user.Id.ToString(), user);
         }
 
-
-
         public async Task DeleteUserAsync(string id)
         {
-            await _usersRepository.DeleteAsync(id);
+            await _usersRepository.DeleteAsync<Users>(id);
         }
 
     }

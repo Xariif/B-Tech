@@ -12,7 +12,6 @@ namespace BlogAPI.Extensions
             services.AddScoped<Auth0Service>();
             services.AddScoped<CommentsService>();
             services.AddScoped<LikesService>();
-            services.AddScoped<FilesService>();
             services.AddScoped<AuthorsService>();
 
             services.AddScoped<PostsRepository>();
@@ -21,8 +20,6 @@ namespace BlogAPI.Extensions
             services.AddScoped<CommentsRepository>();
             services.AddScoped<LikesRepository>();
             services.AddScoped<AuthorsRepository>();
-            services.AddScoped<FilesRepository>();
-            services.AddScoped<ChunksRepository>();
 
             return services;
         }

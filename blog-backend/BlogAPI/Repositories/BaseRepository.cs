@@ -1,5 +1,4 @@
 ﻿using BlogAPI.Contexts;
-using BlogAPI.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
@@ -21,34 +20,57 @@ namespace BlogAPI.Repositories
 
         public Task<List<T>> FindAllAsync<T>()
         {
-            return _db.GetCollection<T>(typeof(T).Name).FindAsync(_ => true).Result.ToListAsync();
+            return _context.GetCollection<T>(typeof(T).Name).FindAsync(_ => true).Result.ToListAsync();
         }
 
 
         public Task<List<T>> FindAllAsync<T>(FilterDefinition<T> filter)
         {
-            return _db.GetCollection<T>(typeof(T).Name).FindAsync(filter).Result.ToListAsync();
+            return _context.GetCollection<T>(typeof(T).Name).FindAsync(filter).Result.ToListAsync();
+        }
+
+        public async Task<T> FindFirstAsync<T>(FilterDefinition<T> filter)
+        {
+            return _context.GetCollection<T>(typeof(T).Name).FindAsync(filter).Result.FirstOrDefault();
         }
 
 
         public Task<T> FindFirstByIdAsync<T>(string id)
         {
-            return _db.GetCollection<T>(typeof(T).Name).Find(Builders<T>.Filter.Eq("_id", id)).FirstOrDefaultAsync();
+            return _context.GetCollection<T>(typeof(T).Name).Find(Builders<T>.Filter.Eq("_id", ObjectId.Parse(id))).FirstOrDefaultAsync();
         }
 
         public Task InsertOneAsync<T>(T newItem)
         {
-            return _db.GetCollection<T>(typeof(T).Name).InsertOneAsync(newItem);
+            return _context.GetCollection<T>(typeof(T).Name).InsertOneAsync(newItem);
         }
 
         public Task<ReplaceOneResult> UpdateAsync<T>(string id, T updatedItem)
         {
-            return _db.GetCollection<T>(typeof(T).Name).ReplaceOneAsync(Builders<T>.Filter.Eq("_id", ObjectId.Parse(id)), updatedItem);
+            return _context.GetCollection<T>(typeof(T).Name).ReplaceOneAsync(Builders<T>.Filter.Eq("_id", ObjectId.Parse(id)), updatedItem);
         }
 
-        public Task<DeleteResult> DeleteAsync(string id)
+        public Task<DeleteResult> DeleteAsync<T>(string id)
         {
-            return _db.GetCollection<Users>(nameof(Users)).DeleteOneAsync(Builders<Users>.Filter.Eq("_id", id));
+
+            return _context.GetCollection<T>(typeof(T).Name).DeleteOneAsync(Builders<T>.Filter.Eq("_id", ObjectId.Parse(id)));
+        }
+
+
+        public Task<ObjectId> UploadFileAsync(string fileName, Stream fileStream)
+        {
+            return _bucket.UploadFromStreamAsync(fileName, fileStream);
+        }
+
+
+        public Task<byte[]> DownloadFileAsync(string id)
+        {
+            return _bucket.DownloadAsBytesAsync(ObjectId.Parse(id));
+        }
+
+        public Task DeleteFileAsync(string id)
+        {
+            return _bucket.DeleteAsync(ObjectId.Parse(id));
         }
     }
 }

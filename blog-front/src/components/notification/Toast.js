@@ -1,7 +1,6 @@
 import { Alert, Snackbar } from "@mui/material";
 
 const Toast = ({ state, hideToast }) => {
-	console.log(state);
 	const handleClose = (event, reason) => {
 		if (reason === "clickaway") {
 			return;

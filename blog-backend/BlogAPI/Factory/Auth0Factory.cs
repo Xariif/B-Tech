@@ -17,7 +17,7 @@ namespace BlogAPI.Factory
         public async Task<RestResponse> RequestAsync(string endpoint, Method method, List<HeaderParameter>? headers = null, object? body = null)
         {
             var token = await ApiManagementKeyUtils.GetTokenAsync(_client, _configuration) ?? throw new Exception("No token");
-            _client.AddDefaultHeader("Authorization", $"Bearer {token.Token}");
+            _client.AddDefaultHeader("Authorization", $"Bearer {token.AccessToken}");
 
             var request = new RestRequest(endpoint, method);
 
