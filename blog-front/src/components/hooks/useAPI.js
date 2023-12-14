@@ -7,6 +7,16 @@ const useAPI = () => {
 
 	const { getAccessTokenSilently, isAuthenticated, isLoading } = useAuth0();
 
+	const ValidateError = (error) => {
+		console.log(error);
+
+		if (error.response) {
+			if (error.response.status === 401) {
+				// history.push("/login");
+			}
+		}
+	};
+
 	const getToken = async () => {
 		if (!isLoading && isAuthenticated) {
 			return await getAccessTokenSilently();
@@ -53,16 +63,11 @@ const useAPI = () => {
 			console.log(params);
 			const token = await getToken();
 			console.log(token);
-			try {
-				const response = await axiosInstance.post(url, {
-					headers: { Authorization: "Bearer " + token },
-				});
-			} catch (error) {
-				console.log(error);
-			}
-			if (response.status !== 200) {
-				throw new Error(`Unexpected response status: ${response.status}`);
-			}
+
+			const response = await axiosInstance.post(url, {
+				headers: { Authorization: "Bearer " + token },
+			});
+
 			return response.data;
 		} catch (error) {
 			console.error(error);

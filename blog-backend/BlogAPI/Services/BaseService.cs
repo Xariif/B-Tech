@@ -1,5 +1,4 @@
-﻿using System.Xml.Linq;
-using BlogAPI.Models;
+﻿using BlogAPI.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
 namespace BlogAPI.Services
@@ -7,12 +6,11 @@ namespace BlogAPI.Services
     public class BaseService
     {
         protected IMongoDatabase db;
-        protected IMongoCollection<Author> _authorCollection;
-        protected IMongoCollection<Comment> _commentCollection;
-        protected IMongoCollection<CommentLike> _commentLikeCollection;
-        protected IMongoCollection<Post> _postCollection;
-        protected IMongoCollection<PostLike> _postLikeCollection;
-
+        protected IMongoCollection<Authors> _authorsCollection;
+        protected IMongoCollection<Comments> _commentsCollection;
+        protected IMongoCollection<Likes> _likesCollection;
+        protected IMongoCollection<Posts> _postsCollection;
+        protected IMongoCollection<Users> _usersCollection;
 
         public BaseService()
         {
@@ -31,14 +29,14 @@ namespace BlogAPI.Services
 
             db = client.GetDatabase(databaseName);
 
-            _postCollection = db.GetCollection<Post>("Post");
-            _authorCollection = db.GetCollection<Author>("Author");
-            _commentCollection = db.GetCollection<Comment>("Comment");
-            _commentLikeCollection = db.GetCollection<CommentLike>("CommentLike");
-            _postLikeCollection = db.GetCollection<PostLike>("PostLike");
+            _postsCollection = db.GetCollection<Posts>("Posts");
+            _authorsCollection = db.GetCollection<Authors>("Authors");
+            _commentsCollection = db.GetCollection<Comments>("Comments");
+            _likesCollection = db.GetCollection<Likes>("Likes");
+            _usersCollection = db.GetCollection<Users>("Users");
         }
 
-        protected async Task<T> GetByIdAsync<T>(IMongoCollection<T> collection, string id)
+        public async Task<T> GetByIdAsync<T>(IMongoCollection<T> collection, string id)
         {
             var filter = Builders<T>.Filter.Eq("_id", ObjectId.Parse(id));
             var cursor = await collection.FindAsync(filter);

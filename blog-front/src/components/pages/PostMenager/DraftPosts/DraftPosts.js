@@ -16,7 +16,14 @@ const DraftPosts = () => {
 		postsService
 			.GetDraftPosts()
 			.then((response) => {
+				response.map((post) => {
+					//foreach post get image and set it to post
+					postsService.GetImage(post.mainPhotoId).then((image) => {
+						post.image = image;
+					});
+				});
 				console.log(response);
+
 				setPosts(response);
 			})
 			.finally(() => {

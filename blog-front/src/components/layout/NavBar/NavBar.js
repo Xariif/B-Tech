@@ -136,6 +136,7 @@ const NavBar = () => {
 	};
 
 	const MenuBar = () => {
+		console.log(user);
 		return (
 			<>
 				{user && user.permissions.includes("admin") && (

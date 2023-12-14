@@ -1,10 +1,14 @@
 import useAPI from "../../components/hooks/useAPI";
+import { useNotification } from "../../components/hooks/useNotification";
 
 const useService = () => {
 	const api = useAPI();
+	const notification = useNotification();
 
 	const GetApprovedPosts = () => {
-		return api.get("Posts/GetApprovedPosts");
+		return api.get("Posts/GetApprovedPosts").catch((error) => {
+			throw error;
+		});
 	};
 
 	const GetDraftPosts = () => {

@@ -27,12 +27,11 @@ export default function Home() {
 
 	useEffect(() => {
 		notification.setLoader(true);
-		console.log(notification);
 		postsService
 			.GetApprovedPosts()
 			.then((response) => {
-				setPosts(response);
 				console.log(response);
+				setPosts(response);
 			})
 			.finally(() => {
 				notification.setLoader(false);
