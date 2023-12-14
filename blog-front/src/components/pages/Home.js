@@ -12,6 +12,7 @@ import useService from "../../services/posts/useService";
 
 import NotFound from "./NotFound";
 import { useNotification } from "../hooks/useNotification";
+import { useError } from "../hooks/useError";
 export default function Home() {
 	const {
 		getAccessTokenSilently,
@@ -20,21 +21,24 @@ export default function Home() {
 		getIdTokenClaims,
 		isLoading,
 	} = useAuth0();
-	const notification = useNotification();
+	const { handleClose, showToast, hideToast, setLoader } = useNotification();
 	const postsService = useService();
-
+	const { error, handleError, clearError } = useError();
 	const [posts, setPosts] = useState([]);
 
 	useEffect(() => {
-		notification.setLoader(true);
+		setLoader(true);
 		postsService
 			.GetApprovedPosts()
 			.then((response) => {
 				console.log(response);
 				setPosts(response);
 			})
+			.catch((e) => {
+				handleError(e);
+			})
 			.finally(() => {
-				notification.setLoader(false);
+				setLoader(false);
 			});
 	}, []);
 

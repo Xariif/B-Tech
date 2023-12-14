@@ -6,6 +6,7 @@ import "./index.css";
 import { Auth0Provider } from "@auth0/auth0-react";
 
 import { ToastProvider } from "./context/NotificationContext";
+import { ErrorProvider } from "./context/ErrorContext";
 
 const rootElement = document.getElementById("root");
 
@@ -25,7 +26,9 @@ root.render(
 		cacheLocation="localstorage"
 	>
 		<ToastProvider>
-			<App />
+			<ErrorProvider>
+				<App />
+			</ErrorProvider>
 		</ToastProvider>
 	</Auth0Provider>
 );
