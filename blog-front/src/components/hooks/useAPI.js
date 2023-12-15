@@ -7,16 +7,6 @@ const useAPI = () => {
 
 	const { getAccessTokenSilently, isAuthenticated, isLoading } = useAuth0();
 
-	const ValidateError = (error) => {
-		console.log(error);
-
-		if (error.response) {
-			if (error.response.status === 401) {
-				// history.push("/login");
-			}
-		}
-	};
-
 	const getToken = async () => {
 		if (!isLoading && isAuthenticated) {
 			return await getAccessTokenSilently();
@@ -60,12 +50,13 @@ const useAPI = () => {
 
 	const post = async (url, params) => {
 		try {
-			console.log(params);
 			const token = await getToken();
-			console.log(token);
+
+			console.log(url, params, token);
 
 			const response = await axiosInstance.post(url, {
 				headers: { Authorization: "Bearer " + token },
+				params: params,
 			});
 
 			return response.data;

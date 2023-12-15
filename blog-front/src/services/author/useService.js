@@ -4,6 +4,7 @@ const useService = () => {
 	const api = useAPI();
 
 	const GetAuthorById = ({ id }) => {
+		console.log("GetAuthorById");
 		return api.getWithParams("Authors/GetAuthorById", {
 			id: id,
 		});

@@ -23,24 +23,8 @@ import { useNotification } from "../hooks/useNotification";
 const PostRow = ({ post }) => {
 	const postService = useService();
 
-	const [image, setImage] = useState(null);
 	const [open, setOpen] = useState(false);
-
-	useEffect(() => {
-		/*
-
-		postService.GetImage({ id: post.mainPhotoId }).then((response) => {
-			setImage(response);
-		});
-		*/
-	}, []);
-
-	const arrayBufferToBase64 = (buffer) => {
-		const binary = [];
-		const bytes = new Uint8Array(buffer);
-		bytes.forEach((byte) => binary.push(String.fromCharCode(byte)));
-		return `data:image/jpeg;base64,${window.btoa(binary.join(""))}`;
-	};
+	console.log(post.image);
 
 	return (
 		<>
@@ -99,16 +83,16 @@ const PostRow = ({ post }) => {
 				}}
 			>
 				<Box sx={{ display: "flex" }}>
-					<img
-						src={arrayBufferToBase64(image)}
-						alt="zdjęcie"
-						style={{
-							objectFit: "cover",
-							verticalAlign: "top",
+					{post.image ? (
+						<img
+							src={post.image}
+							alt="post image"
+							style={{ width: "10rem", height: "10rem" }}
+						/>
+					) : (
+						<ModeEditIcon style={{ width: "10rem", height: "10rem" }} />
+					)}
 
-							width: "300px",
-						}}
-					/>
 					<Box
 						sx={{
 							m: 1,

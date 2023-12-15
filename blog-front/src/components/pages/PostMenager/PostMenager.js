@@ -21,7 +21,7 @@ import { red } from "@mui/material/colors";
 import { useEffect, useState } from "react";
 import NewPost from "./NewPost/NewPost";
 import WaitingPosts from "./WaitingPosts/WaitingPosts";
-import YourPosts from "./YourPosts/YourPosts";
+import ApprovedPosts from "./ApprovedPosts/ApprovedPosts";
 import DraftPosts from "./DraftPosts/DraftPosts";
 
 export default function PostMenager() {
@@ -43,7 +43,7 @@ export default function PostMenager() {
 				</Box>
 
 				<TabPanel value="1">
-					<YourPosts />
+					<ApprovedPosts />
 				</TabPanel>
 				<TabPanel value="2">
 					<DraftPosts />

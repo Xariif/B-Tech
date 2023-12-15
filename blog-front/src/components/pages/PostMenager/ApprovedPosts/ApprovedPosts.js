@@ -1,18 +1,18 @@
-import { useEffect, useState } from "react";
+import { Typography } from "@mui/material";
+import { useEffect } from "react";
+import { useState } from "react";
+import { useUser } from "../../../hooks/useUser";
+import { useDispatch } from "react-redux";
 import useService from "../../../../services/posts/useService";
 import { useNotification } from "../../../hooks/useNotification";
-import PostSmallImg from "../../../ui/PostSmallImg";
-import PostRow from "../../../ui/PostRow";
-import { Paper } from "@mui/material";
 import { useError } from "../../../hooks/useError";
-import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import PostSmallImg from "../../../ui/PostSmallImg";
 
-const DraftPosts = () => {
-	const postsService = useService();
+const ApprovedPosts = () => {
+	const [posts, setPosts] = useState([]);
 	const { setLoader } = useNotification();
 	const { handleError } = useError();
-
-	const [posts, setPosts] = useState([]);
+	const postsService = useService();
 
 	const arrayBufferToBase64 = (buffer) => {
 		const binary = [];
@@ -24,13 +24,12 @@ const DraftPosts = () => {
 	useEffect(() => {
 		setLoader(true);
 		postsService
-			.GetDraftPosts()
+			.GetAuthorApprovedPosts()
 			.then((response) => {
 				const fetchImagePromises = response.map((post) => {
 					return postsService
 						.GetImage({ id: post.mainPhotoId })
 						.then((image) => {
-							console.log(image);
 							post.image = arrayBufferToBase64(image);
 						})
 						.catch((e) => {
@@ -56,17 +55,15 @@ const DraftPosts = () => {
 			});
 	}, []);
 
-	if (posts.length === 0) {
-		return null;
-	}
-
 	return (
 		<>
 			{posts.map((post) => {
-				return <PostRow key={post.id} post={post} />;
+				return <PostSmallImg key={post.id} post={post} />;
 			})}
+			<Typography variant="h4">Your posts</Typography>
+			tu będzie lista postów z możliwościa edycji i usunięcia
 		</>
 	);
 };
 
-export default DraftPosts;
+export default ApprovedPosts;

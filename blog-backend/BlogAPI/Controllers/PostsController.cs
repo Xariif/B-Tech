@@ -15,7 +15,8 @@ namespace BlogAPI.Controllers
         private readonly AuthorsService _authorsService;
 
 
-        public PostsController(IWebHostEnvironment env, PostsService postsService, UsersService usersService, AuthorsService authorsService) : base(env)
+        public PostsController(IWebHostEnvironment env, PostsService postsService, UsersService usersService,
+            AuthorsService authorsService) : base(env)
         {
             _postsService = postsService;
             _usersService = usersService;
@@ -63,22 +64,31 @@ namespace BlogAPI.Controllers
             {
                 var result = await _postsService.GetPostsByStatusAsync(Status.Aproved);
 
-                var res = result.Select(post => new PostsDTO
-                {
-                    Id = post.Id.ToString(),
-                    Title = post.Title,
-                    Category = post.Category,
-                    Content = post.Content,
-                    Tags = post.Tags,
-                    MainPhotoId = post.MainPhotoId.ToString(),
-                    AuthorId = post.AuthorId.ToString(),
-                    CreatedAt = post.CreatedAt,
-                    Status = post.Status,
-                    Dislikes = post.Dislikes,
-                    Likes = post.Likes,
-                    Views = post.Views,
-                    MainParentId = post.MainParentId?.ToString()
-                }).ToList();
+                var res = result.Select(post =>
+                    {
+                        var author = _authorsService.GetAuthorByIdAsync(post.AuthorId.ToString()).Result;
+                        var user = _usersService.GetUserByIdAsync(author.UserId).Result;
+
+                        return new PostsDTO
+                        {
+                            Id = post.Id.ToString(),
+                            Title = post.Title,
+                            Category = post.Category,
+                            Content = post.Content,
+                            Tags = post.Tags,
+                            MainPhotoId = post.MainPhotoId.ToString(),
+                            AuthorName = user.Name,
+                            AuthorSurname = user.Surname,
+                            AuthorId = author.Id.ToString(),
+                            CreatedAt = post.CreatedAt,
+                            Status = post.Status,
+                            Dislikes = post.Dislikes,
+                            Likes = post.Likes,
+                            Views = post.Views,
+                            MainParentId = post.MainParentId?.ToString()
+                        };
+                    }
+                ).ToList();
 
 
                 return Ok(res);
@@ -99,22 +109,31 @@ namespace BlogAPI.Controllers
 
                 var result = await _postsService.GetPostsByStatusAndAuthorIdAsync(Status.Draft, authorId);
 
-                var res = result.Select(post => new PostsDTO
-                {
-                    Id = post.Id.ToString(),
-                    Title = post.Title,
-                    Category = post.Category,
-                    Content = post.Content,
-                    Tags = post.Tags,
-                    MainPhotoId = post.MainPhotoId.ToString(),
-                    AuthorId = post.AuthorId.ToString(),
-                    CreatedAt = post.CreatedAt,
-                    Status = post.Status,
-                    Dislikes = post.Dislikes,
-                    Likes = post.Likes,
-                    Views = post.Views,
-                    MainParentId = post.MainParentId?.ToString()
-                }).ToList();
+                var res = result.Select(post =>
+                    {
+                        var author = _authorsService.GetAuthorByIdAsync(post.AuthorId.ToString()).Result;
+                        var user = _usersService.GetUserByIdAsync(author.UserId).Result;
+
+                        return new PostsDTO
+                        {
+                            Id = post.Id.ToString(),
+                            Title = post.Title,
+                            Category = post.Category,
+                            Content = post.Content,
+                            Tags = post.Tags,
+                            MainPhotoId = post.MainPhotoId.ToString(),
+                            AuthorName = user.Name,
+                            AuthorSurname = user.Surname,
+                            AuthorId = author.Id.ToString(),
+                            CreatedAt = post.CreatedAt,
+                            Status = post.Status,
+                            Dislikes = post.Dislikes,
+                            Likes = post.Likes,
+                            Views = post.Views,
+                            MainParentId = post.MainParentId?.ToString()
+                        };
+                    }
+                ).ToList();
 
                 return Ok(res);
             }
@@ -133,22 +152,31 @@ namespace BlogAPI.Controllers
                 var authorId = IdHelper.GetAuthorId(User, _usersService, _authorsService);
                 var result = await _postsService.GetPostsByStatusAndAuthorIdAsync(Status.Rejected, authorId);
 
-                var res = result.Select(post => new PostsDTO
-                {
-                    Id = post.Id.ToString(),
-                    Title = post.Title,
-                    Category = post.Category,
-                    Content = post.Content,
-                    Tags = post.Tags,
-                    MainPhotoId = post.MainPhotoId.ToString(),
-                    AuthorId = post.AuthorId.ToString(),
-                    CreatedAt = post.CreatedAt,
-                    Status = post.Status,
-                    Dislikes = post.Dislikes,
-                    Likes = post.Likes,
-                    Views = post.Views,
-                    MainParentId = post.MainParentId?.ToString()
-                }).ToList();
+                var res = result.Select(post =>
+                    {
+                        var author = _authorsService.GetAuthorByIdAsync(post.AuthorId.ToString()).Result;
+                        var user = _usersService.GetUserByIdAsync(author.UserId).Result;
+
+                        return new PostsDTO
+                        {
+                            Id = post.Id.ToString(),
+                            Title = post.Title,
+                            Category = post.Category,
+                            Content = post.Content,
+                            Tags = post.Tags,
+                            MainPhotoId = post.MainPhotoId.ToString(),
+                            AuthorName = user.Name,
+                            AuthorSurname = user.Surname,
+                            AuthorId = author.Id.ToString(),
+                            CreatedAt = post.CreatedAt,
+                            Status = post.Status,
+                            Dislikes = post.Dislikes,
+                            Likes = post.Likes,
+                            Views = post.Views,
+                            MainParentId = post.MainParentId?.ToString()
+                        };
+                    }
+                ).ToList();
 
                 return Ok(res);
             }
@@ -168,22 +196,31 @@ namespace BlogAPI.Controllers
                 var authorId = IdHelper.GetAuthorId(User, _usersService, _authorsService);
                 var result = await _postsService.GetPostsByStatusAndAuthorIdAsync(Status.ToConfirm, authorId);
 
-                var res = result.Select(post => new PostsDTO
-                {
-                    Id = post.Id.ToString(),
-                    Title = post.Title,
-                    Category = post.Category,
-                    Content = post.Content,
-                    Tags = post.Tags,
-                    MainPhotoId = post.MainPhotoId.ToString(),
-                    AuthorId = post.AuthorId.ToString(),
-                    CreatedAt = post.CreatedAt,
-                    Status = post.Status,
-                    Dislikes = post.Dislikes,
-                    Likes = post.Likes,
-                    Views = post.Views,
-                    MainParentId = post.MainParentId?.ToString()
-                }).ToList();
+                var res = result.Select(post =>
+                    {
+                        var author = _authorsService.GetAuthorByIdAsync(post.AuthorId.ToString()).Result;
+                        var user = _usersService.GetUserByIdAsync(author.UserId).Result;
+
+                        return new PostsDTO
+                        {
+                            Id = post.Id.ToString(),
+                            Title = post.Title,
+                            Category = post.Category,
+                            Content = post.Content,
+                            Tags = post.Tags,
+                            MainPhotoId = post.MainPhotoId.ToString(),
+                            AuthorName = user.Name,
+                            AuthorSurname = user.Surname,
+                            AuthorId = author.Id.ToString(),
+                            CreatedAt = post.CreatedAt,
+                            Status = post.Status,
+                            Dislikes = post.Dislikes,
+                            Likes = post.Likes,
+                            Views = post.Views,
+                            MainParentId = post.MainParentId?.ToString()
+                        };
+                    }
+                ).ToList();
 
                 return Ok(res);
             }
@@ -201,22 +238,31 @@ namespace BlogAPI.Controllers
             {
                 var result = await _postsService.GetApprovedPostsByAuthorIdAsync(authorId);
 
-                var res = result.Select(post => new PostsDTO
-                {
-                    Id = post.Id.ToString(),
-                    Title = post.Title,
-                    Category = post.Category,
-                    Content = post.Content,
-                    Tags = post.Tags,
-                    MainPhotoId = post.MainPhotoId.ToString(),
-                    AuthorId = post.AuthorId.ToString(),
-                    CreatedAt = post.CreatedAt,
-                    Status = post.Status,
-                    Dislikes = post.Dislikes,
-                    Likes = post.Likes,
-                    Views = post.Views,
-                    MainParentId = post.MainParentId?.ToString()
-                }).ToList();
+                var res = result.Select(post =>
+                    {
+                        var author = _authorsService.GetAuthorByIdAsync(post.AuthorId.ToString()).Result;
+                        var user = _usersService.GetUserByIdAsync(author.UserId).Result;
+
+                        return new PostsDTO
+                        {
+                            Id = post.Id.ToString(),
+                            Title = post.Title,
+                            Category = post.Category,
+                            Content = post.Content,
+                            Tags = post.Tags,
+                            MainPhotoId = post.MainPhotoId.ToString(),
+                            AuthorName = user.Name,
+                            AuthorSurname = user.Surname,
+                            AuthorId = author.Id.ToString(),
+                            CreatedAt = post.CreatedAt,
+                            Status = post.Status,
+                            Dislikes = post.Dislikes,
+                            Likes = post.Likes,
+                            Views = post.Views,
+                            MainParentId = post.MainParentId?.ToString()
+                        };
+                    }
+                ).ToList();
 
                 return Ok(res);
             }
@@ -235,22 +281,120 @@ namespace BlogAPI.Controllers
             {
                 var result = await _postsService.GetApprovedPostsByCategoryAsync(category);
 
-                var res = result.Select(post => new PostsDTO
+                var res = result.Select(post =>
+                    {
+                        var author = _authorsService.GetAuthorByIdAsync(post.AuthorId.ToString()).Result;
+                        var user = _usersService.GetUserByIdAsync(author.UserId).Result;
+
+                        return new PostsDTO
+                        {
+                            Id = post.Id.ToString(),
+                            Title = post.Title,
+                            Category = post.Category,
+                            Content = post.Content,
+                            Tags = post.Tags,
+                            MainPhotoId = post.MainPhotoId.ToString(),
+                            AuthorName = user.Name,
+                            AuthorSurname = user.Surname,
+                            AuthorId = author.Id.ToString(),
+                            CreatedAt = post.CreatedAt,
+                            Status = post.Status,
+                            Dislikes = post.Dislikes,
+                            Likes = post.Likes,
+                            Views = post.Views,
+                            MainParentId = post.MainParentId?.ToString()
+                        };
+                    }
+                ).ToList();
+
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
+        }
+
+
+        [AllowAnonymous]
+        [HttpGet("GetAuthorApprovedPosts")]
+        public async Task<ActionResult<List<PostsDTO>>> GetAuthorApprovedPosts()
+        {
+            try
+            {
+                var authorId = IdHelper.GetAuthorId(User, _usersService, _authorsService);
+
+                var posts = await _postsService.GetApprovedPostsByAuthorIdAsync(authorId.ToString()) ?? throw new Exception("Author posts not found");
+
+                var res = posts.Select(post =>
                 {
-                    Id = post.Id.ToString(),
-                    Title = post.Title,
-                    Category = post.Category,
-                    Content = post.Content,
-                    Tags = post.Tags,
-                    MainPhotoId = post.MainPhotoId.ToString(),
-                    AuthorId = post.AuthorId.ToString(),
-                    CreatedAt = post.CreatedAt,
-                    Status = post.Status,
-                    Dislikes = post.Dislikes,
-                    Likes = post.Likes,
-                    Views = post.Views,
-                    MainParentId = post.MainParentId?.ToString()
-                }).ToList();
+                    var author = _authorsService.GetAuthorByIdAsync(post.AuthorId.ToString()).Result;
+                    var user = _usersService.GetUserByIdAsync(author.UserId).Result;
+
+                    return new PostsDTO
+                    {
+                        Id = post.Id.ToString(),
+                        Title = post.Title,
+                        Category = post.Category,
+                        Content = post.Content,
+                        Tags = post.Tags,
+                        MainPhotoId = post.MainPhotoId.ToString(),
+                        AuthorName = user.Name,
+                        AuthorSurname = user.Surname,
+                        AuthorId = author.Id.ToString(),
+                        CreatedAt = post.CreatedAt,
+                        Status = post.Status,
+                        Dislikes = post.Dislikes,
+                        Likes = post.Likes,
+                        Views = post.Views,
+                        MainParentId = post.MainParentId?.ToString()
+                    };
+                }
+                                   ).ToList();
+
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
+        }
+
+
+        [AllowAnonymous]
+        [HttpGet("GetApprovedPostsByTag")]
+        public async Task<ActionResult<List<PostsDTO>>> GetApprovedPostsByTag(string tag)
+        {
+            try
+            {
+                var result = await _postsService.GetApprovedPostsByTagAsync(tag);
+
+                var res = result.Select(post =>
+                    {
+                        var author = _authorsService.GetAuthorByIdAsync(post.AuthorId.ToString()).Result;
+                        var user = _usersService.GetUserByIdAsync(author.UserId).Result;
+
+                        return new PostsDTO
+                        {
+                            Id = post.Id.ToString(),
+                            Title = post.Title,
+                            Category = post.Category,
+                            Content = post.Content,
+                            Tags = post.Tags,
+                            MainPhotoId = post.MainPhotoId.ToString(),
+                            AuthorName = user.Name,
+                            AuthorSurname = user.Surname,
+                            AuthorId = author.Id.ToString(),
+                            CreatedAt = post.CreatedAt,
+                            Status = post.Status,
+                            Dislikes = post.Dislikes,
+                            Likes = post.Likes,
+                            Views = post.Views,
+                            MainParentId = post.MainParentId?.ToString()
+                        };
+                    }
+                ).ToList();
+
 
                 return Ok(res);
             }
@@ -261,14 +405,18 @@ namespace BlogAPI.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("GetApprovedPostsByTag")]
-        public async Task<ActionResult<List<PostsDTO>>> GetApprovedPostsByTag(string tag)
+        [HttpGet("GetApprovedPostById")]
+        public async Task<ActionResult<List<PostsDTO>>> GetApprovedPostById(string id)
         {
             try
             {
-                var result = await _postsService.GetApprovedPostsByTagAsync(tag);
+                var post = await _postsService.GetPostByIdAsync(id) ?? throw new Exception("Post not found");
 
-                var res = result.Select(post => new PostsDTO
+
+                var author = _authorsService.GetAuthorByIdAsync(post.AuthorId.ToString()).Result;
+                var user = _usersService.GetUserByIdAsync(author.UserId).Result;
+
+                var res = new PostsDTO
                 {
                     Id = post.Id.ToString(),
                     Title = post.Title,
@@ -276,14 +424,16 @@ namespace BlogAPI.Controllers
                     Content = post.Content,
                     Tags = post.Tags,
                     MainPhotoId = post.MainPhotoId.ToString(),
-                    AuthorId = post.AuthorId.ToString(),
+                    AuthorName = user.Name,
+                    AuthorSurname = user.Surname,
+                    AuthorId = author.Id.ToString(),
                     CreatedAt = post.CreatedAt,
                     Status = post.Status,
                     Dislikes = post.Dislikes,
                     Likes = post.Likes,
                     Views = post.Views,
                     MainParentId = post.MainParentId?.ToString()
-                }).ToList();
+                };
 
                 return Ok(res);
             }
@@ -292,6 +442,8 @@ namespace BlogAPI.Controllers
                 return HandleError(ex);
             }
         }
+
+
 
         [Authorize("write:posts")]
         [HttpPost("CreateDraftPost")]
@@ -306,6 +458,7 @@ namespace BlogAPI.Controllers
 
                 return Ok("Post created");
             }
+
             catch (Exception ex)
             {
                 return HandleError(ex);
@@ -434,3 +587,4 @@ namespace BlogAPI.Controllers
         }
     }
 }
+

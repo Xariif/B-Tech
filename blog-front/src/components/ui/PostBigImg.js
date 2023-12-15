@@ -23,8 +23,8 @@ export default function PostBigImg({ post }) {
 				}}
 			>
 				<Tag tag={post.tag} />
-				<a
-					href={"post/" + post.id}
+				<Link
+					to={"post/" + post.id}
 					style={{
 						fontWeight: "bolder",
 						fontSize: "2rem",
@@ -33,7 +33,7 @@ export default function PostBigImg({ post }) {
 					}}
 				>
 					{post.title}
-				</a>
+				</Link>
 
 				<div
 					style={{
@@ -52,7 +52,9 @@ export default function PostBigImg({ post }) {
 							pathname: "/author/" + post.authorId,
 						}}
 					>
-						<div style={{ fontWeight: "bold" }}>{post.authorName}&nbsp;</div>
+						<div style={{ fontWeight: "bold" }}>
+							{post.authorName}&nbsp;{post.authorSurname}&nbsp;
+						</div>
 						{new Date(post.createdAt).toLocaleDateString("en-EN", {
 							year: "numeric",
 							month: "long",
@@ -63,16 +65,14 @@ export default function PostBigImg({ post }) {
 							hourCycle: "h24",
 						})}
 					</Link>
-					<p style={{ margin: "0", userSelect: "none" }}>
-						Views: {Math.floor(Math.random() * 1000) + 1}
-						&nbsp; Comments: {Math.floor(Math.random() * 100) + 1}
-					</p>
+					<p style={{ margin: "0", userSelect: "none" }}>Views: {post.views}</p>
 				</div>
 			</div>
 
 			<Link
 				to={{
 					pathname: "post/" + post.id,
+					state: { postData: post },
 				}}
 				style={{
 					display: "block",
@@ -82,7 +82,7 @@ export default function PostBigImg({ post }) {
 				}}
 			>
 				<img
-					src={"https://picsum.photos/seed/" + post.id + "/1920/1080"}
+					src={post.image}
 					alt="zdjęcie"
 					style={{
 						objectFit: "cover",

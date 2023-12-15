@@ -20,6 +20,11 @@ public class UsersController : BaseController
         _auth0Service = auth0Service;
     }
 
+
+
+
+
+
     [Authorize("admin")]
     [HttpGet("GetUserByAuth0Id")]
     public async Task<ActionResult<Users>> GetUserByAuth0IdAsync(string auth0Id)

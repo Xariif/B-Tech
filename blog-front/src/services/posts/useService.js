@@ -15,6 +15,14 @@ const useService = () => {
 		return api.get("Posts/GetDraftPosts");
 	};
 
+	const GetAuthorApprovedPosts = () => {
+		return api.get("Posts/GetAuthorApprovedPosts");
+	};
+
+	const GetApprovedPostById = ({ id }) => {
+		return api.getWithParams("Posts/GetApprovedPostById", { id: id });
+	};
+
 	const GetRejectedPosts = () => {
 		return api.get("Posts/GetRejectedPosts");
 	};
@@ -109,6 +117,7 @@ const useService = () => {
 
 	return {
 		GetApprovedPosts,
+		GetApprovedPostById,
 		GetDraftPosts,
 		GetRejectedPosts,
 		GetPostWaitingForApproval,
@@ -122,6 +131,7 @@ const useService = () => {
 		RejectPost,
 		DeletePost,
 		GetImage,
+		GetAuthorApprovedPosts,
 	};
 };
 
