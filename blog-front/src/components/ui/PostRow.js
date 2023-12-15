@@ -21,59 +21,20 @@ import { Close } from "@mui/icons-material";
 import { useNotification } from "../hooks/useNotification";
 
 const PostRow = ({ post }) => {
-	const postService = useService();
-
-	const [open, setOpen] = useState(false);
-	console.log(post.image);
+	const categoryColors = {
+		news: "red",
+		events: "green",
+		reviews: "blue",
+		tutorials: "yellow",
+		other: "grey",
+	};
 
 	return (
 		<>
-			<Dialog
-				open={open}
-				onClose={() => {
-					setOpen(false);
-				}}
-				aria-labelledby="alert-dialog-title"
-				aria-describedby="alert-dialog-description"
-				sx={{ borderRadius: "1rem" }}
-			>
-				<DialogTitle id="alert-dialog-title">
-					{"Delete draft post?"}
-				</DialogTitle>
-				<DialogContent>
-					<DialogContentText id="alert-dialog-description">
-						Are you sure you want to delete this draft post?
-					</DialogContentText>
-				</DialogContent>
-				<DialogActions>
-					<Button
-						startIcon={<Close />}
-						color="success"
-						onClick={() => {
-							setOpen(false);
-						}}
-					>
-						Cancel
-					</Button>
-					<Button
-						startIcon={<DeleteIcon />}
-						color="error"
-						onClick={() => {
-							setOpen(false);
-							console.log(post);
-							postService.DeletePost({ id: post.id });
-						}}
-						autoFocus
-					>
-						Delete
-					</Button>
-				</DialogActions>
-			</Dialog>
 			<Box
 				sx={{
 					m: 2,
 					display: "flex",
-					justifyContent: "space-between",
 					borderRadius: "1rem",
 					overflow: "hidden",
 					"&:hover": {
@@ -82,60 +43,52 @@ const PostRow = ({ post }) => {
 					},
 				}}
 			>
-				<Box sx={{ display: "flex" }}>
+				<Box mr={"2rem"} width={"10rem"} height={"10rem"}>
 					{post.image ? (
 						<img
 							src={post.image}
 							alt="post image"
-							style={{ width: "10rem", height: "10rem" }}
+							style={{ width: "100%", height: "100%", objectFit: "cover" }}
 						/>
 					) : (
-						<ModeEditIcon style={{ width: "10rem", height: "10rem" }} />
+						<ModeEditIcon
+							sx={{ width: "100%", height: "100%", objectFit: "cover" }}
+						/>
 					)}
-
-					<Box
-						sx={{
-							m: 1,
-							display: "flex",
-							flexDirection: "column",
-							justifyContent: "space-between",
-						}}
-					>
-						<h1>{post.title}</h1>
-						<h3>Category: {post.category}</h3>
-						<h3>Tags: {post.tags}</h3>
-						Date of creation: {new Date(
-							post.createdAt
-						).toLocaleDateString()} at{" "}
-						{new Date(post.createdAt).toLocaleTimeString()}
-					</Box>
 				</Box>
+
 				<Box
 					sx={{
+						m: 1,
 						display: "flex",
 						flexDirection: "column",
 						justifyContent: "space-between",
-						p: 1,
 					}}
 				>
-					<Button
-						startIcon={<ModeEditIcon />}
-						color="info"
-						onClick={() => {
-							console.log("edit");
+					<Box
+						sx={{
+							display: "flex",
+							alignItems: "center",
+							fontSize: ".8rem",
 						}}
 					>
-						Edit
-					</Button>
-					<Button
-						startIcon={<DeleteIcon />}
-						color="error"
-						onClick={() => {
-							setOpen(true);
-						}}
-					>
-						Delete
-					</Button>
+						<Box
+							sx={{
+								width: "3rem",
+								height: ".4rem",
+								borderRadius: "1rem",
+								bgcolor: categoryColors[post.category],
+								mr: ".5rem",
+							}}
+						></Box>{" "}
+						{post.category?.toUpperCase()}
+					</Box>
+					<h1>{post.title}</h1>
+					<h3>Category: {post.category}</h3>
+					Date of creation: {new Date(
+						post.createdAt
+					).toLocaleDateString()} at{" "}
+					{new Date(post.createdAt).toLocaleTimeString()}
 				</Box>
 			</Box>
 		</>

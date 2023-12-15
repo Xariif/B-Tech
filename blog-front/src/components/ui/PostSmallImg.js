@@ -13,7 +13,6 @@ export default function PostSmallImg({ post }) {
 				width: "200px",
 				borderRadius: "1rem",
 				overflow: "hidden",
-
 				border: "1px solid var(--surface-border)",
 			}}
 		>
@@ -51,34 +50,6 @@ export default function PostSmallImg({ post }) {
 					}}
 				>
 					{post.title}
-				</div>
-			</Link>
-			<Link
-				style={{
-					padding: ".5rem",
-					fontSize: ".75rem",
-					display: "flex",
-					textDecoration: "none",
-					color: "inherit",
-				}}
-				to={{
-					pathname: "/author/" + post.authorId,
-				}}
-			>
-				<Avatar icon="pi pi-user" size="small" shape="circle" />
-				<div
-					style={{
-						display: "flex",
-						flexDirection: "column	",
-						marginLeft: ".5rem",
-					}}
-				>
-					<div style={{ fontWeight: "bold" }}>{post.authorName}</div>
-					{new Date(post.createdAt).toLocaleDateString("en-EN", {
-						year: "numeric",
-						month: "long",
-						day: "numeric",
-					})}
 				</div>
 			</Link>
 		</div>

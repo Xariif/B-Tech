@@ -9,60 +9,7 @@ import useService from "../../services/posts/useService";
 import { createImmutableStateInvariantMiddleware } from "@reduxjs/toolkit";
 import PostBigImg from "../ui/PostBigImg";
 
-export default function Post(props) {
-	const { id } = useParams();
-
-	const [post, setPost] = useState();
-
-	const { setLoader } = useNotification();
-	const postsService = useService();
-	const { handleError } = useError();
-
-	const arrayBufferToBase64 = (buffer) => {
-		const binary = [];
-		const bytes = new Uint8Array(buffer);
-		bytes.forEach((byte) => binary.push(String.fromCharCode(byte)));
-		return `data:image/jpeg;base64,${window.btoa(binary.join(""))}`;
-	};
-
-	useEffect(() => {
-		setLoader(true);
-		postsService
-			.GetApprovedPostById({ id })
-			.then((response) => {
-				const fetchImagePromises = [response].map((post) => {
-					return postsService
-						.GetImage({ id: post.mainPhotoId })
-						.then((image) => {
-							post.image = arrayBufferToBase64(image);
-						})
-						.catch((e) => {
-							console.log(e);
-							post.image = null;
-							handleError(e);
-						});
-				});
-
-				Promise.all(fetchImagePromises)
-					.then(() => {
-						setPost(response);
-					})
-					.catch((error) => {
-						handleError(error);
-					});
-			})
-			.catch((error) => {
-				console.log(error);
-			})
-			.finally(() => {
-				setLoader(false);
-			});
-	}, []);
-
-	if (post === undefined) {
-		return null;
-	}
-
+export default function Post({ postData }) {
 	return (
 		<div
 			style={{
@@ -82,7 +29,7 @@ export default function Post(props) {
 					margin: ".5rem auto ",
 				}}
 			>
-				<Tag tag={post.tag} />
+				<Tag tag={postData.tag} />
 				<div
 					style={{
 						fontWeight: "bolder",
@@ -91,7 +38,7 @@ export default function Post(props) {
 						color: "inherit",
 					}}
 				>
-					{post.title}
+					{postData.title}
 				</div>
 
 				<div
@@ -115,12 +62,12 @@ export default function Post(props) {
 								color: "inherit",
 							}}
 							to={{
-								pathname: "/author/" + post.authorId,
+								pathname: "/author/" + postData.authorId,
 							}}
 						>
-							{post.authorName}&nbsp;{post.authorSurname}&nbsp;
+							{postData.authorName}&nbsp;{postData.authorSurname}&nbsp;
 						</Link>
-						{new Date(post.createdAt).toLocaleDateString("en-EN", {
+						{new Date(postData.createdAt).toLocaleDateString("en-EN", {
 							year: "numeric",
 							month: "long",
 							day: "numeric",
@@ -130,11 +77,13 @@ export default function Post(props) {
 							hourCycle: "h24",
 						})}
 					</div>
-					<p style={{ margin: "0", userSelect: "none" }}>Views: {post.views}</p>
+					<p style={{ margin: "0", userSelect: "none" }}>
+						Views: {postData.views}
+					</p>
 				</div>
 			</div>
 			<img
-				src={post.image}
+				src={postData.image}
 				alt="zdjęcie"
 				style={{
 					objectFit: "cover",
@@ -154,7 +103,7 @@ export default function Post(props) {
 					whiteSpace: "pre-wrap",
 				}}
 			>
-				{post.content}
+				{postData.content}
 			</div>
 		</div>
 	);

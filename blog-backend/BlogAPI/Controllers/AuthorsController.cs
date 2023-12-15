@@ -26,11 +26,26 @@ namespace BlogAPI.Controllers
 
         [AllowAnonymous]
         [HttpGet("GetAuthorById")]
-        public async Task<ActionResult<AuthorsDTO>> GetAuthorById(string id)
+        public async Task<ActionResult<object>> GetAuthorById(string id)
         {
             try
             {
-                return await _authorsService.GetAuthorByIdAsync(id);
+                var author = await _authorsService.GetAuthorByIdAsync(id);
+                var user = await _usersService.GetUserByIdAsync(author.UserId);
+
+                return new
+                {
+                    author.Id,
+                    author.UserId,
+                    author.Description,
+                    author.SocialMedia,
+                    user.Name,
+                    user.Surname,
+                    user.Email,
+                    user.Auth0Id,
+                    user.ActiveFrom
+                };
+
 
             }
             catch (Exception ex)
