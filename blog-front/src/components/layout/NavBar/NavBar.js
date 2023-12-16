@@ -23,7 +23,8 @@ import {
 	PowerSettingsNew,
 } from "@mui/icons-material";
 import { useUser } from "../../hooks/useUser";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNotification } from "../../hooks/useNotification";
 
 const Search = styled("div")(({ theme }) => ({
 	position: "relative",
@@ -85,16 +86,8 @@ const StyledIcon = styled(SvgIcon)(({ theme }) => ({
 	},
 }));
 
-const NavBar = () => {
-	const {
-		isAuthenticated,
-		isLoading,
-		logout,
-		loginWithRedirect,
-		getAccessTokenSilently,
-	} = useAuth0();
-
-	const { user } = useUser();
+const NavBar = ({ user, isAuthenticated }) => {
+	const { logout, loginWithRedirect } = useAuth0();
 
 	const BasicMenuBar = () => {
 		return (
@@ -105,7 +98,7 @@ const NavBar = () => {
 				<StyledLink underline="none" href="/newest">
 					Newest
 				</StyledLink>
-				{!isLoading && !isAuthenticated ? (
+				{!isAuthenticated ? (
 					<StyledLink
 						underline="none"
 						onClick={(e) => {

@@ -21,13 +21,15 @@ import Newest from "../components/pages/Newest";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useUser } from "../components/hooks/useUser";
 import { useNotification } from "../components/hooks/useNotification";
+import HomeWrapper from "../components/wrappers/HomeWrapper";
+import { useEffect } from "react";
 
 export default function AppRoutes() {
 	return (
 		<BrowserRouter>
 			<Routes>
 				<Route path="/" element={<Layout content={<Outlet />} />}>
-					<Route path="/" element={<Home />} />
+					<Route path="/" element={<HomeWrapper />} />
 					<Route path="/top" element={<Top />} />
 					<Route path="/newest" element={<Newest />} />
 					<Route path="/contact" element={<Contact />} />
@@ -56,8 +58,7 @@ export default function AppRoutes() {
 }
 
 const ProtectedRoute = ({ allowedPermissions }) => {
-	const { user } = useUser();
-	const { isAuthenticated, isLoading } = useAuth0();
+	const { user, isLoading } = useUser();
 	const location = useLocation();
 	const notification = useNotification();
 

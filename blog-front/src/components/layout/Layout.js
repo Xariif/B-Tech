@@ -17,13 +17,17 @@ import {
 } from "@mui/material";
 import NavBar from "./NavBar/NavBar";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { useAuth0 } from "@auth0/auth0-react";
+import { useUser } from "../hooks/useUser";
 
 export function Layout(props) {
+	const { user, isLoading, isAuthenticated } = useUser();
+
 	return (
 		<ThemeProvider theme={theme}>
 			<CssBaseline />
 
-			<NavBar />
+			<NavBar user={user} isAuthenticated={isAuthenticated} />
 
 			<Container maxWidth="lg">
 				<Box sx={{ my: 2, p: 0 }}>{props.content}</Box>

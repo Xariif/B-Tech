@@ -4,7 +4,7 @@ import PrimeReact, { PrimeReactContext } from "primereact/api";
 
 export const ThemeContext = createContext();
 
-function ThemeProvider(props) {
+function ThemeProvider({ children }) {
 	const [darkMode, setDarkMode] = useState(false);
 	const [themeStorage, setThemeStorage] = useLocalStorage("theme");
 
@@ -35,9 +35,7 @@ function ThemeProvider(props) {
 		setThemeStorage(themes[newIndex]);
 	};
 	return (
-		<ThemeContext.Provider value={nextTheme}>
-			{props.children}
-		</ThemeContext.Provider>
+		<ThemeContext.Provider value={nextTheme}>{children}</ThemeContext.Provider>
 	);
 }
 

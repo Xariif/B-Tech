@@ -7,6 +7,7 @@ import { Auth0Provider } from "@auth0/auth0-react";
 
 import { ToastProvider } from "./context/NotificationContext";
 import { ErrorProvider } from "./context/ErrorContext";
+import { UserProvider } from "./context/UserContext";
 
 const rootElement = document.getElementById("root");
 
@@ -25,10 +26,12 @@ root.render(
 		}}
 		cacheLocation="localstorage"
 	>
-		<ToastProvider>
-			<ErrorProvider>
-				<App />
-			</ErrorProvider>
-		</ToastProvider>
+		<UserProvider>
+			<ToastProvider>
+				<ErrorProvider>
+					<App />
+				</ErrorProvider>
+			</ToastProvider>
+		</UserProvider>
 	</Auth0Provider>
 );

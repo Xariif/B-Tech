@@ -24,10 +24,8 @@ function AuthorWrapper() {
 				setAuthorData(response);
 			})
 			.catch((error) => {
-				console.log(error);
-
-				setAuthorData(false);
 				handleError(error);
+				setAuthorData(false);
 			})
 			.finally(() => {
 				setLoader(false);

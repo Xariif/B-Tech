@@ -8,11 +8,10 @@ import PostBigImg from "../ui/PostBigImg";
 import { useNotification } from "../hooks/useNotification";
 import useService from "../../services/posts/useService";
 import { useError } from "../hooks/useError";
+import Home from "../pages/Home";
 
-export default function PostWrapper() {
-	const { id } = useParams();
-
-	const [post, setPost] = useState();
+export default function HomeWrapper() {
+	const [posts, setPosts] = useState();
 
 	const { setLoader } = useNotification();
 	const postsService = useService();
@@ -28,35 +27,33 @@ export default function PostWrapper() {
 	useEffect(() => {
 		setLoader(true);
 		postsService
-			.GetApprovedPostById({ id })
+			.GetApprovedPosts()
 			.then((response) => {
-				const fetchImagePromises = [response].map((post) => {
+				const fetchImagePromises = response.map((post) => {
 					return postsService
 						.GetImage({ id: post.mainPhotoId })
 						.then((image) => {
 							post.image = arrayBufferToBase64(image);
 						})
 						.catch((e) => {
-							console.log(e);
 							post.image = null;
 							handleError(e);
 						});
 				});
 
 				Promise.all(fetchImagePromises).then(() => {
-					setPost(response);
+					setPosts(response);
 				});
 			})
 			.catch((error) => {
-				handleError(error);
-				setPost(false);
+				setPosts(false);
 			})
 			.finally(() => {
 				setLoader(false);
 			});
-	}, [id]);
+	}, []);
 
-	if (post === undefined) return null;
-	else if (post === false) return <NotFound />;
-	else return <Post postData={post} />;
+	if (posts === undefined) return null;
+	else if (posts === false) return <NotFound />;
+	else return <Home posts={posts} />;
 }

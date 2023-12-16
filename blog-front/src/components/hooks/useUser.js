@@ -1,26 +1,8 @@
-import { useAuth0 } from "@auth0/auth0-react";
-import { CompareSharp } from "@mui/icons-material";
-import { useEffect, useState } from "react";
-import { jwtDecode } from "jwt-decode";
+import { useContext } from "react";
+import { UserContext } from "../../context/UserContext";
 
 export const useUser = () => {
-	const { getAccessTokenSilently, isAuthenticated } = useAuth0();
-	const [user, setUser] = useState(null);
-	useEffect(() => {
-		if (!isAuthenticated) {
-			return;
-		}
-
-		getAccessTokenSilently()
-			.then((token) => {
-				const decodedUser = jwtDecode(token);
-				setUser(decodedUser);
-			})
-			.catch((err) => {
-				console.error(err);
-				setUser(false);
-			});
-	}, [isAuthenticated]);
-
-	return { user };
+	const context = useContext(UserContext);
+	if (!context) throw new Error("useUser must be used within a UserProvider");
+	return context;
 };
