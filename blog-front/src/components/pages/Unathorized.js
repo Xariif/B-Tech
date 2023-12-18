@@ -1,5 +1,5 @@
-import { Box, Button } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { Box, Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 export default function Unathorized() {
   const navigate = useNavigate();
@@ -9,7 +9,7 @@ export default function Unathorized() {
   };
 
   return (
-    <Box sx={{ textAlign: 'center', m: 'auto' }}>
+    <Box sx={{ textAlign: "center", m: "auto" }}>
       <h1>401</h1>
       <h2>Unauthorized</h2>
       <div>

@@ -3,9 +3,9 @@ export default function SmallScreen() {
     <>
       <div
         style={{
-				  display: 'flex',
-				  justifyContent: 'center',
-				  alignItems: 'center',
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
         <i className="pi pi-wrench" />

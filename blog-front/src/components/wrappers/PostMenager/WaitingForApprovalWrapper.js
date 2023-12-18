@@ -5,7 +5,7 @@ import useService from "../../../services/posts/useService";
 import useError from "../../hooks/useError";
 import NotFound from "../../pages/NotFound";
 
-export default function ApprovedPostsWrapper() {
+export default function WaitingForApprovalWrapper() {
   const [posts, setPosts] = useState();
 
   const { setLoader } = useNotification();
@@ -22,7 +22,7 @@ export default function ApprovedPostsWrapper() {
   useEffect(() => {
     setLoader(true);
     postsService
-      .GetAuthorApprovedPosts()
+      .GetPostWaitingForApproval()
       .then((response) => {
         const fetchImagePromises = response.map((post) =>
           postsService

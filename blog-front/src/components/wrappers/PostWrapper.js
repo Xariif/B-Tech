@@ -28,35 +28,57 @@ export default function PostWrapper({ children }) {
   useEffect(() => {
     setLoader(true);
 
-    postsService
-      .GetApprovedPostById({ id })
-      .then((response) => {
-        const fetchImagePromises = response.map((p) => {
-          postsService
-            .GetImage({ id: post.mainPhotoId })
-            .then((image) => {
-              p.image = arrayBufferToBase64(image);
-            })
-            .catch((e) => {
-              p.image = null;
-              handleError(e);
-            });
-
-          return p;
-        });
-
-        Promise.all(fetchImagePromises).then((res) => {
-          setPost(res);
-        });
-      })
-      .catch((error) => {
-        handleError(error);
-        setPost(false);
-      })
-      .finally(() => {
-        setLoader(false);
+    try {
+      postsService.GetApprovedPostById({ id }).then((res) => {
+        postsService
+          .GetImage({ id: res.mainPhotoId })
+          .then((image) => {
+            res.image = arrayBufferToBase64(image);
+            setPost(res);
+          })
+          .catch((e) => {
+            res.image = null;
+            handleError(e);
+          });
       });
-  }, [id]);
+    } catch (error) {
+      handleError(error);
+      setPost(false);
+    } finally {
+      setLoader(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    // search all coockies if there is a cookie with name "post" and if there is
+    // a equal id cookie if is not then set a coockie and call a function
+    // to increase a view count
+
+    const cookies = document.cookie.split(";");
+
+    function findCookieByID(findId) {
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        // Rozbij ciasteczko na nazwę i wartość
+        const [cookieName, cookieValue] = cookie.split("=");
+        // Sprawdź, czy wartość ciasteczka zawiera podane "id"
+        if (cookieValue.includes(findId)) {
+          return { name: cookieName, value: cookieValue };
+        }
+      }
+      return null; // Zwraca null, jeśli nie znaleziono ciasteczka z podanym "id"
+    }
+
+    const foundCookie = findCookieByID(id);
+    console.log(foundCookie);
+
+    if (true) {
+      const date = new Date();
+      date.setTime(date.getTime() + 1000 * 60 * 60 * 24 * 7);
+      document.cookie = `post=${id}; expires=${date.toUTCString()}; path=/`;
+      postsService.IncreaseViews({ id });
+    }
+  }, []);
 
   if (post === undefined) return null;
   if (post === false) return <NotFound />;

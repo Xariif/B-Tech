@@ -585,6 +585,21 @@ namespace BlogAPI.Controllers
                 return HandleError(ex);
             }
         }
+
+        [AllowAnonymous]
+        [HttpPost("IncreaseViews")]
+        public async Task<ActionResult> IncreaseViews(string id)
+        {
+            try
+            {
+                await _postsService.IncreaseViewsAsync(id);
+                return Ok("Views increased");
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
+        }
     }
 }
 

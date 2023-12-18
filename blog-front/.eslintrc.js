@@ -27,5 +27,8 @@ module.exports = {
     "arrow-body-style": "off",
     "prefer-arrow-callback": "off",
     "react/prop-types": "off",
+    "no-param-reassign": "off",
+    "react/jsx-props-no-spreading": "off",
+    "no-plusplus": "off",
   },
 };

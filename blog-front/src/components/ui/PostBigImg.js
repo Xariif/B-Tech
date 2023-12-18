@@ -1,37 +1,37 @@
-import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { Box, Container } from '@mui/material';
-import Category from './Category';
+import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Box, Container } from "@mui/material";
+import Category from "./Category";
 
 export default function PostBigImg({ post }) {
   return (
     <Container
       maxWidth="lg"
       style={{
-			  backgroundColor: 'var(--surface-card)',
-			  borderRadius: 'var(--border-radius)',
-			  padding: '1rem',
-			  marginTop: '1rem',
+        backgroundColor: "var(--surface-card)",
+        borderRadius: "var(--border-radius)",
+        padding: "1rem",
+        marginTop: "1rem",
       }}
     >
       <div
         style={{
-				  borderBottom: '1px solid grey',
-				  marginBottom: '.5rem',
-				  paddingBottom: '.5rem',
+          borderBottom: "1px solid grey",
+          paddingBottom: ".5rem",
 
-				  maxWidth: 'calc(1180px - 10rem)',
+          maxWidth: "calc(1180px - 10rem)",
+          margin: "0 auto .5rem auto",
         }}
       >
         <Category category={post.category} />
         <Link
           to={`post/${post.id}`}
           style={{
-					  fontWeight: 'bolder',
-					  fontSize: '2rem',
-					  textDecoration: 'none',
-					  color: 'inherit',
-					  marginTop: '2rem',
+            fontWeight: "bolder",
+            fontSize: "2rem",
+            textDecoration: "none",
+            color: "inherit",
+            marginTop: "2rem",
           }}
         >
           {post.title}
@@ -39,33 +39,32 @@ export default function PostBigImg({ post }) {
 
         <div
           style={{
-					  display: 'flex',
-					  justifyContent: 'space-between',
-					  fontSize: '.8rem',
+            display: "flex",
+            justifyContent: "space-between",
+            fontSize: ".8rem",
           }}
         >
           <Link
             style={{
-						  display: 'flex',
-						  textDecoration: 'none',
-						  color: 'inherit',
+              display: "flex",
+              textDecoration: "none",
+              color: "inherit",
             }}
             to={{
-						  pathname: `/author/${post.authorId}`,
+              pathname: `/author/${post.authorId}`,
             }}
           >
-            <div style={{ fontWeight: 'bold' }}>
-              {post.authorName}
-              {post.authorSurname}
-&nbsp;
+            <div>
+              {`${post.authorName} ${post.authorSurname}`}
+              &nbsp;
             </div>
-            {new Date(post.createdAt).toLocaleDateString('en-EN', {
-						  year: 'numeric',
-						  month: 'long',
-						  day: 'numeric',
+            {new Date(post.createdAt).toLocaleDateString("en-EN", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
             })}
           </Link>
-          <p style={{ margin: '0', userSelect: 'none' }}>
+          <p style={{ margin: "0", userSelect: "none" }}>
             Views:
             {post.views}
           </p>
@@ -74,27 +73,30 @@ export default function PostBigImg({ post }) {
 
       <Link
         to={{
-				  pathname: `post/${post.id}`,
-				  state: { postData: post },
+          pathname: `post/${post.id}`,
+          state: { postData: post },
         }}
         style={{
-				  display: 'block',
-				  borderRadius: '1.5rem',
-				  overflow: 'hidden',
-				  lineHeight: '0',
+          display: "block",
+          borderRadius: "1.5rem",
+          overflow: "hidden",
+          lineHeight: "0",
         }}
       >
-        {' '}
+        {" "}
         <Box
           component="img"
           src={post.image}
           alt="zdjęcie"
           sx={{
-					  width: '100%',
-					  objectFit: 'cover',
+            width: "100%",
+            objectFit: "cover",
 
-					  maxHeight: {
-					    lg: 400, md: 300, sm: 200, xs: 100,
+            maxHeight: {
+              lg: 400,
+              md: 300,
+              sm: 200,
+              xs: 100,
             },
           }}
         />

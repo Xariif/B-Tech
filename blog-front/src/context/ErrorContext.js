@@ -8,12 +8,12 @@ export function ErrorProvider({ children }) {
 
   const notification = useNotification();
 
-  const handleError = (error) => {
-    setError(error);
+  const handleError = (newError) => {
+    setError(newError);
 
     // handle error here
 
-    switch (error.code) {
+    switch (newError.code) {
       case 401:
         console.log("401");
         break;
@@ -31,8 +31,7 @@ export function ErrorProvider({ children }) {
         break;
 
       case "ERR_NETWORK":
-        console.log(error);
-        notification.showToast(error.message, "error");
+        notification.showToast(newError.message, "error");
 
         break;
 

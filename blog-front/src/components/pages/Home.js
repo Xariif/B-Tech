@@ -14,6 +14,7 @@ import NotFound from "./NotFound";
 import { useNotification } from "../hooks/useNotification";
 
 export default function Home({ posts }) {
+  console.log(posts);
   const {
     getAccessTokenSilently,
     user,

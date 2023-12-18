@@ -1,6 +1,6 @@
-import { useParams } from 'react-router-dom';
-import { useEffect } from 'react';
-import Loading from '../ui/Loading';
+import { useParams } from "react-router-dom";
+import { useEffect } from "react";
+import Loading from "../ui/Loading";
 
 export default function Search(props) {
   const { term } = useParams();

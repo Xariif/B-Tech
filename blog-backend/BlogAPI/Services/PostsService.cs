@@ -266,5 +266,15 @@ namespace BlogAPI.Services
 
             return await _postsRepository.FindFirstAsync<Posts>(filter);
         }
+
+
+        public async Task IncreaseViewsAsync(string postId)
+        {
+            var post = await GetPostByIdAsync(postId) ?? throw new Exception("Post doesn't exist");
+
+            post.Views++;
+
+            await _postsRepository.UpdateAsync(post.Id.ToString(), post);
+        }
     }
 }

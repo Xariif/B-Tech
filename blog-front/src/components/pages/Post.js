@@ -5,7 +5,7 @@ import { createImmutableStateInvariantMiddleware } from "@reduxjs/toolkit";
 import Category from "../ui/Category";
 import CommentSection from "../ui/CommentSection";
 import { useNotification } from "../hooks/useNotification";
-import { useError } from "../hooks/useError";
+import useError from "../hooks/useError";
 import useService from "../../services/posts/useService";
 import PostBigImg from "../ui/PostBigImg";
 
@@ -66,8 +66,7 @@ export default function Post({ postData }) {
                 pathname: `/author/${postData.authorId}`,
               }}
             >
-              {postData.authorName}
-              {postData.authorSurname}
+              {`${postData.authorName} ${postData.authorSurname}`}
               &nbsp;
             </Link>
             {new Date(postData.createdAt).toLocaleDateString("en-EN", {

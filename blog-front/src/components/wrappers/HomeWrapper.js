@@ -29,24 +29,26 @@ export default function HomeWrapper() {
     postsService
       .GetApprovedPosts()
       .then((response) => {
-        const fetchImagePromises = response.map((post) =>
+        const postsWithImgs = response.map((post) =>
           postsService
             .GetImage({ id: post.mainPhotoId })
             .then((image) => {
               post.image = arrayBufferToBase64(image);
+              return post;
             })
             .catch((e) => {
               post.image = null;
               handleError(e);
+              return post;
             }),
         );
 
-        Promise.all(fetchImagePromises).then(() => {
-          setPosts(response);
+        Promise.all(postsWithImgs).then((postsWithImages) => {
+          setPosts(postsWithImages);
         });
       })
       .catch((error) => {
-        //  handleError(error);
+        handleError(error);
         setPosts(false);
       })
       .finally(() => {

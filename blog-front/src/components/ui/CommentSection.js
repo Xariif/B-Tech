@@ -1,11 +1,9 @@
-import { useEffect, useState } from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
-import {
-  Box, Button, Pagination, Paper, TextField,
-} from '@mui/material';
+import { useEffect, useState } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
+import { Box, Button, Pagination, Paper, TextField } from "@mui/material";
 
 function NewComment() {
-  const [text, setText] = useState('');
+  const [text, setText] = useState("");
 
   const handlePost = () => {
     console.log(text);
@@ -16,20 +14,20 @@ function NewComment() {
       <h1>Post a Comment</h1>
       <div
         style={{
-				  width: '100%',
-				  display: 'flex',
-				  flexDirection: 'column',
-				  gap: '1rem',
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          gap: "1rem",
         }}
       >
-        <div style={{ display: 'flex', gap: '1rem' }}>
+        <div style={{ display: "flex", gap: "1rem" }}>
           <span className="p-input-icon-left">
             <i className="pi pi-user" />
-            <TextField placeholder="Name" style={{ width: '100%' }} />
+            <TextField placeholder="Name" style={{ width: "100%" }} />
           </span>
           <span className="p-input-icon-left">
             <i className="pi pi-envelope" />
-            <TextField placeholder="E-mail" style={{ width: '100%' }} />
+            <TextField placeholder="E-mail" style={{ width: "100%" }} />
           </span>
           <Button label="Post" onClick={handlePost} />
           <Button icon="pi pi-check" aria-label="Filter" />
@@ -55,7 +53,7 @@ function NewComment() {
 
 function Comment({ comment }) {
   return (
-    <Box title="Imie nazwisko" style={{ margin: '.5rem 0' }}>
+    <Box title="Imie nazwisko" style={{ margin: ".5rem 0" }}>
       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
       tempor incididunt ut labore et dolore magna aliqua.
     </Box>
@@ -70,7 +68,7 @@ function CommentList({ comments }) {
     setRows(event.rows);
   };
   useEffect(() => {
-    console.log('comments', comments);
+    console.log("comments", comments);
   }, [comments]);
 
   return (

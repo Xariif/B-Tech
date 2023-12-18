@@ -83,11 +83,10 @@ function PostRow({ post }) {
           {post.category?.toUpperCase()}
         </Box>
         <h1>{post.title}</h1>
-        <h3>
-          Category:
-          {post.category}
-        </h3>
-        Date of creation: {new Date(post.createdAt).toLocaleDateString()} at{" "}
+        <h3>Category: {post.category}</h3>
+        Date of creation: {new Date(
+          post.createdAt,
+        ).toLocaleDateString()} at{" "}
         {new Date(post.createdAt).toLocaleTimeString()}
       </Box>
     </Box>

@@ -17,31 +17,28 @@ export default function AdminWrapper() {
 
   useEffect(() => {
     setLoader(true);
-    setTimeout(() => {
-      userService
-        .GetAllUsers()
-        .then((response) => {
-          Promise.all(
-            response.map((user) =>
-              auth0.GetUserRoles({ auth0Id: user.auth0Id }),
-            ),
-          ).then((roles) => {
-            const usersWithRoles = response.map((user, index) => ({
-              ...user,
-              roles: roles[index],
-            }));
 
-            setUsers(usersWithRoles);
-          });
-        })
-        .catch((error) => {
-          handleError(error);
-          setUsers(false);
-        })
-        .finally(() => {
-          setLoader(false);
+    userService
+      .GetAllUsers()
+      .then((response) => {
+        Promise.all(
+          response.map((user) => auth0.GetUserRoles({ auth0Id: user.auth0Id })),
+        ).then((roles) => {
+          const usersWithRoles = response.map((user, index) => ({
+            ...user,
+            roles: roles[index],
+          }));
+
+          setUsers(usersWithRoles);
         });
-    }, 2000);
+      })
+      .catch((error) => {
+        handleError(error);
+        setUsers(false);
+      })
+      .finally(() => {
+        setLoader(false);
+      });
   }, []);
 
   if (users === undefined) return null;

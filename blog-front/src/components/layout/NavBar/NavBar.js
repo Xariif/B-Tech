@@ -107,7 +107,8 @@ function NavBar() {
 
 export default NavBar;
 
-function MenuBar({ user = null }) {
+function MenuBar() {
+  const { user } = useUser();
   const { isAuthenticated } = useAuth0();
   const navigate = useNavigate();
   return (
