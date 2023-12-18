@@ -1,39 +1,38 @@
 import React, { useReducer } from "react";
-import Footer from "./Footer/Footer";
-import { styled } from "@mui/material/styles";
+import { styled, ThemeProvider, createTheme } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
-import theme from "../../theme";
 import {
-	Alert,
-	Box,
-	Card,
-	Container,
-	CssBaseline,
-	Grid,
-	Link,
-	Slide,
-	Snackbar,
-	Stack,
+  Alert,
+  Box,
+  Card,
+  Container,
+  CssBaseline,
+  Grid,
+  Link,
+  Slide,
+  Snackbar,
+  Stack,
 } from "@mui/material";
-import NavBar from "./NavBar/NavBar";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useUser } from "../hooks/useUser";
+import pageTheme from "../../theme";
+import NavBar from "./NavBar/NavBar";
 
-export function Layout(props) {
-	const { user, isLoading, isAuthenticated } = useUser();
+import Footer from "./Footer/Footer";
+import useUser from "../hooks/useUser";
 
-	return (
-		<ThemeProvider theme={theme}>
-			<CssBaseline />
+export default function Layout({ content }) {
+  const user = useUser();
+  return (
+    <ThemeProvider theme={pageTheme}>
+      <CssBaseline />
 
-			<NavBar user={user} isAuthenticated={isAuthenticated} />
+      <NavBar />
 
-			<Container maxWidth="lg">
-				<Box sx={{ my: 2, p: 0 }}>{props.content}</Box>
-			</Container>
+      <Container maxWidth="lg">
+        <Box sx={{ my: 2, p: 0 }}>{content}</Box>
+      </Container>
 
-			<Footer />
-		</ThemeProvider>
-	);
+      <Footer />
+    </ThemeProvider>
+  );
 }

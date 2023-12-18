@@ -1,19 +1,14 @@
-import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import NotFound from "../pages/NotFound";
-import Post from "../pages/Post";
+import ApprovedPosts from "../../pages/PostMenager/ApprovedPosts/ApprovedPosts";
+import { useNotification } from "../../hooks/useNotification";
+import useService from "../../../services/posts/useService";
+import useError from "../../hooks/useError";
+import NotFound from "../../pages/NotFound";
 
-import Loading from "../ui/Loading";
-import PostBigImg from "../ui/PostBigImg";
-import { useNotification } from "../hooks/useNotification";
-import useService from "../../services/posts/useService";
-import useError from "../hooks/useError";
-import Home from "../pages/Home";
-
-export default function HomeWrapper() {
+export default function ApprovedPostsWrapper() {
   const [posts, setPosts] = useState();
 
-  const notification = useNotification();
+  const { setLoader } = useNotification();
   const postsService = useService();
   const { handleError } = useError();
 
@@ -25,9 +20,9 @@ export default function HomeWrapper() {
   };
 
   useEffect(() => {
-    notification.setLoader(true);
+    setLoader(true);
     postsService
-      .GetApprovedPosts()
+      .GetAuthorApprovedPosts()
       .then((response) => {
         const fetchImagePromises = response.map((post) =>
           postsService
@@ -36,6 +31,7 @@ export default function HomeWrapper() {
               post.image = arrayBufferToBase64(image);
             })
             .catch((e) => {
+              console.log(e);
               post.image = null;
               handleError(e);
             }),
@@ -46,15 +42,15 @@ export default function HomeWrapper() {
         });
       })
       .catch((error) => {
-        //  handleError(error);
+        handleError(error);
         setPosts(false);
       })
       .finally(() => {
-        notification.setLoader(false);
+        setLoader(false);
       });
   }, []);
 
   if (posts === undefined) return null;
   if (posts === false) return <NotFound />;
-  return <Home posts={posts} />;
+  return <ApprovedPosts posts={posts} />;
 }

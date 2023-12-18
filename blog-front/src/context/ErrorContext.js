@@ -1,51 +1,56 @@
 import React, { createContext, useContext, useState } from "react";
+import { useNotification } from "../components/hooks/useNotification";
 
 const ErrorContext = createContext();
 
-export const ErrorProvider = ({ children }) => {
-	const [error, setError] = useState(null);
+export function ErrorProvider({ children }) {
+  const [error, setError] = useState(null);
 
-	const handleError = (error) => {
-		setError(error);
+  const notification = useNotification();
 
-		//handle error here
+  const handleError = (error) => {
+    setError(error);
 
-		switch (error.code) {
-			case 401:
-				console.log("401");
-				break;
-			case 404:
-				console.log("404");
-				break;
-			case 500:
-				console.log("500");
-				break;
-			case 400:
-				console.log("400");
-				break;
-			case 403:
-				console.log("403");
-				break;
+    // handle error here
 
-			case "ERR_NETWORK":
-				console.log("Network Error");
-				break;
+    switch (error.code) {
+      case 401:
+        console.log("401");
+        break;
+      case 404:
+        console.log("404");
+        break;
+      case 500:
+        console.log("500");
+        break;
+      case 400:
+        console.log("400");
+        break;
+      case 403:
+        console.log("403");
+        break;
 
-			default:
-				console.log("default");
-				break;
-		}
-	};
+      case "ERR_NETWORK":
+        console.log(error);
+        notification.showToast(error.message, "error");
 
-	const clearError = () => {
-		setError(null);
-	};
+        break;
 
-	return (
-		<ErrorContext.Provider value={{ error, handleError, clearError }}>
-			{children}
-		</ErrorContext.Provider>
-	);
-};
+      default:
+        console.log("default");
+        break;
+    }
+  };
+
+  const clearError = () => {
+    setError(null);
+  };
+
+  return (
+    <ErrorContext.Provider value={{ error, handleError, clearError }}>
+      {children}
+    </ErrorContext.Provider>
+  );
+}
 
 export default ErrorContext;

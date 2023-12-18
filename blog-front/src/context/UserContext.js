@@ -1,37 +1,28 @@
-import { createContext, useEffect, useState } from "react";
-import { useUser } from "../components/hooks/useUser";
+import { createContext, useEffect, useMemo, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
+import { jwtDecode } from "jwt-decode";
+import { useMediaQuery } from "@mui/material";
+import Loading from "../components/ui/Loading";
 
-export const UserContext = createContext();
+const UserContext = createContext();
 
-export const UserProvider = ({ children }) => {
-	const { isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
-	const [authLoaded, setAuthLoaded] = useState(false);
+function UserProvider({ children }) {
+  const { isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
 
-	const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null);
 
-	useEffect(() => {
-		if (!isAuthenticated) {
-			return;
-		}
-		getAccessTokenSilently()
-			.then((token) => {
-				const decodedUser = jwtDecode(token);
-				setUser(decodedUser);
-				console.log(decodedUser);
-			})
-			.catch((err) => {
-				console.error(err);
-				setUser(false);
-			})
-			.finally(() => {
-				console.log("finished");
-			});
-	}, [isLoading]);
+  useMemo(() => {
+    if (isAuthenticated) {
+      getAccessTokenSilently().then((token) => {
+        const decoded = jwtDecode(token);
+        setUser(decoded);
+      });
+    }
+  }, [isAuthenticated]);
 
-	return (
-		<UserContext.Provider value={{ isAuthenticated, user, isLoading }}>
-			{children}
-		</UserContext.Provider>
-	);
-};
+  const value = useMemo(() => ({ user }), [user]);
+
+  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
+}
+
+export { UserContext, UserProvider };

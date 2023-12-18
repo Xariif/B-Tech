@@ -1,24 +1,33 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 export default function Loading() {
-	const [dots, setDots] = useState("");
-	useEffect(() => {
-		const intervalId = setInterval(() => {
-			setDots((prev) => (prev.length === 3 ? "" : prev + "."));
-		}, 500);
-		return () => clearInterval(intervalId);
-	}, []);
+  const [dots, setDots] = useState('');
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setDots((prev) => (prev.length === 3 ? '' : `${prev}.`));
+    }, 1000);
+    return () => clearInterval(intervalId);
+  }, []);
 
-	return (
-		<h1
-			style={{
-				fontSize: "3rem",
-				textShadow: "1px 1px #fff",
-				margin: 0,
-				textAlign: "center",
-			}}
-		>
-			Loading{dots}
-		</h1>
-	);
+  return (
+    <div
+      style={{
+			  display: 'flex',
+			  justifyContent: 'center',
+			  alignItems: 'center',
+			  height: '100%',
+      }}
+    >
+      <h1
+        style={{
+				  fontSize: '3rem',
+				  textShadow: '1px 1px #fff',
+				  textAlign: 'center',
+        }}
+      >
+        Loading
+        {dots}
+      </h1>
+    </div>
+  );
 }

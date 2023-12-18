@@ -1,35 +1,37 @@
 import useAPI from "../../components/hooks/useAPI";
 
 const useService = () => {
-	const api = useAPI();
+  const api = useAPI();
 
-	const GetAuthorById = ({ id }) => {
-		console.log("GetAuthorById");
-		return api.getWithParams("Authors/GetAuthorById", {
-			id: id,
-		});
-	};
+  const GetAuthorById = ({ id }) => {
+    console.log("GetAuthorById");
+    return api.getWithParams("Authors/GetAuthorById", {
+      id,
+    });
+  };
 
-	const CreateAuthor = ({ newAuthorUserId }) => {
-		return api.post("Authors/CreateAuthor", {
-			newAuthorUserId: newAuthorUserId,
-		});
-	};
+  const CreateAuthor = ({ newAuthorUserId }) =>
+    api.post("Authors/CreateAuthor", {
+      newAuthorUserId,
+    });
 
-	const UpdateAuthor = ({ description, socialMedia }) => {
-		return api.put("Authors/UpdateAuthor", {
-			description: description,
-			socialMedia: socialMedia,
-		});
-	};
+  const UpdateAuthor = ({ description, socialMedia }) =>
+    api.put("Authors/UpdateAuthor", {
+      description,
+      socialMedia,
+    });
 
-	const DeleteAuthor = ({ id }) => {
-		return api.put("Authors/DeleteAuthor", {
-			id: id,
-		});
-	};
+  const DeleteAuthor = ({ id }) =>
+    api.put("Authors/DeleteAuthor", {
+      id,
+    });
 
-	return { GetAuthorById, CreateAuthor, UpdateAuthor, DeleteAuthor };
+  return {
+    GetAuthorById,
+    CreateAuthor,
+    UpdateAuthor,
+    DeleteAuthor,
+  };
 };
 
 export default useService;

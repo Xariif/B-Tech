@@ -6,35 +6,35 @@ import NotFound from "../pages/NotFound";
 import Loading from "../ui/Loading";
 import useService from "../../services/author/useService";
 import { useNotification } from "../hooks/useNotification";
-import { useError } from "../hooks/useError";
+import useError from "../hooks/useError";
 
 function AuthorWrapper() {
-	const { id } = useParams();
-	const { setLoader } = useNotification();
-	const authorService = useService();
-	const { handleError } = useError();
+  const { id } = useParams();
+  const { setLoader } = useNotification();
+  const authorService = useService();
+  const { handleError } = useError();
 
-	const [authorData, setAuthorData] = useState();
+  const [authorData, setAuthorData] = useState();
 
-	useEffect(() => {
-		setLoader(true);
-		authorService
-			.GetAuthorById({ id })
-			.then((response) => {
-				setAuthorData(response);
-			})
-			.catch((error) => {
-				handleError(error);
-				setAuthorData(false);
-			})
-			.finally(() => {
-				setLoader(false);
-			});
-	}, [id]);
+  useEffect(() => {
+    setLoader(true);
+    authorService
+      .GetAuthorById({ id })
+      .then((response) => {
+        setAuthorData(response);
+      })
+      .catch((error) => {
+        handleError(error);
+        setAuthorData(false);
+      })
+      .finally(() => {
+        setLoader(false);
+      });
+  }, [id]);
 
-	if (authorData === undefined) return null;
-	else if (authorData === false) return <NotFound />;
-	else return <Author authorData={authorData} />;
+  if (authorData === undefined) return null;
+  if (authorData === false) return <NotFound />;
+  return <Author authorData={authorData} />;
 }
 
 export default AuthorWrapper;
