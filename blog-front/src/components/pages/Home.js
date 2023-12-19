@@ -14,15 +14,6 @@ import NotFound from "./NotFound";
 import { useNotification } from "../hooks/useNotification";
 
 export default function Home({ posts }) {
-  console.log(posts);
-  const {
-    getAccessTokenSilently,
-    user,
-    isAuthenticated,
-    getIdTokenClaims,
-    isLoading,
-  } = useAuth0();
-
   return (
     <Paper>
       {posts.map((post) => (

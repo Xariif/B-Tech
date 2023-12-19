@@ -50,31 +50,24 @@ export default function PostWrapper({ children }) {
   }, []);
 
   useEffect(() => {
-    // search all coockies if there is a cookie with name "post" and if there is
-    // a equal id cookie if is not then set a coockie and call a function
-    // to increase a view count
-
     const cookies = document.cookie.split(";");
 
     function findCookieByID(findId) {
       for (let i = 0; i < cookies.length; i++) {
         const cookie = cookies[i].trim();
-        // Rozbij ciasteczko na nazwę i wartość
         const [cookieName, cookieValue] = cookie.split("=");
-        // Sprawdź, czy wartość ciasteczka zawiera podane "id"
         if (cookieValue.includes(findId)) {
           return { name: cookieName, value: cookieValue };
         }
       }
-      return null; // Zwraca null, jeśli nie znaleziono ciasteczka z podanym "id"
+      return null;
     }
 
     const foundCookie = findCookieByID(id);
-    console.log(foundCookie);
 
-    if (true) {
+    if (foundCookie === null) {
       const date = new Date();
-      date.setTime(date.getTime() + 1000 * 60 * 60 * 24 * 7);
+      date.setTime(date.getTime() + 1000 * 60 * 60 * 24);
       document.cookie = `post=${id}; expires=${date.toUTCString()}; path=/`;
       postsService.IncreaseViews({ id });
     }

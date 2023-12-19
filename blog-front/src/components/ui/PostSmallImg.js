@@ -1,11 +1,41 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Avatar, Paper } from "@mui/material";
-import { deepOrange } from "@mui/material/colors";
+import {
+  Avatar,
+  Button,
+  ButtonGroup,
+  Menu,
+  MenuItem,
+  Paper,
+  styled,
+} from "@mui/material";
+import { deepOrange, grey } from "@mui/material/colors";
+import { Dropdown } from "@mui/base/Dropdown";
+import { MenuButton } from "@mui/base";
 import Category from "./Category";
 
-export default function PostSmallImg({ post }) {
-  console.log(post);
+const Listbox = styled("ul")(
+  ({ theme }) => `
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 0.875rem;
+  box-sizing: border-box;
+  padding: 6px;
+  margin: 12px 0;
+  min-width: 200px;
+  border-radius: 12px;
+  overflow: auto;
+  outline: 0px;
+  background: ${theme.palette.mode === "dark" ? grey[900] : "#fff"};
+  border: 1px solid ${theme.palette.mode === "dark" ? grey[700] : grey[200]};
+  color: ${theme.palette.mode === "dark" ? grey[300] : grey[900]};
+  box-shadow: 0px 4px 6px ${
+    theme.palette.mode === "dark" ? "rgba(0,0,0, 0.50)" : "rgba(0,0,0, 0.05)"
+  };
+  z-index: 1;
+  `,
+);
+
+export default function PostSmallImg({ post, isAuthor = false }) {
   return (
     <Paper style={{ borderRadius: "1rem", overflow: "hidden" }}>
       <Link
@@ -27,11 +57,16 @@ export default function PostSmallImg({ post }) {
             width: "100%",
           }}
         />
-        <div style={{ padding: "1.5rem" }}>
+      </Link>
+
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <div style={{ margin: "1rem" }}>
           <Category category={post.category} />
 
           <Link
-            to={`post/${post.id}`}
+            to={{
+              pathname: `/post/${post.id}`,
+            }}
             style={{
               fontWeight: "bolder",
               fontSize: "1.5rem",
@@ -41,48 +76,17 @@ export default function PostSmallImg({ post }) {
           >
             {post.title}
           </Link>
-
-          <Link
-            style={{
-              display: "flex",
-              textDecoration: "none",
-              color: "inherit",
-              alignItems: "center",
-            }}
-            to={{
-              pathname: `/author/${post.authorId}`,
-            }}
-          >
-            <Avatar
-              sx={{
-                bgcolor: deepOrange[500],
-                width: 28,
-                height: 28,
-                fontSize: ".8rem",
-                fontWeight: "bold",
-                marginRight: ".5rem",
-              }}
-            >
-              {post.authorName[0]}
-            </Avatar>
-            <div>
-              <div style={{ fontSize: ".8rem", fontWeight: "bolder" }}>
-                {post.authorName}
-                {post.authorSurname}
-                &nbsp;
-              </div>
-
-              <div style={{ fontSize: ".7rem", fontWeight: "lighter" }}>
-                {new Date(post.createdAt).toLocaleDateString("en-EN", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </div>
-            </div>
-          </Link>
         </div>
-      </Link>
+        <div style={{ marginRight: "1.5rem" }}>
+          <Dropdown>
+            <MenuButton>My account</MenuButton>
+            <Menu slots={{ listbox: Listbox }}>
+              <MenuItem>Log out</MenuItem>
+              <MenuItem>Log coś</MenuItem>
+            </Menu>
+          </Dropdown>
+        </div>
+      </div>
     </Paper>
   );
 }

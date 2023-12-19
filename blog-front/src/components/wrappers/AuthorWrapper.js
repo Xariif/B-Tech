@@ -5,6 +5,7 @@ import Author from "../pages/Author";
 import NotFound from "../pages/NotFound";
 import Loading from "../ui/Loading";
 import useService from "../../services/author/useService";
+import usePostService from "../../services/posts/useService";
 import { useNotification } from "../hooks/useNotification";
 import useError from "../hooks/useError";
 
@@ -12,9 +13,18 @@ function AuthorWrapper() {
   const { id } = useParams();
   const { setLoader } = useNotification();
   const authorService = useService();
+  const postService = usePostService();
   const { handleError } = useError();
 
   const [authorData, setAuthorData] = useState();
+  const [authorPosts, setAuthorPosts] = useState();
+
+  const arrayBufferToBase64 = (buffer) => {
+    const binary = [];
+    const bytes = new Uint8Array(buffer);
+    bytes.forEach((byte) => binary.push(String.fromCharCode(byte)));
+    return `data:image/jpeg;base64,${window.btoa(binary.join(""))}`;
+  };
 
   useEffect(() => {
     setLoader(true);
@@ -22,6 +32,30 @@ function AuthorWrapper() {
       .GetAuthorById({ id })
       .then((response) => {
         setAuthorData(response);
+      })
+      .then(() => {
+        postService
+          .GetApprovedPostsByAuthorId({ authorId: id })
+          .then((response) => {
+            const fetchImagePromises = response.map((post) =>
+              postService
+                .GetImage({ id: post.mainPhotoId })
+                .then((image) => {
+                  post.image = arrayBufferToBase64(image);
+                })
+                .catch((e) => {
+                  post.image = null;
+                  handleError(e);
+                }),
+            );
+
+            Promise.all(fetchImagePromises).then(() => {
+              setAuthorPosts(response);
+            });
+          })
+          .catch((error) => {
+            handleError(error);
+          });
       })
       .catch((error) => {
         handleError(error);
@@ -34,7 +68,7 @@ function AuthorWrapper() {
 
   if (authorData === undefined) return null;
   if (authorData === false) return <NotFound />;
-  return <Author authorData={authorData} />;
+  return <Author authorData={authorData} posts={authorPosts} />;
 }
 
 export default AuthorWrapper;

@@ -39,7 +39,7 @@ const useService = () => {
     Tags,
     MainImage,
   }) =>
-    api.postWithParams("Posts/CreatePost", {
+    api.post("Posts/CreatePost", {
       MainParentId,
       Title,
       Content,
@@ -56,7 +56,7 @@ const useService = () => {
     Tags,
     MainImage,
   }) =>
-    api.postWithParams("Posts/CreateDraftPost", {
+    api.post("Posts/CreateDraftPost", {
       MainParentId,
       Title,
       Content,
@@ -92,8 +92,7 @@ const useService = () => {
 
   const GetImage = ({ id }) => api.getImage("Posts/GetImage", { id });
 
-  const IncreaseViews = ({ id }) =>
-    api.postWithParams("Posts/IncreaseViews", { id });
+  const IncreaseViews = ({ id }) => api.post("Posts/IncreaseViews", { id });
 
   return {
     GetApprovedPosts,

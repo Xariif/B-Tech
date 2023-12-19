@@ -48,14 +48,13 @@ const useAPI = () => {
     }
   };
 
-  const postWithParams = async (url, params) => {
+  const post = async (url, params = null, body = null) => {
     try {
       const token = await getToken();
-      console.log(params);
 
-      const response = await axiosInstance.post(url, {
+      const response = await axiosInstance.post(url, body, {
         headers: { Authorization: `Bearer ${token}` },
-        params: { params },
+        params,
       });
       console.log(response);
 
@@ -132,7 +131,7 @@ const useAPI = () => {
 
   return {
     get,
-    postWithParams,
+    post,
     put,
     patch,
     del,

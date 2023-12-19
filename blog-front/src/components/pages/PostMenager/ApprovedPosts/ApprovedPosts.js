@@ -9,6 +9,8 @@ import useError from "../../../hooks/useError";
 import PostSmallImg from "../../../ui/PostSmallImg";
 
 function ApprovedPosts({ posts }) {
+  console.log(posts);
+
   return (
     <Grid
       container
