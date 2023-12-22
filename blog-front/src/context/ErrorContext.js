@@ -11,8 +11,6 @@ export function ErrorProvider({ children }) {
   const handleError = (newError) => {
     setError(newError);
 
-    // handle error here
-
     switch (newError.code) {
       case 401:
         console.log("401");
@@ -32,11 +30,13 @@ export function ErrorProvider({ children }) {
 
       case "ERR_NETWORK":
         notification.showToast(newError.message, "error");
-
         break;
 
       default:
-        console.log("default");
+        notification.showToast(
+          "Uexpected error occurs, please contact support",
+          "info",
+        );
         break;
     }
   };
@@ -45,8 +45,13 @@ export function ErrorProvider({ children }) {
     setError(null);
   };
 
+  const contextValue = React.useMemo(
+    () => ({ error, handleError, clearError }),
+    [error, handleError, clearError],
+  );
+
   return (
-    <ErrorContext.Provider value={{ error, handleError, clearError }}>
+    <ErrorContext.Provider value={contextValue}>
       {children}
     </ErrorContext.Provider>
   );

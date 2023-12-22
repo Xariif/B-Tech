@@ -12,40 +12,31 @@ export default function DraftPostsWrapper() {
 
   const [posts, setPosts] = useState();
 
-  const arrayBufferToBase64 = (buffer) => {
-    const binary = [];
-    const bytes = new Uint8Array(buffer);
-    bytes.forEach((byte) => binary.push(String.fromCharCode(byte)));
-    return `data:image/jpeg;base64,${window.btoa(binary.join(""))}`;
-  };
-
   useEffect(() => {
     setLoader(true);
-    postsService
-      .GetDraftPosts()
-      .then((response) => {
-        const fetchImagePromises = response.map((post) => {
-          const postTest = post;
+    const fetchPostsAndImages = async () => {
+      const approvedPosts = await postsService.GetDraftPosts();
+      const imagePromises = approvedPosts.map((post) => {
+        if (!post.mainPhotoId) return null;
+        return postsService.GetImage({ id: post.mainPhotoId });
+      });
+      const images = await Promise.all(imagePromises);
+      const updatedPosts = approvedPosts.map((post, i) => {
+        return {
+          ...post,
+          image: images[i],
+        };
+      });
 
-          postsService
-            .GetImage({ id: post.mainPhotoId })
-            .then((image) => {
-              postTest.image = arrayBufferToBase64(image);
-            })
-            .catch((e) => {
-              postTest.image = null;
-              handleError(e);
-            });
-          return postTest;
-        });
+      return updatedPosts;
+    };
 
-        Promise.all(fetchImagePromises).then(() => {
-          setPosts(response);
-        });
+    Promise.all([fetchPostsAndImages()])
+      .then((data) => {
+        setPosts(data[0]);
       })
       .catch((error) => {
         handleError(error);
-        setPosts(false);
       })
       .finally(() => {
         setLoader(false);

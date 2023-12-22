@@ -12,41 +12,28 @@ export default function ApprovedPostsWrapper() {
   const postsService = useService();
   const { handleError } = useError();
 
-  const arrayBufferToBase64 = (buffer) => {
-    const binary = [];
-    const bytes = new Uint8Array(buffer);
-    bytes.forEach((byte) => binary.push(String.fromCharCode(byte)));
-    return `data:image/jpeg;base64,${window.btoa(binary.join(""))}`;
-  };
-
   useEffect(() => {
     setLoader(true);
-    postsService
-      .GetAuthorApprovedPosts()
-      .then((response) => {
-        const fetchImagePromises = response.map((post) =>
-          postsService
-            .GetImage({ id: post.mainPhotoId })
-            .then((image) => {
-              post.image = arrayBufferToBase64(image);
-            })
-            .catch((e) => {
-              post.image = null;
-              handleError(e);
-            }),
-        );
-
-        Promise.all(fetchImagePromises).then(() => {
-          setPosts(response);
-        });
-      })
-      .catch((error) => {
-        handleError(error);
-        setPosts(false);
-      })
-      .finally(() => {
-        setLoader(false);
+    const fetchPostsAndImages = async () => {
+      const approvedPosts = await postsService.GetAuthorApprovedPosts();
+      const imagePromises = approvedPosts.map((post) => {
+        return postsService.GetImage({ id: post.mainPhotoId });
       });
+
+      const images = await Promise.all(imagePromises);
+      const updatedPosts = approvedPosts.map((post, i) => {
+        return {
+          ...post,
+          image: images[i],
+        };
+      });
+
+      setPosts(updatedPosts);
+    };
+
+    fetchPostsAndImages();
+
+    setLoader(false);
   }, []);
 
   if (posts === undefined) return null;

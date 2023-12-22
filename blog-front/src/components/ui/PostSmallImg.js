@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Avatar,
   Button,
+  ButtonBase,
   ButtonGroup,
+  IconButton,
   Menu,
   MenuItem,
   Paper,
@@ -11,31 +13,12 @@ import {
 } from "@mui/material";
 import { deepOrange, grey } from "@mui/material/colors";
 import { Dropdown } from "@mui/base/Dropdown";
-import { MenuButton } from "@mui/base";
+import { MoreVert } from "@mui/icons-material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import Category from "./Category";
 
-const Listbox = styled("ul")(
-  ({ theme }) => `
-  font-family: 'IBM Plex Sans', sans-serif;
-  font-size: 0.875rem;
-  box-sizing: border-box;
-  padding: 6px;
-  margin: 12px 0;
-  min-width: 200px;
-  border-radius: 12px;
-  overflow: auto;
-  outline: 0px;
-  background: ${theme.palette.mode === "dark" ? grey[900] : "#fff"};
-  border: 1px solid ${theme.palette.mode === "dark" ? grey[700] : grey[200]};
-  color: ${theme.palette.mode === "dark" ? grey[300] : grey[900]};
-  box-shadow: 0px 4px 6px ${
-    theme.palette.mode === "dark" ? "rgba(0,0,0, 0.50)" : "rgba(0,0,0, 0.05)"
-  };
-  z-index: 1;
-  `,
-);
-
-export default function PostSmallImg({ post, isAuthor = false }) {
+export default function PostSmallImg({ post }) {
   return (
     <Paper style={{ borderRadius: "1rem", overflow: "hidden" }}>
       <Link
@@ -47,21 +30,43 @@ export default function PostSmallImg({ post, isAuthor = false }) {
           pathname: `/post/${post.id}`,
         }}
       >
-        <img
-          src={post.image}
-          alt="zdjęcie"
-          style={{
-            objectFit: "cover",
-            verticalAlign: "top",
-            height: "280px",
-            width: "100%",
-          }}
-        />
+        {post.image ? (
+          <img
+            src={post.image}
+            alt="zdjęcie"
+            style={{
+              objectFit: "cover",
+              verticalAlign: "top",
+              height: "280px",
+              width: "100%",
+            }}
+          />
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              height: "280px",
+              width: "100%",
+              backgroundColor: grey[400],
+            }}
+          >
+            <EditIcon style={{ fontSize: "5rem" }} />
+          </div>
+        )}
       </Link>
 
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <div style={{ margin: "1rem" }}>
-          <Category category={post.category} />
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          margin: "0.5rem",
+        }}
+      >
+        <div>
+          {post.category && <Category category={post.category} />}
 
           <Link
             to={{
@@ -74,17 +79,13 @@ export default function PostSmallImg({ post, isAuthor = false }) {
               color: "inherit",
             }}
           >
-            {post.title}
+            <p>{post.title}</p>
           </Link>
-        </div>
-        <div style={{ marginRight: "1.5rem" }}>
-          <Dropdown>
-            <MenuButton>My account</MenuButton>
-            <Menu slots={{ listbox: Listbox }}>
-              <MenuItem>Log out</MenuItem>
-              <MenuItem>Log coś</MenuItem>
-            </Menu>
-          </Dropdown>
+          {new Date(post.createdAt).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
         </div>
       </div>
     </Paper>

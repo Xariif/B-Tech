@@ -13,47 +13,32 @@ import Home from "../pages/Home";
 export default function HomeWrapper() {
   const [posts, setPosts] = useState();
 
-  const notification = useNotification();
+  const { setLoader } = useNotification();
   const postsService = useService();
   const { handleError } = useError();
 
-  const arrayBufferToBase64 = (buffer) => {
-    const binary = [];
-    const bytes = new Uint8Array(buffer);
-    bytes.forEach((byte) => binary.push(String.fromCharCode(byte)));
-    return `data:image/jpeg;base64,${window.btoa(binary.join(""))}`;
-  };
-
   useEffect(() => {
-    notification.setLoader(true);
-    postsService
-      .GetApprovedPosts()
-      .then((response) => {
-        const postsWithImgs = response.map((post) =>
-          postsService
-            .GetImage({ id: post.mainPhotoId })
-            .then((image) => {
-              post.image = arrayBufferToBase64(image);
-              return post;
-            })
-            .catch((e) => {
-              post.image = null;
-              handleError(e);
-              return post;
-            }),
-        );
-
-        Promise.all(postsWithImgs).then((postsWithImages) => {
-          setPosts(postsWithImages);
-        });
-      })
-      .catch((error) => {
-        handleError(error);
-        setPosts(false);
-      })
-      .finally(() => {
-        notification.setLoader(false);
+    setLoader(true);
+    const fetchPostsAndImages = async () => {
+      const approvedPosts = await postsService.GetApprovedPosts();
+      const imagePromises = approvedPosts.map((post) => {
+        return postsService.GetImage({ id: post.mainPhotoId });
       });
+
+      const images = await Promise.all(imagePromises);
+      const updatedPosts = approvedPosts.map((post, i) => {
+        return {
+          ...post,
+          image: images[i],
+        };
+      });
+      console.log(updatedPosts);
+      setPosts(updatedPosts);
+    };
+
+    fetchPostsAndImages();
+
+    setLoader(false);
   }, []);
 
   if (posts === undefined) return null;

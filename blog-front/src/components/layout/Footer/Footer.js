@@ -4,6 +4,7 @@ import {
   Card,
   Container,
   CssBaseline,
+  Link,
   Paper,
   Stack,
   SvgIcon,
@@ -51,15 +52,29 @@ export default function Footer() {
             <Copyright fontSize="h1" />
           </Typography>
           <Stack direction="row" gap={1}>
-            <StyledIcon>
-              <TwitterIcon />
-            </StyledIcon>
-            <StyledIcon>
-              <FacebookIcon />
-            </StyledIcon>
-            <StyledIcon>
-              <InstagramIcon />
-            </StyledIcon>
+            <Link href="https://twitter.com/" target="_blank" color="inherit">
+              <StyledIcon>
+                <TwitterIcon />
+              </StyledIcon>
+            </Link>
+            <Link
+              href="https://www.facebook.com/"
+              target="_blank"
+              color="inherit"
+            >
+              <StyledIcon>
+                <FacebookIcon />
+              </StyledIcon>
+            </Link>
+            <Link
+              href="https://www.instagram.com/"
+              target="_blank"
+              color="inherit"
+            >
+              <StyledIcon>
+                <InstagramIcon />
+              </StyledIcon>
+            </Link>
           </Stack>
 
           <Typography

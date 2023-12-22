@@ -12,37 +12,29 @@ export default function WaitingForApprovalWrapper() {
   const postsService = useService();
   const { handleError } = useError();
 
-  const arrayBufferToBase64 = (buffer) => {
-    const binary = [];
-    const bytes = new Uint8Array(buffer);
-    bytes.forEach((byte) => binary.push(String.fromCharCode(byte)));
-    return `data:image/jpeg;base64,${window.btoa(binary.join(""))}`;
-  };
-
   useEffect(() => {
     setLoader(true);
-    postsService
-      .GetPostWaitingForApproval()
-      .then((response) => {
-        const fetchImagePromises = response.map((post) =>
-          postsService
-            .GetImage({ id: post.mainPhotoId })
-            .then((image) => {
-              post.image = arrayBufferToBase64(image);
-            })
-            .catch((e) => {
-              post.image = null;
-              handleError(e);
-            }),
-        );
+    const fetchPostsAndImages = async () => {
+      const approvedPosts = await postsService.GetPostWaitingForApproval();
+      const imagePromises = approvedPosts.map((post) => {
+        return postsService.GetImage({ id: post.mainPhotoId });
+      });
 
-        Promise.all(fetchImagePromises).then(() => {
-          setPosts(response);
-        });
+      const images = await Promise.all(imagePromises);
+      return approvedPosts.map((post, i) => {
+        return {
+          ...post,
+          image: images[i],
+        };
+      });
+    };
+
+    Promise.all([fetchPostsAndImages()])
+      .then((data) => {
+        setPosts(data[0]);
       })
       .catch((error) => {
         handleError(error);
-        setPosts(false);
       })
       .finally(() => {
         setLoader(false);

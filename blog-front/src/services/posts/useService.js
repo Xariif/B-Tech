@@ -5,17 +5,14 @@ const useService = () => {
   const api = useAPI();
   const notification = useNotification();
 
-  const GetApprovedPosts = () =>
-    api.get("Posts/GetApprovedPosts").catch((error) => {
-      throw error;
-    });
+  const GetApprovedPosts = () => api.get("Posts/GetApprovedPosts");
 
   const GetDraftPosts = () => api.get("Posts/GetDraftPosts");
 
   const GetAuthorApprovedPosts = () => api.get("Posts/GetAuthorApprovedPosts");
 
   const GetApprovedPostById = ({ id }) =>
-    api.getWithParams("Posts/GetApprovedPostById", { id });
+    api.get("Posts/GetApprovedPostById", { id });
 
   const GetRejectedPosts = () => api.get("Posts/GetRejectedPosts");
 
@@ -23,13 +20,13 @@ const useService = () => {
     api.get("Posts/GetPostWaitingForApproval");
 
   const GetApprovedPostsByAuthorId = ({ authorId }) =>
-    api.getWithParams("Posts/GetApprovedPostsByAuthorId", { authorId });
+    api.get("Posts/GetApprovedPostsByAuthorId", { authorId });
 
   const GetApprovedPostsByCategory = ({ category }) =>
-    api.getWithParams("Posts/GetApprovedPostsByCategory", { category });
+    api.get("Posts/GetApprovedPostsByCategory", { category });
 
   const GetApprovedPostsByTag = ({ tag }) =>
-    api.getWithParams("Posts/GetApprovedPostsByTag", { tag });
+    api.get("Posts/GetApprovedPostsByTag", { tag });
 
   const CreatePost = ({
     MainParentId,
@@ -90,7 +87,21 @@ const useService = () => {
 
   const DeletePost = ({ id }) => api.del("Posts/DeletePost", { id });
 
-  const GetImage = ({ id }) => api.getImage("Posts/GetImage", { id });
+  const GetImage = ({ id }) =>
+    api.get("Posts/GetImage", { id }).then((image) => {
+      function arrayBufferToBase64(buffer) {
+        let binary = "";
+        const bytes = new Uint8Array(buffer);
+        const len = bytes.byteLength;
+        for (let i = 0; i < len; i++) {
+          binary += String.fromCharCode(bytes[i]);
+        }
+        return window.btoa(binary);
+      }
+      console.log(image);
+      console.log(arrayBufferToBase64(image));
+      return arrayBufferToBase64(image);
+    });
 
   const IncreaseViews = ({ id }) => api.post("Posts/IncreaseViews", { id });
 

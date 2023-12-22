@@ -488,7 +488,7 @@ namespace BlogAPI.Controllers
 
         [Authorize("write:posts")]
         [HttpPut("UpdateDraftPost")]
-        public async Task<ActionResult> UpdateDraftPost(UpdatePostDTO postDto)
+        public async Task<ActionResult> UpdateDraftPost([FromForm] UpdatePostDTO postDto)
         {
             try
             {
@@ -513,7 +513,7 @@ namespace BlogAPI.Controllers
 
         [Authorize("write:posts")]
         [HttpPut("UpdateAcceptedPost")]
-        public async Task<ActionResult> UpdateAcceptedPost(UpdatePostDTO postDto)
+        public async Task<ActionResult> UpdateAcceptedPost([FromForm] UpdatePostDTO postDto)
         {
             try
             {

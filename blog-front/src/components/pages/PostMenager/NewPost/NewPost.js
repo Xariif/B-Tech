@@ -26,73 +26,57 @@ function NewPost() {
   const [category, setCategory] = useState("");
   const [tags, setTags] = useState([]);
   const [content, setContent] = useState("");
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState(new File([], ""));
 
   const categories = [
     {
       value: 1,
-      label: "Cars",
-      name: "cars",
+      name: "CARS",
     },
     {
       value: 2,
-      label: "Tech",
+      name: "TECH",
     },
     {
       value: 3,
-      label: "Business",
+      name: "BUSINESS",
     },
     {
       value: 4,
-      label: "Finance",
+      name: "FINANCE",
     },
     {
       value: 5,
-      label: "Health",
+      name: "HEALTH",
     },
     {
       value: 6,
-      label: "Fitness",
+      name: "FITNESS",
     },
     {
       value: 7,
-      label: "Lifestyle",
+      name: "FILESTYLE",
     },
     {
       value: 8,
-      label: "Travel",
+      name: "TRAVEL",
     },
     {
       value: 9,
-      label: "Food",
+      name: "FOOD",
     },
     {
       value: 10,
-      label: "Fashion",
+      name: "FASHION",
     },
     {
       value: 11,
-      label: "Entertainment",
+      name: "ENTERTEINMENT",
     },
     {
       value: 12,
-      label: "Education",
+      name: "EDUCATION",
     },
-  ];
-
-  const tagsTypes = [
-    "CARS",
-    "TECH",
-    "BUSINESS",
-    "NEWS",
-    "REVIEWS",
-    "TUTORIALS",
-    "TIPS",
-    "HOW-TO",
-    "DIY",
-    "PERSONAL STORIES",
-    "OPINION",
-    "HUMOR",
   ];
 
   const chceckIfSubmitButtonShouldBeDisabled = () => {
@@ -176,22 +160,23 @@ function NewPost() {
           setCategory(e.target.value);
         }}
       >
-        {categories.map((option) => (
-          <MenuItem key={option.value} value={option.value}>
-            {option.label}
-          </MenuItem>
-        ))}
+        {categories.map((option) => {
+          return (
+            <MenuItem key={option.value} value={option.name}>
+              {option.name}
+            </MenuItem>
+          );
+        })}
       </TextField>
       <Autocomplete
         multiple
         id="multiple-limit-tags"
-        options={tagsTypes}
-        getOptionLabel={(option) => option}
+        options={tags}
         renderInput={(params) => <TextField {...params} label="Tags" />}
         sx={{ mt: 2 }}
         value={tags}
         onChange={(e, value) => {
-          setTags(value);
+          console.log(value, e);
         }}
       />
 
@@ -218,7 +203,7 @@ function NewPost() {
             setCategory("");
             setTags([]);
             setContent("");
-            setFile(null);
+            setFile(new File([], ""));
           }}
         >
           Cancel
@@ -266,19 +251,16 @@ function NewPost() {
                   MainImage: file,
                 })
                 .then((res) => {
-                  console.log(res);
-                })
-                .finally(() => {
                   setTitle("");
                   setCategory("");
                   setTags([]);
                   setContent("");
                   setFile(null);
-                  notification.showToast("Post created", "success");
+                  notification.showToast("Post sended to approval", "success");
                 });
             }}
           >
-            Submit
+            Send to Approval
           </Button>
         </div>
       </Box>

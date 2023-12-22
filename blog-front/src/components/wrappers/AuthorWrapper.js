@@ -19,13 +19,6 @@ function AuthorWrapper() {
   const [authorData, setAuthorData] = useState();
   const [authorPosts, setAuthorPosts] = useState();
 
-  const arrayBufferToBase64 = (buffer) => {
-    const binary = [];
-    const bytes = new Uint8Array(buffer);
-    bytes.forEach((byte) => binary.push(String.fromCharCode(byte)));
-    return `data:image/jpeg;base64,${window.btoa(binary.join(""))}`;
-  };
-
   useEffect(() => {
     setLoader(true);
     authorService
@@ -41,7 +34,8 @@ function AuthorWrapper() {
               postService
                 .GetImage({ id: post.mainPhotoId })
                 .then((image) => {
-                  post.image = arrayBufferToBase64(image);
+                  console.log(image);
+                  post.image = image;
                 })
                 .catch((e) => {
                   post.image = null;
@@ -65,7 +59,6 @@ function AuthorWrapper() {
         setLoader(false);
       });
   }, [id]);
-
   if (authorData === undefined) return null;
   if (authorData === false) return <NotFound />;
   return <Author authorData={authorData} posts={authorPosts} />;

@@ -18,45 +18,38 @@ export default function PostWrapper({ children }) {
   const postsService = useService();
   const { handleError } = useError();
 
-  const arrayBufferToBase64 = (buffer) => {
-    const binary = [];
-    const bytes = new Uint8Array(buffer);
-    bytes.forEach((byte) => binary.push(String.fromCharCode(byte)));
-    return `data:image/jpeg;base64,${window.btoa(binary.join(""))}`;
-  };
-
   useEffect(() => {
     setLoader(true);
 
-    try {
-      postsService.GetApprovedPostById({ id }).then((res) => {
-        postsService
-          .GetImage({ id: res.mainPhotoId })
-          .then((image) => {
-            res.image = arrayBufferToBase64(image);
-            setPost(res);
-          })
-          .catch((e) => {
-            res.image = null;
-            handleError(e);
-          });
+    const fetchPost = async () => {
+      const approvedPost = await postsService.GetApprovedPostById({ id });
+      approvedPost.image = await postsService.GetImage({
+        id: approvedPost.mainPhotoId,
       });
-    } catch (error) {
-      handleError(error);
-      setPost(false);
-    } finally {
-      setLoader(false);
-    }
+
+      return approvedPost;
+    };
+
+    Promise.all([fetchPost()])
+      .then((data) => {
+        setPost(data[0]);
+      })
+      .catch((error) => {
+        handleError(error);
+      })
+      .finally(() => {
+        setLoader(false);
+      });
   }, []);
 
   useEffect(() => {
     const cookies = document.cookie.split(";");
-
     function findCookieByID(findId) {
       for (let i = 0; i < cookies.length; i++) {
         const cookie = cookies[i].trim();
         const [cookieName, cookieValue] = cookie.split("=");
-        if (cookieValue.includes(findId)) {
+
+        if (cookieValue?.includes(findId)) {
           return { name: cookieName, value: cookieValue };
         }
       }

@@ -12,120 +12,79 @@ const useAPI = () => {
     if (!isLoading && isAuthenticated) {
       return getAccessTokenSilently();
     }
+
     return null;
   };
 
-  const get = async (url) => {
-    try {
-      const token = await getToken();
-
-      const response = await axiosInstance.get(url, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (response.status !== 200) {
-        throw new Error(`Unexpected response status: ${response.status}`);
-      }
-      return response.data;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
-  const getWithParams = async (url, params) => {
-    try {
-      const token = await getToken();
-      const response = await axiosInstance.get(url, {
-        headers: { Authorization: `Bearer ${token}` },
-        params,
-      });
-      if (response.status !== 200) {
-        throw new Error(`Unexpected response status: ${response.status}`);
-      }
-      return response.data;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
-
-  const post = async (url, params = null, body = null) => {
-    try {
-      const token = await getToken();
-
-      const response = await axiosInstance.post(url, body, {
-        headers: { Authorization: `Bearer ${token}` },
-        params,
-      });
-      console.log(response);
-
-      return response.data;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
-
-  const put = async (url, params) => {
-    try {
-      const token = await getToken();
-      const response = await axiosInstance.put(url, {
-        headers: { Authorization: `Bearer ${token}` },
-        params,
-      });
-      if (response.status !== 200) {
-        throw new Error(`Unexpected response status: ${response.status}`);
-      }
-      return response.data;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
-
-  const patch = async (url, params) => {
-    try {
-      const token = await getToken();
-      const response = await axiosInstance.patch(url, {
-        headers: { Authorization: `Bearer ${token}` },
-        params,
-      });
-      if (response.status !== 200) {
-        throw new Error(`Unexpected response status: ${response.status}`);
-      }
-      return response.data;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
-
-  const del = async (url, params) => {
-    try {
-      const token = await getToken();
-      const response = await axiosInstance.delete(url, {
-        headers: { Authorization: `Bearer ${token}` },
-        params,
-      });
-      if (response.status !== 200) {
-        throw new Error(`Unexpected response status: ${response.status}`);
-      }
-      return response.data;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
-
-  const getImage = async (url, params) => {
+  const get = async (url, params = null) => {
     const token = await getToken();
-    const response = await axiosInstance.get(url, {
-      headers: { Authorization: `Bearer ${token}` },
-      params,
-      responseType: "arraybuffer",
-    });
-    if (response.status !== 200) {
-      throw new Error(`Unexpected response status: ${response.status}`);
-    }
+
+    const response = await axiosInstance
+      .get(url, {
+        headers: { Authorization: `Bearer ${token}` },
+        params,
+      })
+      .catch((error) => {
+        throw error;
+      });
+    console.log(response);
+    return response.data;
+  };
+
+  const post = async (url, data = null, params = null) => {
+    const token = await getToken();
+    const response = await axiosInstance
+      .post(url, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+        params,
+      })
+      .catch((error) => {
+        throw error;
+      });
+
+    return response.data;
+  };
+
+  const put = async (url, data = null, params = null) => {
+    const token = await getToken();
+    const response = await axiosInstance
+      .put(url, data, {
+        headers: { Authorization: `Bearer ${token}` },
+        params,
+      })
+      .catch((error) => {
+        throw error;
+      });
+    return response.data;
+  };
+
+  const patch = async (url, data = null, params = null) => {
+    const token = await getToken();
+    const response = await axiosInstance
+      .patch(url, data, {
+        headers: { Authorization: `Bearer ${token}` },
+        params,
+      })
+      .catch((error) => {
+        throw error;
+      });
+
+    return response.data;
+  };
+
+  const del = async (url, data = null, params = null) => {
+    const token = await getToken();
+    const response = await axiosInstance
+      .delete(url, data, {
+        headers: { Authorization: `Bearer ${token}` },
+        params,
+      })
+      .catch((error) => {
+        throw error;
+      });
     return response.data;
   };
 
@@ -135,8 +94,6 @@ const useAPI = () => {
     put,
     patch,
     del,
-    getWithParams,
-    getImage,
   };
 };
 
