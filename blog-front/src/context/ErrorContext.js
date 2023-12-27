@@ -33,6 +33,7 @@ export function ErrorProvider({ children }) {
         break;
 
       default:
+        console.log(newError);
         notification.showToast(
           "Uexpected error occurs, please contact support",
           "info",

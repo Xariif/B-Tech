@@ -3,7 +3,7 @@ using BlogAPI.Helpers;
 using BlogAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
+using FileInfo = BlogAPI.Models.FileInfo;
 
 namespace BlogAPI.Controllers
 {
@@ -26,7 +26,7 @@ namespace BlogAPI.Controllers
 
         [AllowAnonymous]
         [HttpGet("GetImage")]
-        public async Task<ActionResult<(byte[], BsonDocument)>> GetImage(string id)
+        public async Task<ActionResult> GetImage(string id)
         {
             try
             {
@@ -39,26 +39,73 @@ namespace BlogAPI.Controllers
 
                 var result = await _postsService.GetPostImageAsync(id);
 
-                var fileinfo =await _postsService.GetFileInfo(id);
-                
+
                 if (post.Status == Status.Aproved)
                 {
-                    return (result,fileinfo);
+                    return File(result, "application/octet-stream");
                 }
 
                 var authorId = IdHelper.GetAuthorId(User, _usersService, _authorsService);
-                
+
 
                 if (post.AuthorId != authorId)
                     throw new UnauthorizedAccessException();
 
-                return (result, fileinfo);
+                return File(result, "application/octet-stream");
             }
             catch (Exception ex)
             {
                 return HandleError(ex);
             }
         }
+
+
+
+        [AllowAnonymous]
+        [HttpGet("GetImageInfo")]
+        public async Task<ActionResult<FileInfo>> GetImageInfo(string id)
+        {
+            try
+            {
+                var post = await _postsService.GetPostByMainPhotoIdAsync(id);
+
+                if (post == null)
+                {
+                    throw new ArgumentException("Post using that image not found");
+                }
+
+
+                var fileinfo = await _postsService.GetFileInfo(id);
+
+                if (post.Status == Status.Aproved)
+                {
+                    return new Models.FileInfo()
+                    {
+                        Id = fileinfo.Id.ToString(),
+                        Name = fileinfo.Filename,
+                        Size = fileinfo.Length,
+                    };
+                }
+
+                var authorId = IdHelper.GetAuthorId(User, _usersService, _authorsService);
+
+
+                if (post.AuthorId != authorId)
+                    throw new UnauthorizedAccessException();
+
+                return new Models.FileInfo()
+                {
+                    Id = fileinfo.Id.ToString(),
+                    Name = fileinfo.Filename,
+                    Size = fileinfo.Length,
+                };
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
+        }
+
 
         [AllowAnonymous]
         [HttpGet("GetApprovedPosts")]
@@ -577,7 +624,26 @@ namespace BlogAPI.Controllers
                 return HandleError(ex);
             }
         }
+        [HttpPut("CancelPost")]
+        [Authorize("author")]
+        public async Task<ActionResult> CancelApprove(string id)
+        {
+            try
+            {
+                var authorId = IdHelper.GetAuthorId(User, _usersService, _authorsService);
+                var post = await _postsService.GetPostByIdAsync(id);
 
+                if (post?.AuthorId != authorId)
+                    throw new UnauthorizedAccessException();
+
+                await _postsService.CancelPostAsync(id);
+                return Ok("Post accepted");
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
+        }
 
         [HttpPut("AcceptPost")]
         [Authorize("admin")]

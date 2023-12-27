@@ -1,49 +1,79 @@
-import React, { useEffect, useState } from "react";
+import React, { Component, useEffect, useState } from "react";
 import useService from "../../../services/posts/useService";
 import useError from "../../hooks/useError";
 import { useNotification } from "../../hooks/useNotification";
 import NotFound from "../../pages/NotFound";
 import DraftPosts from "../../pages/PostMenager/DraftPosts/DraftPosts";
 
-export default function DraftPostsWrapper() {
+export default function DraftPostsWrapper({ triggerEffect, setTriggerEffect }) {
   const postsService = useService();
-  const { setLoader } = useNotification();
+  const { setLoader, state } = useNotification();
   const { handleError } = useError();
 
-  const [posts, setPosts] = useState();
+  const [draftPosts, setDraftPosts] = useState();
 
-  useEffect(() => {
+  const fetchData = async () => {
     setLoader(true);
-    const fetchPostsAndImages = async () => {
-      const approvedPosts = await postsService.GetDraftPosts();
-      const imagePromises = approvedPosts.map((post) => {
-        if (!post.mainPhotoId) return null;
-        return postsService.GetImage({ id: post.mainPhotoId });
-      });
-      const images = await Promise.all(imagePromises);
-      const updatedPosts = approvedPosts.map((post, i) => {
-        return {
-          ...post,
-          image: images[i],
-        };
-      });
+    const fetchPosts = async () => postsService.GetDraftPosts();
 
-      return updatedPosts;
+    const fetchImage = (post) => {
+      if (!post.mainPhotoId) return null;
+      return postsService
+        .GetImage({ id: post.mainPhotoId })
+        .then((image) => {
+          post.image = image;
+        })
+        .catch((error) => {
+          post.image = null;
+          handleError(error);
+        });
     };
 
-    Promise.all([fetchPostsAndImages()])
-      .then((data) => {
-        setPosts(data[0]);
+    const fetchImageInfo = (post) => {
+      if (!post.mainPhotoId) return null;
+
+      return postsService
+        .GetImageInfo({ id: post.mainPhotoId })
+        .then((imageInfo) => {
+          post.imageInfo = imageInfo;
+        })
+        .catch((error) => {
+          post.imageInfo = null;
+          handleError(error);
+        });
+    };
+
+    fetchPosts()
+      .then((postsResponse) => {
+        const fetchImagePromises = postsResponse.map(fetchImage);
+        const fetchImageInfoPromises = postsResponse.map(fetchImageInfo);
+        return Promise.all([
+          Promise.all(fetchImagePromises),
+          Promise.all(fetchImageInfoPromises),
+        ]).then(() => {
+          setDraftPosts(postsResponse);
+        });
       })
       .catch((error) => {
         handleError(error);
+        setDraftPosts(false);
       })
       .finally(() => {
         setLoader(false);
       });
-  }, []);
+  };
 
-  if (posts === undefined) return null;
-  if (posts === false) return <NotFound />;
-  return <DraftPosts posts={posts} setPosts={setPosts} />;
+  useEffect(() => {
+    fetchData();
+  }, [triggerEffect]);
+
+  if (draftPosts === undefined) return null;
+  if (draftPosts === false) return <NotFound />;
+  return (
+    <DraftPosts
+      posts={draftPosts}
+      setPosts={setDraftPosts}
+      setTriggerEffect={setTriggerEffect}
+    />
+  );
 }

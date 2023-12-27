@@ -31,13 +31,13 @@ namespace BlogAPI.Services
 
 
 
-        public async Task<IEnumerable<Posts>> GetTopApprovedPostsAsync(DateTime from , DateTime to)
+        public async Task<IEnumerable<Posts>> GetTopApprovedPostsAsync(DateTime from, DateTime to)
         {
             var filter = Builders<Posts>.Filter.Eq(x => x.Status, Status.Aproved)
                 & Builders<Posts>.Filter.Gt(x => x.CreatedAt, from)
                 & Builders<Posts>.Filter.Lt(x => x.CreatedAt, to);
 
-            
+
 
             var sort = Builders<Posts>.Sort.Descending(x => x.Views);
 
@@ -51,6 +51,18 @@ namespace BlogAPI.Services
             return await _postsRepository.FindAllAsync(filter, findOptions);
         }
 
+        public async Task CancelPostAsync(string postId)
+        {
+            var post = await GetPostByIdAsync(postId) ?? throw new Exception("Post doesn't exist");
+
+
+            if (post.Status != Status.ToConfirm || post.Status != Status.Aproved)
+                throw new Exception("Post is not waiting for approval");
+
+            post.Status = Status.Draft;
+
+            await _postsRepository.UpdateAsync(post.Id.ToString(), post);
+        }
 
         public async Task<IEnumerable<Posts>> GetApprovedPostsByCategoryAsync(string category)
         {
@@ -188,7 +200,7 @@ namespace BlogAPI.Services
                 await _postsRepository.DeleteFileAsync(post.MainPhotoId.ToString());
             }
 
-            if(updatedPost.MainImage != null)
+            if (updatedPost.MainImage != null)
             {
                 var imgId = await _postsRepository.UploadFileAsync(updatedPost.MainImage.FileName, updatedPost.MainImage.OpenReadStream());
                 updated.MainPhotoId = imgId;
@@ -278,7 +290,7 @@ namespace BlogAPI.Services
             var post = await GetPostByIdAsync(postId) ?? throw new Exception("Post doesn't exist");
 
 
-            if(post.MainPhotoId != null)
+            if (post.MainPhotoId != null)
                 await _postsRepository.DeleteFileAsync(post.MainPhotoId.ToString());
 
 
@@ -291,12 +303,12 @@ namespace BlogAPI.Services
             return await _postsRepository.DownloadFileAsync(photoId);
         }
 
-        
 
-        public async Task<BsonDocument> GetFileInfo(string photoId)
+
+        public async Task<GridFSFileInfo<ObjectId>> GetFileInfo(string photoId)
         {
-            
-           return await _postsRepository.GetFileInfoAsync(photoId);
+
+            return await _postsRepository.GetFileInfoAsync(photoId);
         }
 
         public async Task<Posts> GetPostByMainPhotoIdAsync(string photoId)

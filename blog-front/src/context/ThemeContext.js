@@ -1,19 +1,17 @@
-import {
-  createContext, useContext, useEffect, useState,
-} from 'react';
-import PrimeReact, { PrimeReactContext } from 'primereact/api';
-import useLocalStorage from '../components/hooks/useLocalStorage';
+import { createContext, useContext, useEffect, useState } from "react";
+import PrimeReact, { PrimeReactContext } from "primereact/api";
+import useLocalStorage from "../components/hooks/useLocalStorage";
 
 export const ThemeContext = createContext();
 
 function ThemeProvider({ children }) {
   const [darkMode, setDarkMode] = useState(false);
-  const [themeStorage, setThemeStorage] = useLocalStorage('theme');
+  const [themeStorage, setThemeStorage] = useLocalStorage("theme");
 
-  const [currentTheme, setCurrentTheme] = useState('light-blue');
+  const [currentTheme, setCurrentTheme] = useState("light-blue");
   const [currentThemeIndex, setCurrentThemeIndex] = useState(0);
 
-  const themes = ['light-blue', 'dark-blue'];
+  const themes = ["light-blue", "dark-blue"];
   useEffect(() => {
     if (themeStorage) {
       setCurrentThemeIndex((prev) => themes.indexOf(themeStorage));
@@ -23,12 +21,13 @@ function ThemeProvider({ children }) {
 
   useEffect(() => {
     document
-      .getElementById('theme-link')
-      .setAttribute('href', `/resources/themes/${currentTheme}/theme.css`);
+      .getElementById("theme-link")
+      .setAttribute("href", `/resources/themes/${currentTheme}/theme.css`);
   }, [currentTheme]);
 
   const nextTheme = () => {
-    const newIndex =			currentThemeIndex >= themes.length - 1 ? 0 : currentThemeIndex + 1;
+    const newIndex =
+      currentThemeIndex >= themes.length - 1 ? 0 : currentThemeIndex + 1;
 
     setCurrentThemeIndex(newIndex);
 

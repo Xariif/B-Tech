@@ -90,11 +90,11 @@ const useService = () => {
 
   const GetImage = ({ id }) =>
     api.getFiles("Posts/GetImage", { id }).then(async (image) => {
-      console.log(image);
       const imageBlob = image;
-      console.log(imageBlob);
       return URL.createObjectURL(imageBlob);
     });
+
+  const GetImageInfo = ({ id }) => api.get("Posts/GetImageInfo", { id });
 
   const IncreaseViews = ({ id }) =>
     api.post("Posts/IncreaseViews", null, { id });
@@ -118,6 +118,7 @@ const useService = () => {
     GetImage,
     GetAuthorApprovedPosts,
     IncreaseViews,
+    GetImageInfo,
   };
 };
 

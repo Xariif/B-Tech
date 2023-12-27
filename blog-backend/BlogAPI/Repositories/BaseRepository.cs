@@ -24,9 +24,9 @@ namespace BlogAPI.Repositories
         }
 
 
-        public Task<List<T>> FindAllAsync<T>(FilterDefinition<T> filter,FindOptions<T> findOptions = null)
+        public Task<List<T>> FindAllAsync<T>(FilterDefinition<T> filter, FindOptions<T> findOptions = null)
         {
-            return _context.GetCollection<T>(typeof(T).Name).FindAsync(filter , findOptions).Result.ToListAsync();
+            return _context.GetCollection<T>(typeof(T).Name).FindAsync(filter, findOptions).Result.ToListAsync();
         }
 
         public async Task<T> FindFirstAsync<T>(FilterDefinition<T> filter)
@@ -62,19 +62,19 @@ namespace BlogAPI.Repositories
             return _bucket.UploadFromStreamAsync(fileName, fileStream);
         }
 
-   
+
         public Task<byte[]> DownloadFileAsync(string id)
         {
             return _bucket.DownloadAsBytesAsync(ObjectId.Parse(id));
         }
 
-        public async Task<BsonDocument> GetFileInfoAsync(string id)
+        public async Task<GridFSFileInfo<ObjectId>> GetFileInfoAsync(string id)
         {
             var filter = Builders<GridFSFileInfo<ObjectId>>.Filter.Eq(x => x.Id, ObjectId.Parse(id));
 
             var cursor = await _bucket.FindAsync(filter);
 
-            var info = await  cursor.FirstOrDefaultAsync();
+            var info = await cursor.FirstOrDefaultAsync();
 
             return info;
         }

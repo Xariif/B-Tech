@@ -79,7 +79,6 @@ const useAPI = () => {
 
   const del = async (url, data = null, params = null) => {
     const token = await getToken();
-    console.log(token);
 
     const response = await axiosInstance
       .delete(url, {
@@ -106,6 +105,7 @@ const useAPI = () => {
       .catch((error) => {
         throw error;
       });
+
     return response.data;
   };
 

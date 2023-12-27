@@ -19,35 +19,50 @@ export default function HomeWrapper() {
 
   useEffect(() => {
     setLoader(true);
+    const fetchPosts = async () => postsService.GetApprovedPosts();
 
-    const fetchPosts = () => postsService.GetApprovedPosts();
-    const fetchImage = (post) =>
-      postsService.GetImage({ id: post.mainPhotoId });
-
-    const fetchPostsAndImages = () => {
-      return fetchPosts()
-        .then((approvedPosts) => {
-          const imagePromises = approvedPosts.map(fetchImage);
-          return Promise.all(imagePromises).then((images) =>
-            approvedPosts.map((post, i) => ({
-              ...post,
-              image: images[i],
-            })),
-          );
-        })
-        .then((postsWithImages) => {
-          setPosts(postsWithImages);
+    const fetchImage = (post) => {
+      return postsService
+        .GetImage({ id: post.mainPhotoId })
+        .then((image) => {
+          post.image = image;
         })
         .catch((error) => {
+          post.image = null;
           handleError(error);
-          setPosts(false);
-        })
-        .finally(() => {
-          setLoader(false);
         });
     };
 
-    fetchPostsAndImages();
+    const fetchImageInfo = (post) => {
+      return postsService
+        .GetImageInfo({ id: post.mainPhotoId })
+        .then((imageInfo) => {
+          post.imageInfo = imageInfo;
+        })
+        .catch((error) => {
+          post.imageInfo = null;
+          handleError(error);
+        });
+    };
+
+    fetchPosts()
+      .then((postsResponse) => {
+        const fetchImagePromises = postsResponse.map(fetchImage);
+        const fetchImageInfoPromises = postsResponse.map(fetchImageInfo);
+        return Promise.all([
+          Promise.all(fetchImagePromises),
+          Promise.all(fetchImageInfoPromises),
+        ]).then(() => {
+          setPosts(postsResponse);
+        });
+      })
+      .catch((error) => {
+        handleError(error);
+        setPosts(false);
+      })
+      .finally(() => {
+        setLoader(false);
+      });
   }, []);
 
   if (posts === undefined) return null;

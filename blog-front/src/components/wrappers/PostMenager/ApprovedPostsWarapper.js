@@ -14,29 +14,46 @@ export default function ApprovedPostsWrapper() {
 
   useEffect(() => {
     setLoader(true);
-    const fetchPostsAndImages = async () => {
-      const approvedPosts = await postsService.GetAuthorApprovedPosts();
-      const imagePromises = approvedPosts.map((post) => {
-        if (!post.mainPhotoId) return null;
-        return postsService.GetImage({ id: post.mainPhotoId });
-      });
-      const images = await Promise.all(imagePromises);
-      const updatedPosts = approvedPosts.map((post, i) => {
-        return {
-          ...post,
-          image: images[i],
-        };
-      });
+    const fetchPosts = async () => postsService.GetAuthorApprovedPosts();
 
-      return updatedPosts;
+    const fetchImage = (post) => {
+      return postsService
+        .GetImage({ id: post.mainPhotoId })
+        .then((image) => {
+          post.image = image;
+        })
+        .catch((error) => {
+          post.image = null;
+          handleError(error);
+        });
     };
 
-    Promise.all([fetchPostsAndImages()])
-      .then((data) => {
-        setPosts(data[0]);
+    const fetchImageInfo = (post) => {
+      return postsService
+        .GetImageInfo({ id: post.mainPhotoId })
+        .then((imageInfo) => {
+          post.imageInfo = imageInfo;
+        })
+        .catch((error) => {
+          post.imageInfo = null;
+          handleError(error);
+        });
+    };
+
+    fetchPosts()
+      .then((postsResponse) => {
+        const fetchImagePromises = postsResponse.map(fetchImage);
+        const fetchImageInfoPromises = postsResponse.map(fetchImageInfo);
+        return Promise.all([
+          Promise.all(fetchImagePromises),
+          Promise.all(fetchImageInfoPromises),
+        ]).then(() => {
+          setPosts(postsResponse);
+        });
       })
       .catch((error) => {
         handleError(error);
+        setPosts(false);
       })
       .finally(() => {
         setLoader(false);

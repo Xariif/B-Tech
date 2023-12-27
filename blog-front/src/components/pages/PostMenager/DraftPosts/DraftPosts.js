@@ -8,9 +8,9 @@ import PostSmallImg from "../../../ui/PostSmallImg";
 import Category from "../../../ui/Category";
 import useService from "../../../../services/posts/useService";
 import useError from "../../../hooks/useError";
-import { NewPostDialog } from "../../../ui/NewPost";
+import Edit from "../../../ui/PostDialog/Edit";
 
-function DraftPosts({ posts, setPosts }) {
+function DraftPosts({ posts, setPosts, setTriggerEffect }) {
   const { handleError } = useError();
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -20,10 +20,14 @@ function DraftPosts({ posts, setPosts }) {
         columns={{ xs: 4, sm: 8, md: 12 }}
       >
         {posts.map((post) => {
-          console.log(post);
           return (
             <Grid item xs={4} key={post.id}>
-              <DraftSmallPost key={post.id} post={post} setPosts={setPosts} />
+              <DraftSmallPost
+                key={post.id}
+                post={post}
+                setPosts={setPosts}
+                setTriggerEffect={setTriggerEffect}
+              />
             </Grid>
           );
         })}
@@ -34,11 +38,10 @@ function DraftPosts({ posts, setPosts }) {
 
 export default DraftPosts;
 
-function DraftSmallPost({ post, setPosts }) {
+function DraftSmallPost({ post, setPosts, setTriggerEffect }) {
   const { handleError } = useError();
   const { DeletePost } = useService();
-
-  const [open, setOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
 
   return (
     <Paper style={{ borderRadius: "1rem", overflow: "hidden" }}>
@@ -76,9 +79,17 @@ function DraftSmallPost({ post, setPosts }) {
           margin: "0.5rem",
         }}
       >
-        <div>
+        <div style={{ maxWidth: "calc(100%-56px)", overflow: "hidden" }}>
           {post.category && <Category category={post.category} />}
-          <p style={{ fontWeight: "bolder", fontSize: "1.5rem" }}>
+
+          <p
+            style={{
+              fontWeight: "bolder",
+              fontSize: "1.2rem",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
             {post.title}
           </p>
           {new Date(post.createdAt).toLocaleDateString("en-US", {
@@ -98,7 +109,7 @@ function DraftSmallPost({ post, setPosts }) {
           <IconButton
             color="info"
             onClick={() => {
-              setOpen(true);
+              setEditDialogOpen(true);
             }}
           >
             <EditIcon />
@@ -119,7 +130,12 @@ function DraftSmallPost({ post, setPosts }) {
           </IconButton>
         </div>
       </div>
-      <NewPostDialog open={open} setOpen={setOpen} post={post} />
+      <Edit
+        post={post}
+        editDialogOpen={editDialogOpen}
+        setEditDialogOpen={setEditDialogOpen}
+        setTriggerEffect={setTriggerEffect}
+      />
     </Paper>
   );
 }

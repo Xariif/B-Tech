@@ -28,7 +28,6 @@ import DrawIcon from "@mui/icons-material/Draw";
 import HourglassBottomIcon from "@mui/icons-material/HourglassBottom";
 import DoneIcon from "@mui/icons-material/Done";
 import { PickersToolbarButton } from "@mui/x-date-pickers/internals";
-import { NewPostDialog } from "../../ui/NewPost";
 import WaitingPosts from "./WaitingPosts/WaitingPosts";
 import ApprovedPosts from "./ApprovedPosts/ApprovedPosts";
 import DraftPosts from "./DraftPosts/DraftPosts";
@@ -36,6 +35,7 @@ import ApprovedPostsWrapper from "../../wrappers/PostMenager/ApprovedPostsWarapp
 import DraftPostsWrapper from "../../wrappers/PostMenager/DraftPostsWrapper";
 import WaitingForApprovalWrapper from "../../wrappers/PostMenager/WaitingForApprovalWrapper";
 import usePostManager from "../../hooks/usePostManager";
+import New from "../../ui/PostDialog/New";
 
 export default function PostMenager() {
   const [value, setValue] = useState("1");
@@ -43,7 +43,8 @@ export default function PostMenager() {
     setValue(newValue);
   };
 
-  const [newDialog, setNewDialog] = useState(false);
+  const [newDialogOpen, setNewDialogOpen] = useState(false);
+  const [triggerEffect, setTriggerEffect] = useState(false);
 
   return (
     <TabContext value={value}>
@@ -79,7 +80,7 @@ export default function PostMenager() {
         <IconButton
           color="success"
           onClick={() => {
-            setNewDialog(true);
+            setNewDialogOpen(true);
           }}
         >
           <AddIcon />
@@ -90,12 +91,19 @@ export default function PostMenager() {
         <ApprovedPostsWrapper />
       </TabPanel>
       <TabPanel value="2">
-        <DraftPostsWrapper />
+        <DraftPostsWrapper
+          triggerEffect={triggerEffect}
+          setTriggerEffect={setTriggerEffect}
+        />
       </TabPanel>
       <TabPanel value="3">
         <WaitingForApprovalWrapper />
       </TabPanel>
-      <NewPostDialog open={newDialog} setOpen={setNewDialog} />
+      <New
+        newDialogOpen={newDialogOpen}
+        setNewDialogOpen={setNewDialogOpen}
+        setTriggerEffect={setTriggerEffect}
+      />
     </TabContext>
   );
 }
