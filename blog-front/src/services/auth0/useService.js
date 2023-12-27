@@ -4,14 +4,13 @@ const useService = () => {
   const api = useAPI();
 
   const GetUserRoles = ({ auth0Id }) => {
-    console.log(auth0Id);
-    return api.getWithParams("Auth0/GetUserRoles", {
+    return api.get("Auth0/GetUserRoles", {
       auth0Id,
     });
   };
 
   const RemoveRole = ({ auth0Id, roleId }) =>
-    api.getWithParams("Auth0/RemoveRole", {
+    api.del("Auth0/RemoveRole", null, {
       auth0Id,
       roleId,
     });

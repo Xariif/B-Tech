@@ -25,6 +25,8 @@ import { useNotification } from "../components/hooks/useNotification";
 import HomeWrapper from "../components/wrappers/HomeWrapper";
 import AdminWrapper from "../components/wrappers/AdminWrapper";
 import useUser from "../components/hooks/useUser";
+import TopWrapper from "../components/wrappers/TopWrapper";
+import { PostManagerProvider } from "../context/PostMenagerContext";
 
 export default function AppRoutes() {
   return (
@@ -32,7 +34,7 @@ export default function AppRoutes() {
       <Routes>
         <Route path="/" element={<Layout content={<Outlet />} />}>
           <Route path="/" element={<HomeWrapper />} />
-          <Route path="/top" element={<Top />} />
+          <Route path="/top" element={<TopWrapper />} />
           <Route path="/newest" element={<Newest />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
@@ -46,7 +48,14 @@ export default function AppRoutes() {
               />
             }
           >
-            <Route path="/post/menager" element={<PostMenager />} />
+            <Route
+              path="/post/menager"
+              element={
+                <PostManagerProvider>
+                  <PostMenager />
+                </PostManagerProvider>
+              }
+            />
           </Route>
 
           <Route path="/post/:id" element={<PostWrapper />} />

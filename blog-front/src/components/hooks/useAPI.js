@@ -27,7 +27,6 @@ const useAPI = () => {
       .catch((error) => {
         throw error;
       });
-    console.log(response);
     return response.data;
   };
 
@@ -52,7 +51,10 @@ const useAPI = () => {
     const token = await getToken();
     const response = await axiosInstance
       .put(url, data, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
         params,
       })
       .catch((error) => {
@@ -77,10 +79,29 @@ const useAPI = () => {
 
   const del = async (url, data = null, params = null) => {
     const token = await getToken();
+    console.log(token);
+
     const response = await axiosInstance
-      .delete(url, data, {
+      .delete(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+        params,
+      })
+      .catch((error) => {
+        throw error;
+      });
+    return response.data;
+  };
+
+  const getFiles = async (url, params = null) => {
+    const token = await getToken();
+    const response = await axiosInstance
+      .get(url, {
         headers: { Authorization: `Bearer ${token}` },
         params,
+        responseType: "blob",
       })
       .catch((error) => {
         throw error;
@@ -90,6 +111,7 @@ const useAPI = () => {
 
   return {
     get,
+    getFiles,
     post,
     put,
     patch,

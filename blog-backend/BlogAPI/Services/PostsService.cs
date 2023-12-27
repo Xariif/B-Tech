@@ -3,6 +3,7 @@ using BlogAPI.Models;
 using BlogAPI.Repositories;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using MongoDB.Driver.GridFS;
 
 namespace BlogAPI.Services
 {
@@ -27,6 +28,29 @@ namespace BlogAPI.Services
 
             return await _postsRepository.FindAllAsync(filter);
         }
+
+
+
+        public async Task<IEnumerable<Posts>> GetTopApprovedPostsAsync(DateTime from , DateTime to)
+        {
+            var filter = Builders<Posts>.Filter.Eq(x => x.Status, Status.Aproved)
+                & Builders<Posts>.Filter.Gt(x => x.CreatedAt, from)
+                & Builders<Posts>.Filter.Lt(x => x.CreatedAt, to);
+
+            
+
+            var sort = Builders<Posts>.Sort.Descending(x => x.Views);
+
+            var findOptions = new FindOptions<Posts>
+            {
+                Sort = sort
+            };
+
+
+
+            return await _postsRepository.FindAllAsync(filter, findOptions);
+        }
+
 
         public async Task<IEnumerable<Posts>> GetApprovedPostsByCategoryAsync(string category)
         {
@@ -137,7 +161,7 @@ namespace BlogAPI.Services
             await _postsRepository.InsertOneAsync(post);
         }
 
-        public async Task UpdateDraftPostAsync(UpdatePostDTO updatedPost)
+        public async Task UpdateDraftPostAsync(UpdateDraftPostDTO updatedPost)
         {
             var post = await GetPostByIdAsync(updatedPost.Id) ?? throw new Exception("Post doesn't exist");
 
@@ -159,12 +183,15 @@ namespace BlogAPI.Services
 
 
 
-            if (updatedPost.MainImage != null)
+            if (post.MainPhotoId != null)
             {
                 await _postsRepository.DeleteFileAsync(post.MainPhotoId.ToString());
+            }
 
+            if(updatedPost.MainImage != null)
+            {
                 var imgId = await _postsRepository.UploadFileAsync(updatedPost.MainImage.FileName, updatedPost.MainImage.OpenReadStream());
-                post.MainPhotoId = imgId;
+                updated.MainPhotoId = imgId;
             }
 
             await _postsRepository.UpdateAsync(updated.Id.ToString(), updated);
@@ -250,7 +277,11 @@ namespace BlogAPI.Services
 
             var post = await GetPostByIdAsync(postId) ?? throw new Exception("Post doesn't exist");
 
-            await _postsRepository.DeleteFileAsync(post.MainPhotoId.ToString());
+
+            if(post.MainPhotoId != null)
+                await _postsRepository.DeleteFileAsync(post.MainPhotoId.ToString());
+
+
             await _postsRepository.DeleteAsync<Posts>(postId);
         }
 
@@ -258,6 +289,14 @@ namespace BlogAPI.Services
         {
 
             return await _postsRepository.DownloadFileAsync(photoId);
+        }
+
+        
+
+        public async Task<BsonDocument> GetFileInfo(string photoId)
+        {
+            
+           return await _postsRepository.GetFileInfoAsync(photoId);
         }
 
         public async Task<Posts> GetPostByMainPhotoIdAsync(string photoId)
@@ -276,5 +315,6 @@ namespace BlogAPI.Services
 
             await _postsRepository.UpdateAsync(post.Id.ToString(), post);
         }
+
     }
 }

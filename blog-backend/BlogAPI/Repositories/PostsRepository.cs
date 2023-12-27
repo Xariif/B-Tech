@@ -1,4 +1,6 @@
 ﻿using BlogAPI.Contexts;
+using BlogAPI.Models;
+using MongoDB.Driver;
 
 namespace BlogAPI.Repositories
 {
@@ -7,6 +9,5 @@ namespace BlogAPI.Repositories
         public PostsRepository(MongoDataBaseContext context) : base(context)
         {
         }
-
     }
 }

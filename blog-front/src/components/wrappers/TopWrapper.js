@@ -9,9 +9,15 @@ import { useNotification } from "../hooks/useNotification";
 import useService from "../../services/posts/useService";
 import useError from "../hooks/useError";
 import Home from "../pages/Home";
+import Top from "../pages/Top";
 
-export default function HomeWrapper() {
+export default function TopWrapper() {
   const [posts, setPosts] = useState();
+
+  const [from, setFrom] = useState(
+    new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
+  );
+  const [to, setTo] = useState(new Date());
 
   const { setLoader } = useNotification();
   const postsService = useService();
@@ -20,11 +26,12 @@ export default function HomeWrapper() {
   useEffect(() => {
     setLoader(true);
 
-    const fetchPosts = () => postsService.GetApprovedPosts();
+    const fetchPosts = () => postsService.GetTopApprovedPosts({ from, to });
     const fetchImage = (post) =>
       postsService.GetImage({ id: post.mainPhotoId });
 
     const fetchPostsAndImages = () => {
+      console.log("fetchPostsAndImages");
       return fetchPosts()
         .then((approvedPosts) => {
           const imagePromises = approvedPosts.map(fetchImage);
@@ -36,6 +43,7 @@ export default function HomeWrapper() {
           );
         })
         .then((postsWithImages) => {
+          console.log(postsWithImages);
           setPosts(postsWithImages);
         })
         .catch((error) => {
@@ -48,9 +56,11 @@ export default function HomeWrapper() {
     };
 
     fetchPostsAndImages();
-  }, []);
+  }, [from, to]);
 
   if (posts === undefined) return null;
   if (posts === false) return <NotFound />;
-  return <Home posts={posts} />;
+  return (
+    <Top posts={posts} from={from} setFrom={setFrom} to={to} setTo={setTo} />
+  );
 }

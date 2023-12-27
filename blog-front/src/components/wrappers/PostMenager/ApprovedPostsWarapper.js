@@ -17,9 +17,9 @@ export default function ApprovedPostsWrapper() {
     const fetchPostsAndImages = async () => {
       const approvedPosts = await postsService.GetAuthorApprovedPosts();
       const imagePromises = approvedPosts.map((post) => {
+        if (!post.mainPhotoId) return null;
         return postsService.GetImage({ id: post.mainPhotoId });
       });
-
       const images = await Promise.all(imagePromises);
       const updatedPosts = approvedPosts.map((post, i) => {
         return {
@@ -28,12 +28,19 @@ export default function ApprovedPostsWrapper() {
         };
       });
 
-      setPosts(updatedPosts);
+      return updatedPosts;
     };
 
-    fetchPostsAndImages();
-
-    setLoader(false);
+    Promise.all([fetchPostsAndImages()])
+      .then((data) => {
+        setPosts(data[0]);
+      })
+      .catch((error) => {
+        handleError(error);
+      })
+      .finally(() => {
+        setLoader(false);
+      });
   }, []);
 
   if (posts === undefined) return null;

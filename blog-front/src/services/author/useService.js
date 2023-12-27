@@ -4,14 +4,13 @@ const useService = () => {
   const api = useAPI();
 
   const GetAuthorById = ({ id }) => {
-    console.log("GetAuthorById");
-    return api.getWithParams("Authors/GetAuthorById", {
+    return api.get("Authors/GetAuthorById", {
       id,
     });
   };
 
   const CreateAuthor = ({ newAuthorUserId }) =>
-    api.post("Authors/CreateAuthor", {
+    api.post("Authors/CreateAuthor", null, {
       newAuthorUserId,
     });
 
@@ -21,10 +20,7 @@ const useService = () => {
       socialMedia,
     });
 
-  const DeleteAuthor = ({ id }) =>
-    api.put("Authors/DeleteAuthor", {
-      id,
-    });
+  const DeleteAuthor = () => api.put("Authors/DeleteAuthor");
 
   return {
     GetAuthorById,

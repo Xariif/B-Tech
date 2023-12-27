@@ -49,7 +49,7 @@ export default function PostWrapper({ children }) {
         const cookie = cookies[i].trim();
         const [cookieName, cookieValue] = cookie.split("=");
 
-        if (cookieValue?.includes(findId)) {
+        if (cookieName?.includes(findId)) {
           return { name: cookieName, value: cookieValue };
         }
       }
@@ -61,7 +61,7 @@ export default function PostWrapper({ children }) {
     if (foundCookie === null) {
       const date = new Date();
       date.setTime(date.getTime() + 1000 * 60 * 60 * 24);
-      document.cookie = `post=${id}; expires=${date.toUTCString()}; path=/`;
+      document.cookie = `${id}=viewed; expires=${date.toUTCString()}; path=/`;
       postsService.IncreaseViews({ id });
     }
   }, []);

@@ -21,35 +21,34 @@ function AuthorWrapper() {
 
   useEffect(() => {
     setLoader(true);
-    authorService
-      .GetAuthorById({ id })
-      .then((response) => {
-        setAuthorData(response);
-      })
-      .then(() => {
-        postService
-          .GetApprovedPostsByAuthorId({ authorId: id })
-          .then((response) => {
-            const fetchImagePromises = response.map((post) =>
-              postService
-                .GetImage({ id: post.mainPhotoId })
-                .then((image) => {
-                  console.log(image);
-                  post.image = image;
-                })
-                .catch((e) => {
-                  post.image = null;
-                  handleError(e);
-                }),
-            );
 
-            Promise.all(fetchImagePromises).then(() => {
-              setAuthorPosts(response);
-            });
-          })
-          .catch((error) => {
-            handleError(error);
-          });
+    const fetchAuthorById = () => authorService.GetAuthorById({ id });
+
+    const fetchPostsByAuthorId = () =>
+      postService.GetApprovedPostsByAuthorId({ authorId: id });
+
+    const fetchImage = (post) => {
+      return postService
+        .GetImage({ id: post.mainPhotoId })
+        .then((image) => {
+          post.image = image;
+        })
+        .catch((error) => {
+          post.image = null;
+          handleError(error);
+        });
+    };
+
+    fetchAuthorById()
+      .then((authorResponse) => {
+        setAuthorData(authorResponse);
+        return fetchPostsByAuthorId();
+      })
+      .then((postsResponse) => {
+        const fetchImagePromises = postsResponse.map(fetchImage);
+        return Promise.all(fetchImagePromises).then(() => {
+          setAuthorPosts(postsResponse);
+        });
       })
       .catch((error) => {
         handleError(error);
@@ -59,6 +58,7 @@ function AuthorWrapper() {
         setLoader(false);
       });
   }, [id]);
+
   if (authorData === undefined) return null;
   if (authorData === false) return <NotFound />;
   return <Author authorData={authorData} posts={authorPosts} />;

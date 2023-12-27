@@ -63,7 +63,7 @@ namespace BlogAPI.Controllers
                 await _authorsService.CreateAuthorAsync(userId);
 
                 var user = await _usersService.GetUserByIdAsync(userId);
-                await _auth0Service.GiveRoleAsync(user.Auth0Id, new string[] { RoleIds.Author });
+                await _auth0Service.GiveRoleAsync(user.Auth0Id,  RoleIds.Author );
 
                 return Ok("Author created");
             }
@@ -106,7 +106,7 @@ namespace BlogAPI.Controllers
                 var userId = IdHelper.GetUserId(User, _usersService);
 
                 var user = await _usersService.GetUserByIdAsync(userId.ToString());
-                await _auth0Service.RemoveRoleAsync(user.Auth0Id, new[] { RoleIds.Author });
+                await _auth0Service.RemoveRoleAsync(user.Auth0Id,  RoleIds.Author );
 
                 return Ok("Author Deleted");
             }

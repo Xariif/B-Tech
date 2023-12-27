@@ -45,5 +45,5 @@ export default function DraftPostsWrapper() {
 
   if (posts === undefined) return null;
   if (posts === false) return <NotFound />;
-  return <DraftPosts posts={posts} />;
+  return <DraftPosts posts={posts} setPosts={setPosts} />;
 }

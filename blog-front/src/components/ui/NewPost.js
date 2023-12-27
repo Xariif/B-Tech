@@ -7,26 +7,32 @@ import {
   Typography,
   styled,
   Button,
+  Dialog,
+  DialogTitle,
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import Autocomplete from "@mui/material/Autocomplete";
 import MenuItem from "@mui/material/MenuItem";
 import SaveIcon from "@mui/icons-material/Save";
-import useService from "../../../../services/posts/useService";
-import { useNotification } from "../../../hooks/useNotification";
+import useService from "../../services/posts/useService";
+import { useNotification } from "../hooks/useNotification";
+import useError from "../hooks/useError";
 
-function NewPost() {
+function NewPost({ post, setOpen }) {
   const postsService = useService();
   const notification = useNotification();
 
   const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
   const [saveButtonDisabled, setSaveButtonDisabled] = useState(true);
 
-  const [title, setTitle] = useState("");
-  const [category, setCategory] = useState("");
-  const [tags, setTags] = useState([]);
-  const [content, setContent] = useState("");
+  const [title, setTitle] = useState(post?.title ?? "");
+  const [category, setCategory] = useState(post?.category ?? "");
+  const [tags, setTags] = useState(post?.tags ?? []);
+  const [content, setContent] = useState(post?.content ?? "");
+
   const [file, setFile] = useState(new File([], ""));
+
+  const { handleError } = useError();
 
   const categories = [
     {
@@ -77,6 +83,18 @@ function NewPost() {
       value: 12,
       name: "EDUCATION",
     },
+    {
+      value: 13,
+      name: "NATURE",
+    },
+    {
+      value: 14,
+      name: "SPORT",
+    },
+    {
+      value: 15,
+      name: "OTHER",
+    },
   ];
 
   const chceckIfSubmitButtonShouldBeDisabled = () => {
@@ -113,7 +131,6 @@ function NewPost() {
 
   return (
     <Paper sx={{ p: 2 }}>
-      <Typography variant="h4">New Post</Typography>
       <TextField
         type="text"
         label="Title"
@@ -168,23 +185,12 @@ function NewPost() {
           );
         })}
       </TextField>
-      <Autocomplete
-        multiple
-        id="multiple-limit-tags"
-        options={tags}
-        renderInput={(params) => <TextField {...params} label="Tags" />}
-        sx={{ mt: 2 }}
-        value={tags}
-        onChange={(e, value) => {
-          console.log(value, e);
-        }}
-      />
 
       <TextField
         id="outlined-multiline-static"
         label="Content"
         multiline
-        minRows={20}
+        minRows={10}
         fullWidth
         sx={{ mt: 2 }}
         value={content}
@@ -195,26 +201,42 @@ function NewPost() {
         }}
       />
       <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
-        <Button
-          variant="contained"
-          color="error"
-          onClick={() => {
-            setTitle("");
-            setCategory("");
-            setTags([]);
-            setContent("");
-            setFile(new File([], ""));
-          }}
-        >
-          Cancel
-        </Button>
-        <div>
+        {post?.id ? (
           <Button
             sx={{ mr: 2 }}
             variant="contained"
             endIcon={<SaveIcon />}
             disabled={saveButtonDisabled}
             onClick={() => {
+              console.log(post);
+              postsService
+                .UpdateDraftPost({
+                  Id: post.id,
+                  MainParentId: post.mainParentId,
+                  Title: title,
+                  Category: category,
+                  Tags: tags,
+                  Content: content,
+                  MainImage: file,
+                })
+                .then((res) => {
+                  setOpen(false);
+                })
+                .catch((err) => {
+                  handleError(err);
+                });
+            }}
+          >
+            Update draft
+          </Button>
+        ) : (
+          <Button
+            sx={{ mr: 2 }}
+            variant="contained"
+            endIcon={<SaveIcon />}
+            disabled={saveButtonDisabled}
+            onClick={() => {
+              notification.setLoader(true);
               postsService
                 .CreateDraftPost({
                   Title: title,
@@ -224,31 +246,7 @@ function NewPost() {
                   MainImage: file,
                 })
                 .then((res) => {
-                  console.log(res);
-                })
-                .finally(() => {
-                  setTitle("");
-                  setCategory("");
-                  setTags([]);
-                  setContent("");
-                  setFile(null);
-                });
-            }}
-          >
-            Save as a draft
-          </Button>
-          <Button
-            variant="contained"
-            disabled={submitButtonDisabled}
-            endIcon={<CloudUploadIcon />}
-            onClick={() => {
-              postsService
-                .CreatePost({
-                  Title: title,
-                  Category: category,
-                  Tags: tags,
-                  Content: content,
-                  MainImage: file,
+                  setOpen(false);
                 })
                 .then((res) => {
                   setTitle("");
@@ -256,16 +254,60 @@ function NewPost() {
                   setTags([]);
                   setContent("");
                   setFile(null);
-                  notification.showToast("Post sended to approval", "success");
+                })
+                .catch((err) => {
+                  handleError(err);
+                })
+                .finally(() => {
+                  notification.setLoader(false);
                 });
             }}
           >
-            Send to Approval
+            Save as a draft
           </Button>
-        </div>
+        )}
+        <Button
+          variant="contained"
+          disabled={submitButtonDisabled}
+          endIcon={<CloudUploadIcon />}
+          onClick={() => {
+            notification.setLoader(true);
+            postsService
+              .CreatePost({
+                Title: title,
+                Category: category,
+                Tags: tags,
+                Content: content,
+                MainImage: file,
+              })
+              .then((res) => {
+                setTitle("");
+                setCategory("");
+                setTags([]);
+                setContent("");
+                setFile(null);
+                notification.showToast("Post sended to approval", "success");
+              })
+              .finally(() => {
+                notification.setLoader(false);
+              });
+          }}
+        >
+          Send to Approval
+        </Button>
       </Box>
     </Paper>
   );
 }
 
 export default NewPost;
+
+export function NewPostDialog({ open, setOpen, post = null }) {
+  return (
+    <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="lg">
+      <DialogTitle>Create new post</DialogTitle>
+
+      <NewPost post={post} setPot setOpen={setOpen} />
+    </Dialog>
+  );
+}

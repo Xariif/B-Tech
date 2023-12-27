@@ -33,7 +33,7 @@ namespace BlogAPI.Controllers
         }
 
         [HttpDelete("RemoveRole")]
-        public async Task<ActionResult> RemoveRole(string auth0Id, string[] roleId)
+        public async Task<ActionResult> RemoveRole(string auth0Id, string roleId)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace BlogAPI.Controllers
         }
 
         [HttpPost("GiveRole")]
-        public async Task<ActionResult> GiveRole(string auth0Id, string[] roleId)
+        public async Task<ActionResult> GiveRole(string auth0Id, string roleId)
         {
             try
             {

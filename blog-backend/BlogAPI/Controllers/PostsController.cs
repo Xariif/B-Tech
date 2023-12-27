@@ -3,6 +3,7 @@ using BlogAPI.Helpers;
 using BlogAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 
 namespace BlogAPI.Controllers
 {
@@ -25,7 +26,7 @@ namespace BlogAPI.Controllers
 
         [AllowAnonymous]
         [HttpGet("GetImage")]
-        public async Task<ActionResult> GetImage(string id)
+        public async Task<ActionResult<(byte[], BsonDocument)>> GetImage(string id)
         {
             try
             {
@@ -38,17 +39,20 @@ namespace BlogAPI.Controllers
 
                 var result = await _postsService.GetPostImageAsync(id);
 
+                var fileinfo =await _postsService.GetFileInfo(id);
+                
                 if (post.Status == Status.Aproved)
                 {
-                    return File(result, "image/jpeg");
+                    return (result,fileinfo);
                 }
 
                 var authorId = IdHelper.GetAuthorId(User, _usersService, _authorsService);
+                
 
                 if (post.AuthorId != authorId)
                     throw new UnauthorizedAccessException();
 
-                return File(result, "image/jpeg");
+                return (result, fileinfo);
             }
             catch (Exception ex)
             {
@@ -349,8 +353,48 @@ namespace BlogAPI.Controllers
                         Views = post.Views,
                         MainParentId = post.MainParentId?.ToString()
                     };
-                }
-                                   ).ToList();
+                }).ToList();
+
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpGet("GetTopApprovedPosts")]
+        public async Task<ActionResult<List<PostsDTO>>> GetTopApprovedPosts(DateTime from, DateTime to)
+        {
+            try
+            {
+                var posts = await _postsService.GetTopApprovedPostsAsync(from, to) ?? throw new Exception("Author posts not found");
+
+                var res = posts.Select(post =>
+                {
+                    var author = _authorsService.GetAuthorByIdAsync(post.AuthorId.ToString()).Result;
+                    var user = _usersService.GetUserByIdAsync(author.UserId).Result;
+
+                    return new PostsDTO
+                    {
+                        Id = post.Id.ToString(),
+                        Title = post.Title,
+                        Category = post.Category,
+                        Content = post.Content,
+                        Tags = post.Tags,
+                        MainPhotoId = post.MainPhotoId.ToString(),
+                        AuthorName = user.Name,
+                        AuthorSurname = user.Surname,
+                        AuthorId = author.Id.ToString(),
+                        CreatedAt = post.CreatedAt,
+                        Status = post.Status,
+                        Dislikes = post.Dislikes,
+                        Likes = post.Likes,
+                        Views = post.Views,
+                        MainParentId = post.MainParentId?.ToString()
+                    };
+                }).ToList();
 
                 return Ok(res);
             }
@@ -488,7 +532,7 @@ namespace BlogAPI.Controllers
 
         [Authorize("write:posts")]
         [HttpPut("UpdateDraftPost")]
-        public async Task<ActionResult> UpdateDraftPost([FromForm] UpdatePostDTO postDto)
+        public async Task<ActionResult> UpdateDraftPost([FromForm] UpdateDraftPostDTO postDto)
         {
             try
             {

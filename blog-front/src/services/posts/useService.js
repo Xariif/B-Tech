@@ -1,11 +1,12 @@
 import useAPI from "../../components/hooks/useAPI";
-import { useNotification } from "../../components/hooks/useNotification";
 
 const useService = () => {
   const api = useAPI();
-  const notification = useNotification();
 
   const GetApprovedPosts = () => api.get("Posts/GetApprovedPosts");
+
+  const GetTopApprovedPosts = ({ from, to }) =>
+    api.get("Posts/GetTopApprovedPosts", { from, to });
 
   const GetDraftPosts = () => api.get("Posts/GetDraftPosts");
 
@@ -81,32 +82,26 @@ const useService = () => {
       MainImage,
     });
 
-  const AcceptPost = ({ id }) => api.put("Posts/AcceptPost", { id });
+  const AcceptPost = ({ id }) => api.put("Posts/AcceptPost", null, { id });
 
-  const RejectPost = ({ id }) => api.put("Posts/RejectPost", { id });
+  const RejectPost = ({ id }) => api.put("Posts/RejectPost", null, { id });
 
-  const DeletePost = ({ id }) => api.del("Posts/DeletePost", { id });
+  const DeletePost = ({ id }) => api.del("Posts/DeletePost", null, { id });
 
   const GetImage = ({ id }) =>
-    api.get("Posts/GetImage", { id }).then((image) => {
-      function arrayBufferToBase64(buffer) {
-        let binary = "";
-        const bytes = new Uint8Array(buffer);
-        const len = bytes.byteLength;
-        for (let i = 0; i < len; i++) {
-          binary += String.fromCharCode(bytes[i]);
-        }
-        return window.btoa(binary);
-      }
+    api.getFiles("Posts/GetImage", { id }).then(async (image) => {
       console.log(image);
-      console.log(arrayBufferToBase64(image));
-      return arrayBufferToBase64(image);
+      const imageBlob = image;
+      console.log(imageBlob);
+      return URL.createObjectURL(imageBlob);
     });
 
-  const IncreaseViews = ({ id }) => api.post("Posts/IncreaseViews", { id });
+  const IncreaseViews = ({ id }) =>
+    api.post("Posts/IncreaseViews", null, { id });
 
   return {
     GetApprovedPosts,
+    GetTopApprovedPosts,
     GetApprovedPostById,
     GetDraftPosts,
     GetRejectedPosts,

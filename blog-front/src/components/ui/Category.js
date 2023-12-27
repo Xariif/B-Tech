@@ -1,10 +1,19 @@
 const CategoryColors = {
-  TECH: "blue",
-  SPACE: "orange",
-  MOTO: "black",
-  NATURE: "green",
-  IMPORTANT: "red",
-  TIPS: "purple",
+  CARS: "blue",
+  TECH: "orange",
+  BUSINESS: "black",
+  FINANCE: "green",
+  HEALTH: "red",
+  FITNESS: "purple",
+  FILESTYLE: "yellow",
+  TRAVEL: "pink",
+  FOOD: "brown",
+  FASHION: "gray",
+  ENTERTEINMENT: "cyan",
+  EDUCATION: "magenta",
+  NATURE: "teal",
+  SPORT: "lime",
+  OTHER: "indigo",
 };
 
 export default function Category({ category }) {

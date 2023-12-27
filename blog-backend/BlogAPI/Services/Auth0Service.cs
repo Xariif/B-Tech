@@ -1,4 +1,5 @@
 ﻿using Auth0.ManagementApi.Models;
+using BlogAPI.Entities;
 using BlogAPI.Repositories;
 using Newtonsoft.Json;
 using RestSharp;
@@ -35,9 +36,9 @@ namespace BlogAPI.Services
             return res.IsSuccessful;
         }
 
-        public async Task<bool> GiveRoleAsync(string auth0Id, string[] rolesIds)
+        public async Task<bool> GiveRoleAsync(string auth0Id, string rolesId)
         {
-            var rolesPayload = new { roles = rolesIds };
+            var rolesPayload = new { roles = new[] { rolesId } };
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(rolesPayload);
 
             var headers = new List<HeaderParameter>
@@ -53,9 +54,9 @@ namespace BlogAPI.Services
             return res.IsSuccessful;
         }
 
-        public async Task<bool> RemoveRoleAsync(string auth0Id, string[] roleId)
+        public async Task<bool> RemoveRoleAsync(string auth0Id, string roleId)
         {
-            var rolesPayload = new { roles = roleId };
+            var rolesPayload = new { roles = new[] { roleId } };
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(rolesPayload);
 
             var headers = new List<HeaderParameter>

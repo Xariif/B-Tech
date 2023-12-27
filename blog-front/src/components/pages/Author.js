@@ -97,14 +97,16 @@ function Author({ authorData, posts }) {
       <Box sx={{ pt: 2 }}>
         <Grid
           container
-          spacing={{ xs: 2, md: 3 }}
+          spacing={{ xs: 2, sm: 4, md: 3 }}
           columns={{ xs: 4, sm: 8, md: 12 }}
         >
-          <Grid item xs={4}>
-            {posts?.map((post) => (
-              <PostSmallImg key={post.id} post={post} />
-            ))}
-          </Grid>
+          {posts?.map((post) => {
+            return (
+              <Grid item xs={2} sm={4} md={4} key={post.id}>
+                <PostSmallImg post={post} />
+              </Grid>
+            );
+          })}
         </Grid>
       </Box>
     </>

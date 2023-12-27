@@ -3,12 +3,16 @@ import {
   Box,
   Button,
   Container,
+  Dialog,
+  DialogTitle,
   FilledInput,
+  IconButton,
   Input,
   MenuItem,
   Paper,
   Select,
   Tab,
+  TabScrollButton,
   Tabs,
   TextField,
   Typography,
@@ -23,13 +27,15 @@ import AddIcon from "@mui/icons-material/Add";
 import DrawIcon from "@mui/icons-material/Draw";
 import HourglassBottomIcon from "@mui/icons-material/HourglassBottom";
 import DoneIcon from "@mui/icons-material/Done";
-import NewPost from "./NewPost/NewPost";
+import { PickersToolbarButton } from "@mui/x-date-pickers/internals";
+import { NewPostDialog } from "../../ui/NewPost";
 import WaitingPosts from "./WaitingPosts/WaitingPosts";
 import ApprovedPosts from "./ApprovedPosts/ApprovedPosts";
 import DraftPosts from "./DraftPosts/DraftPosts";
 import ApprovedPostsWrapper from "../../wrappers/PostMenager/ApprovedPostsWarapper";
 import DraftPostsWrapper from "../../wrappers/PostMenager/DraftPostsWrapper";
 import WaitingForApprovalWrapper from "../../wrappers/PostMenager/WaitingForApprovalWrapper";
+import usePostManager from "../../hooks/usePostManager";
 
 export default function PostMenager() {
   const [value, setValue] = useState("1");
@@ -37,9 +43,19 @@ export default function PostMenager() {
     setValue(newValue);
   };
 
+  const [newDialog, setNewDialog] = useState(false);
+
   return (
     <TabContext value={value}>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          borderBottom: 1,
+          borderColor: "divider",
+          alignItems: "center",
+        }}
+      >
         <TabList onChange={handleChange} aria-label="lab API tabs example">
           <Tab
             icon={<DoneIcon />}
@@ -54,18 +70,20 @@ export default function PostMenager() {
             iconPosition="start"
           />
           <Tab
-            label="Post creator"
-            value="3"
-            icon={<AddIcon />}
-            iconPosition="start"
-          />
-          <Tab
             label="Waiting for approval"
-            value="4"
+            value="3"
             icon={<HourglassBottomIcon />}
             iconPosition="start"
           />
         </TabList>
+        <IconButton
+          color="success"
+          onClick={() => {
+            setNewDialog(true);
+          }}
+        >
+          <AddIcon />
+        </IconButton>
       </Box>
 
       <TabPanel value="1">
@@ -75,11 +93,9 @@ export default function PostMenager() {
         <DraftPostsWrapper />
       </TabPanel>
       <TabPanel value="3">
-        <NewPost />
-      </TabPanel>
-      <TabPanel value="4">
         <WaitingForApprovalWrapper />
       </TabPanel>
+      <NewPostDialog open={newDialog} setOpen={setNewDialog} />
     </TabContext>
   );
 }

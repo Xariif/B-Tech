@@ -7,6 +7,6 @@
         public required string Content { get; set; }
         public required string Category { get; set; }
         public List<string>? Tags { get; set; }
-        public IFormFile? MainImage { get; set; }
+        public required IFormFile MainImage { get; set; }
     }
 }

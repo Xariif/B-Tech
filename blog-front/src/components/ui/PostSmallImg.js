@@ -65,7 +65,7 @@ export default function PostSmallImg({ post }) {
           margin: "0.5rem",
         }}
       >
-        <div>
+        <div style={{ width: "100%" }}>
           {post.category && <Category category={post.category} />}
 
           <Link
@@ -81,11 +81,22 @@ export default function PostSmallImg({ post }) {
           >
             <p>{post.title}</p>
           </Link>
-          {new Date(post.createdAt).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              width: "100%",
+            }}
+          >
+            <div>
+              {new Date(post.createdAt).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </div>
+            <div>Views: {post.views}</div>
+          </div>
         </div>
       </div>
     </Paper>
