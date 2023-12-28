@@ -27,6 +27,10 @@ import AdminWrapper from "../components/wrappers/AdminWrapper";
 import useUser from "../components/hooks/useUser";
 import TopWrapper from "../components/wrappers/TopWrapper";
 import { PostManagerProvider } from "../context/PostMenagerContext";
+import Profile from "../components/pages/Profile";
+import ApprovedPostsWrapper from "../components/wrappers/PostMenager/ApprovedPostsWarapper";
+import DraftPostsWrapper from "../components/wrappers/PostMenager/DraftPostsWrapper";
+import WaitingForApprovalWrapper from "../components/wrappers/PostMenager/WaitingForApprovalWrapper";
 
 export default function AppRoutes() {
   return (
@@ -38,6 +42,9 @@ export default function AppRoutes() {
           <Route path="/newest" element={<Newest />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/profile" element={<Profile />} />
+          </Route>
           <Route element={<ProtectedRoute allowedPermissions={["admin"]} />}>
             <Route path="/admin" element={<AdminWrapper />} />
           </Route>
@@ -48,7 +55,23 @@ export default function AppRoutes() {
               />
             }
           >
-            <Route path="/post/menager" element={<PostMenager />} />
+            <Route
+              path="/post/menager"
+              element={<PostMenager content={<Outlet />} />}
+            >
+              <Route
+                path="/post/menager/approved"
+                element={<ApprovedPostsWrapper />}
+              />
+              <Route
+                path="/post/menager/draft"
+                element={<DraftPostsWrapper />}
+              />
+              <Route
+                path="/post/menager/waiting"
+                element={<WaitingForApprovalWrapper />}
+              />
+            </Route>
           </Route>
 
           <Route path="/post/:id" element={<PostWrapper />} />
@@ -64,20 +87,26 @@ export default function AppRoutes() {
 function ProtectedRoute({ allowedPermissions }) {
   const { user } = useUser();
   const { isLoading, isAuthenticated } = useAuth0();
-  const location = useNavigate();
-  const notification = useNotification();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isLoading && (!isAuthenticated || !user)) {
+      navigate("/", { replace: true });
+    } else if (
+      !isLoading &&
+      user &&
+      !(
+        user?.permissions?.find((role) => allowedPermissions?.includes(role)) ||
+        allowedPermissions === undefined
+      )
+    ) {
+      navigate("/", { replace: true });
+    }
+  }, [isLoading, isAuthenticated, user, allowedPermissions, navigate]);
 
   if (isLoading || !user) {
     return null;
   }
 
-  if (!isAuthenticated) {
-    location("/", { replace: true });
-  }
-
-  if (user?.permissions?.find((role) => allowedPermissions?.includes(role))) {
-    return <Outlet />;
-  }
-
-  location("/", { replace: true });
+  return <Outlet />;
 }

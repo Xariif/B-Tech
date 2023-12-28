@@ -9,9 +9,17 @@ import Category from "../../../ui/Category";
 import useService from "../../../../services/posts/useService";
 import useError from "../../../hooks/useError";
 import Edit from "../../../ui/PostDialog/Edit";
+import usePostMenager from "../../../hooks/usePostMenager";
+import useNotification from "../../../hooks/useNotification";
 
-function DraftPosts({ posts, setPosts, setTriggerEffect }) {
+function DraftPosts({ posts }) {
+  const { fetchDraftPosts, draftPosts } = usePostMenager();
+  const { DeletePost } = useService();
+  const { removeDraftPost } = usePostMenager();
   const { handleError } = useError();
+  const notification = useNotification();
+
+  const [editingPost, setEditingPost] = useState(null);
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid
@@ -22,11 +30,47 @@ function DraftPosts({ posts, setPosts, setTriggerEffect }) {
         {posts.map((post) => {
           return (
             <Grid item xs={4} key={post.id}>
-              <DraftSmallPost
-                key={post.id}
+              <PostSmallImg
                 post={post}
-                setPosts={setPosts}
-                setTriggerEffect={setTriggerEffect}
+                options={
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "flex-end",
+                    }}
+                  >
+                    <IconButton
+                      color="info"
+                      onClick={() => {
+                        setEditingPost(post);
+                      }}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      color="error"
+                      onClick={() => {
+                        DeletePost({ id: post.id })
+                          .then((res) => {
+                            removeDraftPost(post.id);
+                          })
+                          .catch((err) => {
+                            handleError(err);
+                          });
+                      }}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                    {editingPost && editingPost.id === post.id && (
+                      <Edit
+                        post={editingPost}
+                        editDialogOpen={editingPost !== null}
+                        setEditDialogOpen={() => setEditingPost(null)}
+                      />
+                    )}
+                  </div>
+                }
               />
             </Grid>
           );
@@ -35,107 +79,4 @@ function DraftPosts({ posts, setPosts, setTriggerEffect }) {
     </Box>
   );
 }
-
 export default DraftPosts;
-
-function DraftSmallPost({ post, setPosts, setTriggerEffect }) {
-  const { handleError } = useError();
-  const { DeletePost } = useService();
-  const [editDialogOpen, setEditDialogOpen] = useState(false);
-
-  return (
-    <Paper style={{ borderRadius: "1rem", overflow: "hidden" }}>
-      {post.image ? (
-        <img
-          src={post.image}
-          alt="zdjęcie"
-          style={{
-            objectFit: "cover",
-            verticalAlign: "top",
-            height: "280px",
-            width: "100%",
-          }}
-        />
-      ) : (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "280px",
-            width: "100%",
-            backgroundColor: grey[400],
-          }}
-        >
-          <EditIcon style={{ fontSize: "5rem" }} />
-        </div>
-      )}
-
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          margin: "0.5rem",
-        }}
-      >
-        <div style={{ maxWidth: "calc(100%-56px)", overflow: "hidden" }}>
-          {post.category && <Category category={post.category} />}
-
-          <p
-            style={{
-              fontWeight: "bolder",
-              fontSize: "1.2rem",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}
-          >
-            {post.title}
-          </p>
-          {new Date(post.createdAt).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
-        </div>
-
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "flex-end",
-          }}
-        >
-          <IconButton
-            color="info"
-            onClick={() => {
-              setEditDialogOpen(true);
-            }}
-          >
-            <EditIcon />
-          </IconButton>
-          <IconButton
-            color="error"
-            onClick={() => {
-              DeletePost({ id: post.id })
-                .then((res) => {
-                  setPosts((prev) => prev.filter((p) => p.id !== post.id));
-                })
-                .catch((err) => {
-                  handleError(err);
-                });
-            }}
-          >
-            <DeleteIcon />
-          </IconButton>
-        </div>
-      </div>
-      <Edit
-        post={post}
-        editDialogOpen={editDialogOpen}
-        setEditDialogOpen={setEditDialogOpen}
-        setTriggerEffect={setTriggerEffect}
-      />
-    </Paper>
-  );
-}

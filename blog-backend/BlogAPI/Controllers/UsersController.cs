@@ -23,8 +23,6 @@ public class UsersController : BaseController
 
 
 
-
-
     [Authorize("admin")]
     [HttpGet("GetUserByAuth0Id")]
     public async Task<ActionResult<Users>> GetUserByAuth0IdAsync(string auth0Id)
@@ -40,8 +38,53 @@ public class UsersController : BaseController
     }
 
     [Authorize]
+    [HttpGet("GetUserData")]
+    public async Task<ActionResult<UsersDTO>> GetUserData()
+    {
+        try
+        {
+            var userId = IdHelper.GetUserId(User, _usersService).ToString();
+            var res = await _usersService.GetUserByIdAsync(userId);
+
+            return new UsersDTO()
+            {
+                Id = res.Id.ToString(),
+                Name = res.Name,
+                Surname = res.Surname,
+                Email = res.Email,
+                Phone = res.Phone,
+                ActiveFrom = res.ActiveFrom,
+                Auth0Id = res.Auth0Id,
+                AvatarId = res.AvatarId.ToString()
+            };
+        }
+        catch (Exception ex)
+        {
+            return HandleError(ex);
+        }
+    }
+    [Authorize]
+    [HttpGet("GetAvatar")]
+    public async Task<ActionResult<UsersDTO>> GetAvatar(string id)
+    {
+        try
+        {
+            var res = await _usersService.GetAvatarAsync(id);
+            return File(res, "image/jpeg");
+
+        }
+        catch (Exception ex)
+        {
+            return HandleError(ex);
+        }
+    }
+
+
+
+
+    [Authorize]
     [HttpPut("UpdateUser")]
-    public async Task<ActionResult> UpdateUserAsync(UpdateUsersDTO userDto)
+    public async Task<ActionResult> UpdateUserAsync([FromForm] UpdateUsersDTO userDto)
     {
         try
         {

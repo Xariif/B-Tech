@@ -503,6 +503,8 @@ namespace BlogAPI.Controllers
             {
                 var post = await _postsService.GetPostByIdAsync(id) ?? throw new Exception("Post not found");
 
+                if (post.Status != Status.Aproved)
+                    throw new UnauthorizedAccessException();
 
                 var author = _authorsService.GetAuthorByIdAsync(post.AuthorId.ToString()).Result;
                 var user = _usersService.GetUserByIdAsync(author.UserId).Result;
@@ -625,8 +627,8 @@ namespace BlogAPI.Controllers
             }
         }
         [HttpPut("CancelPost")]
-        [Authorize("author")]
-        public async Task<ActionResult> CancelApprove(string id)
+        [Authorize("write:posts")]
+        public async Task<ActionResult> CancelPost(string id)
         {
             try
             {
@@ -637,7 +639,7 @@ namespace BlogAPI.Controllers
                     throw new UnauthorizedAccessException();
 
                 await _postsService.CancelPostAsync(id);
-                return Ok("Post accepted");
+                return Ok("Post canceled");
             }
             catch (Exception ex)
             {

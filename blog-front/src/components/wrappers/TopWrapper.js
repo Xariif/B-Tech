@@ -31,7 +31,6 @@ export default function TopWrapper() {
       postsService.GetImage({ id: post.mainPhotoId });
 
     const fetchPostsAndImages = () => {
-      console.log("fetchPostsAndImages");
       return fetchPosts()
         .then((approvedPosts) => {
           const imagePromises = approvedPosts.map(fetchImage);
@@ -43,7 +42,6 @@ export default function TopWrapper() {
           );
         })
         .then((postsWithImages) => {
-          console.log(postsWithImages);
           setPosts(postsWithImages);
         })
         .catch((error) => {

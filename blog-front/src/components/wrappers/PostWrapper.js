@@ -6,8 +6,9 @@ import Post from "../pages/Post";
 import Loading from "../ui/Loading";
 import PostBigImg from "../ui/PostBigImg";
 import { useNotification } from "../hooks/useNotification";
-import useService from "../../services/posts/useService";
+import usePostService from "../../services/posts/useService";
 import useError from "../hooks/useError";
+import useAuthorService from "../../services/author/useService";
 
 export default function PostWrapper({ children }) {
   const { id } = useParams();
@@ -15,7 +16,8 @@ export default function PostWrapper({ children }) {
   const [post, setPost] = useState();
 
   const { setLoader } = useNotification();
-  const postsService = useService();
+  const postsService = usePostService();
+  const authorService = useAuthorService();
   const { handleError } = useError();
 
   useEffect(() => {
@@ -27,6 +29,10 @@ export default function PostWrapper({ children }) {
         id: approvedPost.mainPhotoId,
       });
 
+      approvedPost.authorAvatar = await authorService.GetAvatarByAuthorId({
+        id: approvedPost.authorId,
+      });
+
       return approvedPost;
     };
 
@@ -36,6 +42,7 @@ export default function PostWrapper({ children }) {
       })
       .catch((error) => {
         handleError(error);
+        setPost(false);
       })
       .finally(() => {
         setLoader(false);

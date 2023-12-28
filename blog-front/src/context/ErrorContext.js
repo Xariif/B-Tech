@@ -18,8 +18,8 @@ export function ErrorProvider({ children }) {
       case 404:
         console.log("404");
         break;
-      case 500:
-        console.log("500");
+      case "ERR_BAD_RESPONSE":
+        console.log("ERR_BAD_RESPONSE");
         break;
       case 400:
         console.log("400");
@@ -28,8 +28,12 @@ export function ErrorProvider({ children }) {
         console.log("403");
         break;
 
+      case "ERR_BAD_REQUEST":
+        // notification.showToast(newError.message, "error");
+        break;
+
       case "ERR_NETWORK":
-        notification.showToast(newError.message, "error");
+        //  notification.showToast(newError.message, "error");
         break;
 
       default:

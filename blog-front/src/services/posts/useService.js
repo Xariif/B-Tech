@@ -29,6 +29,8 @@ const useService = () => {
   const GetApprovedPostsByTag = ({ tag }) =>
     api.get("Posts/GetApprovedPostsByTag", { tag });
 
+  const CancelPost = ({ id }) => api.put("Posts/CancelPost", null, { id });
+
   const CreatePost = ({
     MainParentId,
     Title,
@@ -100,6 +102,7 @@ const useService = () => {
     api.post("Posts/IncreaseViews", null, { id });
 
   return {
+    CancelPost,
     GetApprovedPosts,
     GetTopApprovedPosts,
     GetApprovedPostById,

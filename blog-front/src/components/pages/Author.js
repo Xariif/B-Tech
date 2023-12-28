@@ -17,20 +17,30 @@ function Author({ authorData, posts }) {
             justifyItems: "center",
           }}
         >
-          <Box sx={{ m: 2 }}>
+          <Box sx={{ m: 1 }}>
             <Stack direction="row" spacing={2}>
-              <Avatar
-                sx={{
-                  bgcolor: deepOrange[500],
-                  width: 56,
-                  height: 56,
-                  fontWeight: "bold",
-                }}
-              >
-                {authorData.name[0]}
-              </Avatar>
+              {authorData.authorAvatar ? (
+                <Avatar
+                  src={authorData.authorAvatar}
+                  sx={{
+                    width: 120,
+                    height: 120,
+                    fontWeight: "bold",
+                  }}
+                />
+              ) : (
+                <Avatar>
+                  {authorData.authorName[0]}
+                  {authorData.authorSurname[0]}
+                </Avatar>
+              )}
 
-              <Typography variant="h4" display="flex" alignItems="center">
+              <Typography
+                variant="h4"
+                display="flex"
+                alignItems="center"
+                fontWeight="bold"
+              >
                 {authorData.name} {authorData.surname}
               </Typography>
             </Stack>
@@ -103,7 +113,7 @@ function Author({ authorData, posts }) {
           {posts?.map((post) => {
             return (
               <Grid item xs={2} sm={4} md={4} key={post.id}>
-                <PostSmallImg post={post} />
+                <PostSmallImg post={post} link />
               </Grid>
             );
           })}

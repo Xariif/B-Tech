@@ -44,7 +44,6 @@ function reducer(state, action) {
       };
 
     case "SET_POSTS":
-      console.log(action.payload);
       return { ...state, [action.payload.type]: action.payload.posts };
     default:
       return state;
@@ -200,6 +199,7 @@ export function PostManagerProvider({ children }) {
         });
       })
       .catch((error) => {
+        console.log(error);
         handleError(error);
         return false;
       })
@@ -237,7 +237,6 @@ export function PostManagerProvider({ children }) {
     const posts = await fetchDraftPostData();
 
     if (posts) {
-      console.log(posts);
       dispatch({
         type: "SET_POSTS",
         payload: { posts, type: "draftPosts" },
@@ -255,11 +254,23 @@ export function PostManagerProvider({ children }) {
     }
   };
 
+  const removeDraftPost = (id) => {
+    dispatch({ type: "REMOVE_POST", payload: { id, type: "draftPosts" } });
+  };
+
+  const removeApprovedPost = (id) => {
+    dispatch({ type: "REMOVE_POST", payload: { id, type: "approvedPosts" } });
+  };
+
+  const removeWaitingPost = (id) => {
+    dispatch({ type: "REMOVE_POST", payload: { id, type: "waitingPosts" } });
+  };
+
   const contextValue = useMemo(
     () => ({
-      addPost,
-      removePost,
-      updatePost,
+      removeDraftPost,
+      removeApprovedPost,
+      removeWaitingPost,
       fetchDraftPosts,
       fetchApprovedPosts,
       fetchWaitingPosts,
@@ -268,7 +279,6 @@ export function PostManagerProvider({ children }) {
       waitingPosts: state.waitingPosts,
     }),
     [
-      addPost,
       removePost,
       updatePost,
       fetchDraftPosts,

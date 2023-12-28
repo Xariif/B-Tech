@@ -24,6 +24,18 @@ namespace BlogAPI.Services
             return await _usersRepository.FindFirstByIdAsync<Users>(id) ?? throw new ArgumentException("User not found");
         }
 
+        public async Task<byte[]> GetAvatarAsync(string id)
+        {
+
+            var photo = await _usersRepository.DownloadFileAsync(id);
+            if (photo == null)
+            {
+                return null;
+            }
+
+            return photo;
+        }
+
 
         public async Task<List<UsersDTO>> GetAllUsersAsync()
         {
@@ -46,8 +58,8 @@ namespace BlogAPI.Services
 
         public async Task UpdateUserAsync(string userId, UpdateUsersDTO updateUser)
         {
-            var user = await _usersRepository.FindFirstByAuth0IdAsync(userId) ??
-                       throw new ArgumentException("User not found");
+            var user = await _usersRepository.FindFirstByIdAsync<Users>(userId) ?? throw new ArgumentException("User not found");
+
             user = new Users
             {
                 Id = user.Id,
@@ -56,8 +68,21 @@ namespace BlogAPI.Services
                 Surname = updateUser.Surname,
                 ActiveFrom = user.ActiveFrom,
                 Phone = updateUser.Phone,
-                Email = user.Email
+                Email = updateUser.Email
             };
+
+            if (user.AvatarId != null)
+            {
+                await _usersRepository.DeleteFileAsync(user.AvatarId.ToString());
+            }
+
+
+            if (updateUser.Avatar != null)
+            {
+                var imgId = await _usersRepository.UploadFileAsync("avatar", updateUser.Avatar.OpenReadStream());
+                user.AvatarId = imgId;
+            }
+
 
             await _usersRepository.UpdateAsync<Users>(user.Id.ToString(), user);
         }

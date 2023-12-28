@@ -1,5 +1,4 @@
 ﻿using Auth0.ManagementApi.Models;
-using BlogAPI.Entities;
 using BlogAPI.Repositories;
 using Newtonsoft.Json;
 using RestSharp;

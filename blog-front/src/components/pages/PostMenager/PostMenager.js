@@ -28,6 +28,8 @@ import DrawIcon from "@mui/icons-material/Draw";
 import HourglassBottomIcon from "@mui/icons-material/HourglassBottom";
 import DoneIcon from "@mui/icons-material/Done";
 import { PickersToolbarButton } from "@mui/x-date-pickers/internals";
+import { ConstructionOutlined } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 import WaitingPosts from "./WaitingPosts/WaitingPosts";
 import ApprovedPosts from "./ApprovedPosts/ApprovedPosts";
 import DraftPosts from "./DraftPosts/DraftPosts";
@@ -36,14 +38,24 @@ import DraftPostsWrapper from "../../wrappers/PostMenager/DraftPostsWrapper";
 import WaitingForApprovalWrapper from "../../wrappers/PostMenager/WaitingForApprovalWrapper";
 import New from "../../ui/PostDialog/New";
 
-export default function PostMenager() {
-  const [value, setValue] = useState("1");
+export default function PostMenager({ content }) {
+  const url = window.location.pathname;
+  const segments = url.split("/");
+  const lastWord = segments.pop() || segments.pop();
+
+  const [value, setValue] = useState("approved");
+
+  useEffect(() => {
+    setValue(lastWord);
+  }, [lastWord]);
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
   const [newDialogOpen, setNewDialogOpen] = useState(false);
-  const [triggerEffect, setTriggerEffect] = useState(false);
+
+  const navigate = useNavigate();
 
   return (
     <TabContext value={value}>
@@ -54,6 +66,7 @@ export default function PostMenager() {
           borderBottom: 1,
           borderColor: "divider",
           alignItems: "center",
+          mb: 2,
         }}
       >
         <TabList onChange={handleChange} aria-label="lab API tabs example">
@@ -61,19 +74,28 @@ export default function PostMenager() {
             icon={<DoneIcon />}
             iconPosition="start"
             label="Approved posts"
-            value="1"
+            value="approved"
+            onClick={() => {
+              navigate("./approved", { replace: false });
+            }}
           />
           <Tab
             label="Draft posts"
-            value="2"
+            value="draft"
             icon={<DrawIcon />}
             iconPosition="start"
+            onClick={() => {
+              navigate("./draft ", { replace: false });
+            }}
           />
           <Tab
             label="Waiting for approval"
-            value="3"
+            value="waiting"
             icon={<HourglassBottomIcon />}
             iconPosition="start"
+            onClick={() => {
+              navigate("./waiting", { replace: false });
+            }}
           />
         </TabList>
         <IconButton
@@ -85,24 +107,8 @@ export default function PostMenager() {
           <AddIcon />
         </IconButton>
       </Box>
-
-      <TabPanel value="1">
-        <ApprovedPostsWrapper />
-      </TabPanel>
-      <TabPanel value="2">
-        <DraftPostsWrapper
-          triggerEffect={triggerEffect}
-          setTriggerEffect={setTriggerEffect}
-        />
-      </TabPanel>
-      <TabPanel value="3">
-        <WaitingForApprovalWrapper />
-      </TabPanel>
-      <New
-        newDialogOpen={newDialogOpen}
-        setNewDialogOpen={setNewDialogOpen}
-        setTriggerEffect={setTriggerEffect}
-      />
+      {content}
+      <New newDialogOpen={newDialogOpen} setNewDialogOpen={setNewDialogOpen} />
     </TabContext>
   );
 }

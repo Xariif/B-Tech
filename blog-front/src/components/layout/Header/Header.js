@@ -31,6 +31,7 @@ export default function Header() {
           alignItems: "center",
         }}
       >
+        qwe
         <div className="logo">
           <Link to="/" onClick={() => (document.title = "B-TECH")}>
             <i

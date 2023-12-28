@@ -11,6 +11,7 @@ namespace BlogAPI.Models
         public required string Name { get; set; }
         public required string Surname { get; set; }
         public int? Phone { get; set; }
+        public ObjectId? AvatarId { get; set; }
         public required string Email { get; set; }
         public required string Auth0Id { get; set; }
         public DateTime ActiveFrom { get; set; }

@@ -9,6 +9,7 @@ import {
   Button,
   Dialog,
   DialogTitle,
+  IconButton,
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -16,15 +17,13 @@ import MenuItem from "@mui/material/MenuItem";
 import SaveIcon from "@mui/icons-material/Save";
 import { BluetoothDisabled } from "@mui/icons-material";
 import axios from "axios";
+import CancelIcon from "@mui/icons-material/Cancel";
 import useService from "../../../services/posts/useService";
 import { useNotification } from "../../hooks/useNotification";
 import useError from "../../hooks/useError";
+import usePostMenager from "../../hooks/usePostMenager";
 
-export default function New({
-  newDialogOpen,
-  setNewDialogOpen,
-  setTriggerEffect,
-}) {
+export default function New({ newDialogOpen, setNewDialogOpen }) {
   const postsService = useService();
   const notification = useNotification();
 
@@ -35,6 +34,8 @@ export default function New({
   const [category, setCategory] = useState("");
   const [tags, setTags] = useState([]);
   const [content, setContent] = useState("");
+
+  const { fetchWaitingPosts, fetchDraftPosts } = usePostMenager();
 
   const [file, setFile] = useState(null);
   const { handleError } = useError();
@@ -165,6 +166,7 @@ export default function New({
               height: "280px",
               width: "100%",
               marginTop: "1rem",
+              borderRadius: "1rem",
             }}
           />
         )}
@@ -174,23 +176,29 @@ export default function New({
             component="label"
             variant="contained"
             startIcon={<CloudUploadIcon />}
-            sx={{ mr: 2, width: "-webkit-fill-available" }}
+            sx={{ mr: 1, width: "-webkit-fill-available" }}
           >
             Upload image
             <VisuallyHiddenInput
               type="file"
-              accept="image/*"
+              accept=".jpg,.jpeg,.png"
               multiple={false}
               onChange={(e) => {
                 setFile(e.target.files[0]);
               }}
             />
           </Button>
+
           <TextField
             value={file?.name ?? "No file selected"}
             disabled
             sx={{ width: "-webkit-fill-available" }}
           />
+          {file && (
+            <IconButton sx={{ ml: 1 }} onClick={() => setFile(null)}>
+              <CancelIcon fontSize="large" />
+            </IconButton>
+          )}
         </Box>
         <TextField
           select
@@ -255,7 +263,8 @@ export default function New({
                 .finally(() => {
                   notification.setLoader(false);
                   setNewDialogOpen(false);
-                  setTriggerEffect((prev) => !prev);
+                  fetchDraftPosts();
+                  fetchWaitingPosts();
                 });
             }}
           >
@@ -287,6 +296,8 @@ export default function New({
                   notification.showToast("Post sended to approval", "success");
                   notification.setLoader(false);
                   setNewDialogOpen(false);
+                  fetchWaitingPosts();
+                  fetchDraftPosts();
                 });
             }}
           >

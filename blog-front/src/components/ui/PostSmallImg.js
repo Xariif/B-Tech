@@ -18,10 +18,12 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import Category from "./Category";
 
-export default function PostSmallImg({ post }) {
+export default function PostSmallImg({ post, options = null, link = false }) {
+  const LinkOrDiv = link ? Link : "div";
+
   return (
     <Paper style={{ borderRadius: "1rem", overflow: "hidden" }}>
-      <Link
+      <LinkOrDiv
         style={{
           textDecoration: "none",
           color: "inherit",
@@ -55,7 +57,7 @@ export default function PostSmallImg({ post }) {
             <EditIcon style={{ fontSize: "5rem" }} />
           </div>
         )}
-      </Link>
+      </LinkOrDiv>
 
       <div
         style={{
@@ -68,19 +70,31 @@ export default function PostSmallImg({ post }) {
         <div style={{ width: "100%" }}>
           {post.category && <Category category={post.category} />}
 
-          <Link
+          <LinkOrDiv
             to={{
               pathname: `/post/${post.id}`,
             }}
             style={{
               fontWeight: "bolder",
-              fontSize: "1.5rem",
               textDecoration: "none",
               color: "inherit",
             }}
           >
-            <p>{post.title}</p>
-          </Link>
+            <p
+              style={{
+                display: "-webkit-box",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
+                minHeight: "2.5em", // Adjust this value based on your line-height
+                maxHeight: "2.5em", // Adjust this value based on your line-height
+                lineHeight: "1.25em", // Adjust this value based on your design
+              }}
+            >
+              {post.title}
+            </p>
+          </LinkOrDiv>
           <div
             style={{
               display: "flex",
@@ -88,15 +102,21 @@ export default function PostSmallImg({ post }) {
               width: "100%",
             }}
           >
-            <div>
-              {new Date(post.createdAt).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </div>
-            <div>Views: {post.views}</div>
+            {new Date(post.createdAt).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
           </div>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-end",
+          }}
+        >
+          {options}
         </div>
       </div>
     </Paper>

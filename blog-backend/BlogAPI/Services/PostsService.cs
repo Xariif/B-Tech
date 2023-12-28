@@ -56,8 +56,11 @@ namespace BlogAPI.Services
             var post = await GetPostByIdAsync(postId) ?? throw new Exception("Post doesn't exist");
 
 
-            if (post.Status != Status.ToConfirm || post.Status != Status.Aproved)
-                throw new Exception("Post is not waiting for approval");
+            if (post.Status == Status.Draft)
+            {
+                throw new Exception("Post is already canceled");
+            }
+
 
             post.Status = Status.Draft;
 

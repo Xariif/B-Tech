@@ -16,6 +16,8 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
 import { CribSharp, PowerSettingsNew } from "@mui/icons-material";
 import { useState } from "react";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import PersonIcon from "@mui/icons-material/Person";
 import useUser from "../../hooks/useUser";
 
 const Search = styled("div")(({ theme }) => ({
@@ -69,6 +71,7 @@ const StyledLink = styled(Box)(({ theme }) => ({
     color: theme.palette.primary.main,
   },
   color: "inherit",
+  display: "flex",
   alignItems: "center",
 }));
 
@@ -90,7 +93,7 @@ function NavBar() {
           <StyledLink
             underline="none"
             style={{ display: "flex" }}
-            onClick={() => navigate("/", { replace: true })}
+            onClick={() => navigate("/", { replace: false })}
           >
             <BoltIcon fontSize="large" />
             <Typography variant="h6">B-TECH</Typography>
@@ -116,7 +119,7 @@ function MenuBar() {
       {user && user.permissions.includes("admin") && (
         <StyledLink
           underline="none"
-          onClick={() => navigate("./admin", { replace: true })}
+          onClick={() => navigate("./admin", { replace: false })}
         >
           Admin
         </StyledLink>
@@ -124,7 +127,9 @@ function MenuBar() {
       {user && user.permissions.includes("write:posts") && (
         <StyledLink
           underline="none"
-          onClick={() => navigate("./post/menager", { replace: true })}
+          onClick={() =>
+            navigate("./post/menager/approved", { replace: false })
+          }
         >
           Post Menager
         </StyledLink>
@@ -143,16 +148,19 @@ function BasicMenuBar({ isAuthenticated }) {
     <>
       <StyledLink
         underline="none"
-        onClick={() => navigate("./top", { replace: true })}
+        onClick={() => navigate("./top", { replace: false })}
       >
         Top
       </StyledLink>
-      <StyledLink
-        underline="none"
-        onClick={() => navigate("./newest", { replace: true })}
-      >
-        Newest
-      </StyledLink>
+
+      {isAuthenticated && (
+        <StyledLink
+          underline="none"
+          onClick={() => navigate("./profile", { replace: false })}
+        >
+          <PersonIcon />
+        </StyledLink>
+      )}
       {!isAuthenticated ? (
         <StyledLink
           underline="none"

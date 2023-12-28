@@ -10,3 +10,5 @@
 	flex-direction: column;
 	background-color: #121212;
 }
+
+iframe#webpack-dev-server-client-overlay{display:none!important}

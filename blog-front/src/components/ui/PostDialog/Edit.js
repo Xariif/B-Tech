@@ -14,34 +14,31 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import Autocomplete from "@mui/material/Autocomplete";
 import MenuItem from "@mui/material/MenuItem";
 import SaveIcon from "@mui/icons-material/Save";
-import { BluetoothDisabled } from "@mui/icons-material";
+import { BluetoothDisabled, ConstructionOutlined } from "@mui/icons-material";
 import axios from "axios";
 import useService from "../../../services/posts/useService";
 import { useNotification } from "../../hooks/useNotification";
 import useError from "../../hooks/useError";
+import usePostMenager from "../../hooks/usePostMenager";
 
-export default function Edit({
-  post,
-  editDialogOpen,
-  setEditDialogOpen,
-  setTriggerEffect,
-}) {
+export default function Edit({ post, editDialogOpen, setEditDialogOpen }) {
   const postsService = useService();
   const notification = useNotification();
 
   const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
   const [saveButtonDisabled, setSaveButtonDisabled] = useState(true);
 
-  const [title, setTitle] = useState(post?.title ?? "");
-  const [category, setCategory] = useState(post?.category ?? "");
-  const [tags, setTags] = useState(post?.tags ?? []);
-  const [content, setContent] = useState(post?.content ?? "");
+  const [title, setTitle] = useState(post.title ?? "");
+  const [category, setCategory] = useState(post.category ?? "");
+  const [tags, setTags] = useState(post.tags ?? []);
+  const [content, setContent] = useState(post.content ?? "");
+  const { fetchWaitingPosts, fetchDraftPosts } = usePostMenager();
 
   const [file, setFile] = useState(null);
   const { handleError } = useError();
 
   useEffect(() => {
-    const getImageFromBlob = async (blob) => {
+    const getImageFromBlob = (blob) => {
       return fetch(blob)
         .then((res) => res.blob())
         .then((x) => {
@@ -49,7 +46,7 @@ export default function Edit({
         });
     };
 
-    if (post?.image) {
+    if (post.image) {
       getImageFromBlob(post?.image);
     }
   }, []);
@@ -152,11 +149,11 @@ export default function Edit({
   return (
     <Dialog
       open={editDialogOpen}
-      onClose={() => setEditDialogOpen(false)}
+      onClose={() => setEditDialogOpen()}
       fullWidth
       maxWidth="lg"
     >
-      <DialogTitle>Create new post</DialogTitle>
+      <DialogTitle>Edit post</DialogTitle>
 
       <Paper sx={{ p: 2 }}>
         <TextField
@@ -194,7 +191,7 @@ export default function Edit({
             Upload image
             <VisuallyHiddenInput
               type="file"
-              accept="image/*"
+              accept=".jpg,.jpeg,.png"
               multiple={false}
               onChange={(e) => {
                 setFile(e.target.files[0]);
@@ -242,72 +239,36 @@ export default function Edit({
           }}
         />
         <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
-          {post?.id ? (
-            <Button
-              sx={{ mr: 2 }}
-              variant="contained"
-              endIcon={<SaveIcon />}
-              disabled={saveButtonDisabled}
-              onClick={() => {
-                notification.setLoader(true);
-                postsService
-                  .UpdateDraftPost({
-                    Id: post.id,
-                    MainParentId: post.mainParentId,
-                    Title: title,
-                    Category: category,
-                    Tags: tags,
-                    Content: content,
-                    MainImage: file,
-                  })
-                  .catch((err) => {
-                    handleError(err);
-                  })
-                  .finally(() => {
-                    notification.setLoader(false);
-                    setEditDialogOpen(false);
-                    setTriggerEffect((prev) => !prev);
-                  });
-              }}
-            >
-              Update draft
-            </Button>
-          ) : (
-            <Button
-              sx={{ mr: 2 }}
-              variant="contained"
-              endIcon={<SaveIcon />}
-              disabled={saveButtonDisabled}
-              onClick={() => {
-                notification.setLoader(true);
-                postsService
-                  .CreateDraftPost({
-                    Title: title,
-                    Category: category,
-                    Tags: tags,
-                    Content: content,
-                    MainImage: file,
-                  })
-                  .then((res) => {
-                    setTitle("");
-                    setCategory("");
-                    setTags([]);
-                    setContent("");
-                    setFile(null);
-                  })
-                  .catch((err) => {
-                    handleError(err);
-                  })
-                  .finally(() => {
-                    notification.setLoader(false);
-                    setEditDialogOpen(false);
-                    setTriggerEffect((prev) => !prev);
-                  });
-              }}
-            >
-              Save as a draft
-            </Button>
-          )}
+          <Button
+            sx={{ mr: 2 }}
+            variant="contained"
+            endIcon={<SaveIcon />}
+            disabled={saveButtonDisabled}
+            onClick={() => {
+              notification.setLoader(true);
+              postsService
+                .UpdateDraftPost({
+                  Id: post.id,
+                  MainParentId: post.mainParentId,
+                  Title: title,
+                  Category: category,
+                  Tags: tags,
+                  Content: content,
+                  MainImage: file,
+                })
+                .catch((err) => {
+                  handleError(err);
+                })
+                .finally(() => {
+                  notification.setLoader(false);
+                  setEditDialogOpen();
+                  fetchDraftPosts();
+                });
+            }}
+          >
+            Update draft
+          </Button>
+
           <Button
             variant="contained"
             disabled={submitButtonDisabled}
@@ -322,21 +283,27 @@ export default function Edit({
                   Content: content,
                   MainImage: file,
                 })
-                .then((res) => {
+                .then(() => {
+                  postsService.DeletePost({ id: post.id }).then(() => {
+                    fetchDraftPosts();
+                    fetchWaitingPosts();
+                  });
+                })
+                .then(() => {})
+                .then(() => {
                   setTitle("");
                   setCategory("");
                   // setTags([]);
                   setContent("");
                   setFile(null);
                 })
-                .then(async () => {
-                  await postsService.DeletePost({ id: post.id });
+                .catch((err) => {
+                  handleError(err);
                 })
                 .finally(() => {
                   notification.showToast("Post sended to approval", "success");
                   notification.setLoader(false);
                   setEditDialogOpen(false);
-                  setTriggerEffect((prev) => !prev);
                 });
             }}
           >

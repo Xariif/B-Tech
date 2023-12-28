@@ -9,5 +9,6 @@
         public string Email { get; set; }
         public string Auth0Id { get; set; }
         public DateTime ActiveFrom { get; set; }
+        public string? AvatarId { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Box, Container } from "@mui/material";
+import { Avatar, Box, Container, Stack, Typography } from "@mui/material";
+import { deepOrange } from "@mui/material/colors";
 import Category from "./Category";
 
 export default function PostBigImg({ post }) {
@@ -41,7 +42,9 @@ export default function PostBigImg({ post }) {
           style={{
             display: "flex",
             justifyContent: "space-between",
-            fontSize: ".8rem",
+            fontSize: "1.2rem",
+
+            alignItems: "center",
           }}
         >
           <Link
@@ -54,15 +57,45 @@ export default function PostBigImg({ post }) {
               pathname: `/author/${post.authorId}`,
             }}
           >
-            <div>
-              {`${post.authorName} ${post.authorSurname}`}
-              &nbsp;
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <Stack direction="row" spacing={2}>
+                {post.authorAvatar ? (
+                  <Avatar
+                    src={post.authorAvatar}
+                    sx={{
+                      width: 56,
+                      height: 56,
+                      fontWeight: "bold",
+                    }}
+                  />
+                ) : (
+                  <Avatar>
+                    {post.authorName[0]}
+                    {post.authorSurname[0]}
+                  </Avatar>
+                )}
+                <Typography
+                  variant="h5"
+                  display="flex"
+                  alignItems="center"
+                  fontWeight="bold"
+                >
+                  {`${post.authorName} ${post.authorSurname}`}
+                </Typography>
+              </Stack>
+
+              <p style={{ marginLeft: "1rem" }}>
+                {new Date(post.createdAt).toLocaleDateString("en-EN", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: false,
+                  hourCycle: "h24",
+                })}
+              </p>
             </div>
-            {new Date(post.createdAt).toLocaleDateString("en-EN", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}
           </Link>
           <p style={{ margin: "0", userSelect: "none" }}>
             Views:

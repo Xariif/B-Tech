@@ -22,13 +22,13 @@ export default function Category({ category }) {
       style={{
         display: "flex",
         alignItems: "center",
-        fontSize: ".5rem",
+        fontSize: ".7rem",
       }}
     >
       <div
         style={{
-          height: ".3rem",
-          width: "1.5rem ",
+          height: ".5rem",
+          width: "2.5rem ",
           marginRight: ".5rem",
           backgroundColor: CategoryColors[category],
         }}

@@ -1,4 +1,5 @@
 ﻿using BlogAPI.DTOs.Authors;
+using BlogAPI.DTOs.Users;
 using BlogAPI.Entities;
 using BlogAPI.Helpers;
 using BlogAPI.Services;
@@ -8,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace BlogAPI.Controllers
 {
     [ApiController]
-    [Authorize("admin")]
     [Route("api/[controller]")]
     public class AuthorsController : BaseController
     {
@@ -22,6 +22,54 @@ namespace BlogAPI.Controllers
             _authorsService = authorsService;
             _usersService = usersService;
             _auth0Service = auth0Service;
+        }
+
+        [AllowAnonymous]
+        [HttpGet("GetAuthorByUserId")]
+        public async Task<ActionResult<AuthorsDTO>> GetAuthorByUserId(string id)
+        {
+            try
+            {
+                var author = await _authorsService.GetAuthorByUserIdAsync(id);
+                var user = await _usersService.GetUserByIdAsync(author.UserId);
+
+                return new AuthorsDTO()
+                {
+                    Id = user.Id.ToString(),
+                    Description = author.Description,
+                    UserId = author.UserId,
+                    SocialMedia = author.SocialMedia
+                };
+
+
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
+
+        }
+
+        [AllowAnonymous]
+        [HttpGet("GetAvatarByAuthorId")]
+        public async Task<ActionResult<UsersDTO>> GetAvatar(string id)
+        {
+            try
+            {
+                var author = await _authorsService.GetAuthorByIdAsync(id);
+                var user = await _usersService.GetUserByIdAsync(author.UserId);
+                if (user.AvatarId == null)
+                {
+                    return NotFound("Avatar not found");
+                }
+                var res = await _usersService.GetAvatarAsync(user.AvatarId.ToString());
+                return File(res, "image/jpeg");
+
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
         }
 
         [AllowAnonymous]
@@ -45,8 +93,6 @@ namespace BlogAPI.Controllers
                     user.Auth0Id,
                     user.ActiveFrom
                 };
-
-
             }
             catch (Exception ex)
             {
@@ -54,7 +100,7 @@ namespace BlogAPI.Controllers
             }
 
         }
-
+        [Authorize("admin")]
         [HttpPost("CreateAuthor")]
         public async Task<ActionResult> CreateAuthor(string userId)
         {
@@ -63,7 +109,7 @@ namespace BlogAPI.Controllers
                 await _authorsService.CreateAuthorAsync(userId);
 
                 var user = await _usersService.GetUserByIdAsync(userId);
-                await _auth0Service.GiveRoleAsync(user.Auth0Id,  RoleIds.Author );
+                await _auth0Service.GiveRoleAsync(user.Auth0Id, RoleIds.Author);
 
                 return Ok("Author created");
             }
@@ -77,7 +123,7 @@ namespace BlogAPI.Controllers
 
         [Authorize("write:posts")]
         [HttpPut("UpdateAuthor")]
-        public async Task<ActionResult> UpdateAuthor(UpdateAuthorsDTO authorDto)
+        public async Task<ActionResult> UpdateAuthor([FromForm] UpdateAuthorsDTO authorDto)
         {
             try
             {
@@ -93,6 +139,7 @@ namespace BlogAPI.Controllers
             }
         }
 
+        [Authorize("admin")]
         [HttpDelete("DeleteAuthor")]
         public async Task<ActionResult> DeleteAuthor()
         {
@@ -106,7 +153,7 @@ namespace BlogAPI.Controllers
                 var userId = IdHelper.GetUserId(User, _usersService);
 
                 var user = await _usersService.GetUserByIdAsync(userId.ToString());
-                await _auth0Service.RemoveRoleAsync(user.Auth0Id,  RoleIds.Author );
+                await _auth0Service.RemoveRoleAsync(user.Auth0Id, RoleIds.Author);
 
                 return Ok("Author Deleted");
             }

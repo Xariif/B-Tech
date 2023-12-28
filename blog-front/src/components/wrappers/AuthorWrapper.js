@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import Author from "../pages/Author";
 import NotFound from "../pages/NotFound";
 import Loading from "../ui/Loading";
-import useService from "../../services/author/useService";
+import useAuthorService from "../../services/author/useService";
 import usePostService from "../../services/posts/useService";
 import { useNotification } from "../hooks/useNotification";
 import useError from "../hooks/useError";
@@ -12,7 +12,7 @@ import useError from "../hooks/useError";
 function AuthorWrapper() {
   const { id } = useParams();
   const { setLoader } = useNotification();
-  const authorService = useService();
+  const authorService = useAuthorService();
   const postService = usePostService();
   const { handleError } = useError();
 
@@ -40,7 +40,11 @@ function AuthorWrapper() {
     };
 
     fetchAuthorById()
-      .then((authorResponse) => {
+      .then(async (authorResponse) => {
+        authorResponse.authorAvatar = await authorService.GetAvatarByAuthorId({
+          id: authorResponse.id,
+        });
+
         setAuthorData(authorResponse);
         return fetchPostsByAuthorId();
       })

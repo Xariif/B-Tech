@@ -6,15 +6,17 @@ import Post from "../pages/Post";
 import Loading from "../ui/Loading";
 import PostBigImg from "../ui/PostBigImg";
 import { useNotification } from "../hooks/useNotification";
-import useService from "../../services/posts/useService";
+import usePostsService from "../../services/posts/useService";
 import useError from "../hooks/useError";
 import Home from "../pages/Home";
+import useAuthorService from "../../services/author/useService";
 
 export default function HomeWrapper() {
   const [posts, setPosts] = useState();
 
   const { setLoader } = useNotification();
-  const postsService = useService();
+  const postsService = usePostsService();
+  const authorService = useAuthorService();
   const { handleError } = useError();
 
   useEffect(() => {
@@ -45,13 +47,27 @@ export default function HomeWrapper() {
         });
     };
 
+    const fetchAuthorAvatar = (post) => {
+      return authorService
+        .GetAvatarByAuthorId({ id: post.authorId })
+        .then((avatar) => {
+          post.authorAvatar = avatar;
+        })
+        .catch((error) => {
+          post.authorAvatar = null;
+          handleError(error);
+        });
+    };
+
     fetchPosts()
       .then((postsResponse) => {
         const fetchImagePromises = postsResponse.map(fetchImage);
         const fetchImageInfoPromises = postsResponse.map(fetchImageInfo);
+        const fetchAuthorAvatarPromises = postsResponse.map(fetchAuthorAvatar);
         return Promise.all([
           Promise.all(fetchImagePromises),
           Promise.all(fetchImageInfoPromises),
+          Promise.all(fetchAuthorAvatarPromises),
         ]).then(() => {
           setPosts(postsResponse);
         });
