@@ -34,7 +34,6 @@ import DraftPosts from "./DraftPosts/DraftPosts";
 import ApprovedPostsWrapper from "../../wrappers/PostMenager/ApprovedPostsWarapper";
 import DraftPostsWrapper from "../../wrappers/PostMenager/DraftPostsWrapper";
 import WaitingForApprovalWrapper from "../../wrappers/PostMenager/WaitingForApprovalWrapper";
-import usePostManager from "../../hooks/usePostManager";
 import New from "../../ui/PostDialog/New";
 
 export default function PostMenager() {

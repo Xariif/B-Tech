@@ -6,6 +6,7 @@ import App from "./App";
 import { ToastProvider } from "./context/NotificationContext";
 import { ErrorProvider } from "./context/ErrorContext";
 import { UserProvider } from "./context/UserContext";
+import { PostManagerProvider } from "./context/PostMenagerContext";
 
 const rootElement = document.getElementById("root");
 
@@ -27,7 +28,9 @@ root.render(
     <UserProvider>
       <ToastProvider>
         <ErrorProvider>
-          <App />
+          <PostManagerProvider>
+            <App />
+          </PostManagerProvider>
         </ErrorProvider>
       </ToastProvider>
     </UserProvider>

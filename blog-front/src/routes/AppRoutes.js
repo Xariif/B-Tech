@@ -48,14 +48,7 @@ export default function AppRoutes() {
               />
             }
           >
-            <Route
-              path="/post/menager"
-              element={
-                <PostManagerProvider>
-                  <PostMenager />
-                </PostManagerProvider>
-              }
-            />
+            <Route path="/post/menager" element={<PostMenager />} />
           </Route>
 
           <Route path="/post/:id" element={<PostWrapper />} />

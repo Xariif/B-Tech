@@ -1,11 +1,11 @@
 import { useState, useEffect, useContext } from "react";
 import { PostManagerContext } from "../../context/PostMenagerContext";
 
-const usePostManager = () => {
+const usePostMenager = () => {
   const context = useContext(PostManagerContext);
   if (!context)
-    throw new Error("usePostManager must be used within a PostManagerProvider");
+    throw new Error("usePostMenager must be used within a PostManagerProvider");
   return context;
 };
 
-export default usePostManager;
+export default usePostMenager;

@@ -22,6 +22,8 @@ const initialState = {
   },
 };
 
+export const ToastContext = createContext();
+
 const reducer = (state, action) => {
   switch (action.type) {
     case "SHOW_TOAST":
@@ -54,8 +56,6 @@ const reducer = (state, action) => {
       return state;
   }
 };
-
-export const ToastContext = createContext();
 
 export function ToastProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
