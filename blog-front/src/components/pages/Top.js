@@ -5,6 +5,7 @@ import { DateCalendar, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import Popper from "@mui/material/Popper";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useNotification } from "../hooks/useNotification";
 import PostSmallImg from "../ui/PostSmallImg";
 
@@ -32,6 +33,7 @@ export default function Top({ ...props }) {
         <Button
           onClick={() => {
             setFrom(new Date(today.getTime() - 24 * 60 * 60 * 1000));
+            setTo(today);
           }}
         >
           24h
@@ -39,6 +41,7 @@ export default function Top({ ...props }) {
         <Button
           onClick={() => {
             setFrom(new Date(today.getTime() - 48 * 60 * 60 * 1000));
+            setTo(today);
           }}
         >
           48h
@@ -47,6 +50,7 @@ export default function Top({ ...props }) {
         <Button
           onClick={() => {
             setFrom(new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000));
+            setTo(today);
           }}
         >
           7 days
@@ -54,6 +58,7 @@ export default function Top({ ...props }) {
         <Button
           onClick={() => {
             setFrom(new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000));
+            setTo(today);
           }}
         >
           1 month
@@ -129,7 +134,21 @@ export default function Top({ ...props }) {
             {props.posts?.map((post) => {
               return (
                 <Grid item xs={2} sm={4} md={4} key={post.id}>
-                  <PostSmallImg post={post} link />
+                  <PostSmallImg
+                    post={post}
+                    options={
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                        }}
+                      >
+                        <VisibilityIcon /> {post.views}
+                      </div>
+                    }
+                    link
+                  />
                 </Grid>
               );
             })}

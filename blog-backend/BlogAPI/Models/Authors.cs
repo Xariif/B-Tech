@@ -8,7 +8,7 @@ namespace BlogAPI.Models
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public required ObjectId Id { get; set; }
-        public required string UserId { get; set; }
+        public required ObjectId UserId { get; set; }
         public string? Description { get; set; }
         public SocialMedia? SocialMedia { get; set; }
     }

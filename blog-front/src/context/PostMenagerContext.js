@@ -6,7 +6,8 @@ import React, {
   useEffect,
 } from "react";
 import { useNotification } from "../components/hooks/useNotification";
-import useService from "../services/posts/useService";
+import usePostsService from "../services/posts/useService";
+import useAuthorService from "../services/author/useService";
 import useError from "../components/hooks/useError";
 
 export const PostManagerContext = createContext();
@@ -53,7 +54,8 @@ function reducer(state, action) {
 export function PostManagerProvider({ children }) {
   const { setLoader } = useNotification();
   const { handleError } = useError();
-  const postsService = useService();
+  const postsService = usePostsService();
+  const authorService = useAuthorService();
   const fetchDraftPostData = async () => {
     setLoader(true);
     const fetchPosts = async () => postsService.GetDraftPosts();
@@ -140,6 +142,7 @@ export function PostManagerProvider({ children }) {
       .then((postsResponse) => {
         const fetchImagePromises = postsResponse.map(fetchImage);
         const fetchImageInfoPromises = postsResponse.map(fetchImageInfo);
+
         return Promise.all([
           Promise.all(fetchImagePromises),
           Promise.all(fetchImageInfoPromises),
@@ -187,19 +190,32 @@ export function PostManagerProvider({ children }) {
         });
     };
 
+    const fetchAuthorAvatar = (post) => {
+      return authorService
+        .GetAvatarByAuthorId({ id: post.authorId })
+        .then((avatar) => {
+          post.authorAvatar = avatar;
+        })
+        .catch((error) => {
+          post.authorAvatar = null;
+          handleError(error);
+        });
+    };
+
     return fetchPosts()
       .then((postsResponse) => {
         const fetchImagePromises = postsResponse.map(fetchImage);
         const fetchImageInfoPromises = postsResponse.map(fetchImageInfo);
+        const fetchAuthorAvatarPromises = postsResponse.map(fetchAuthorAvatar);
         return Promise.all([
           Promise.all(fetchImagePromises),
           Promise.all(fetchImageInfoPromises),
+          Promise.all(fetchAuthorAvatarPromises),
         ]).then(() => {
           return postsResponse;
         });
       })
       .catch((error) => {
-        console.log(error);
         handleError(error);
         return false;
       })

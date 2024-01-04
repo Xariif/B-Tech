@@ -31,13 +31,13 @@ namespace BlogAPI.Controllers
             try
             {
                 var author = await _authorsService.GetAuthorByUserIdAsync(id);
-                var user = await _usersService.GetUserByIdAsync(author.UserId);
+                var user = await _usersService.GetUserByIdAsync(author.UserId.ToString());
 
                 return new AuthorsDTO()
                 {
-                    Id = user.Id.ToString(),
+                    Id = author.Id.ToString(),
                     Description = author.Description,
-                    UserId = author.UserId,
+                    UserId = author.UserId.ToString(),
                     SocialMedia = author.SocialMedia
                 };
 

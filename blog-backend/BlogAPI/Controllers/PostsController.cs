@@ -194,6 +194,50 @@ namespace BlogAPI.Controllers
             }
         }
 
+        [AllowAnonymous]
+        [HttpGet("SearchForPhrase")]
+        public async Task<ActionResult<List<PostsDTO>>> SearchForPhrase(string phrase)
+        {
+            try
+            {
+                var result = await _postsService.SearchForPhraseAsync(phrase);
+
+                var res = result.Select(post =>
+                {
+                    var author = _authorsService.GetAuthorByIdAsync(post.AuthorId.ToString()).Result;
+                    var user = _usersService.GetUserByIdAsync(author.UserId).Result;
+
+                    return new PostsDTO
+                    {
+                        Id = post.Id.ToString(),
+                        Title = post.Title,
+                        Category = post.Category,
+                        Content = post.Content,
+                        Tags = post.Tags,
+                        MainPhotoId = post.MainPhotoId.ToString(),
+                        AuthorName = user.Name,
+                        AuthorSurname = user.Surname,
+                        AuthorId = author.Id.ToString(),
+                        CreatedAt = post.CreatedAt,
+                        Status = post.Status,
+                        Dislikes = post.Dislikes,
+                        Likes = post.Likes,
+                        Views = post.Views,
+                        MainParentId = post.MainParentId?.ToString()
+                    };
+                }
+                                   ).ToList();
+
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
+
+        }
+
+
         [Authorize("write:posts")]
         [HttpGet("GetRejectedPosts")]
         public async Task<ActionResult<List<PostsDTO>>> GetRejectedPosts()

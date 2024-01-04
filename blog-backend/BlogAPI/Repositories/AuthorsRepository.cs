@@ -1,5 +1,6 @@
 ﻿using BlogAPI.Contexts;
 using BlogAPI.Models;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace BlogAPI.Repositories
@@ -10,7 +11,7 @@ namespace BlogAPI.Repositories
         {
         }
 
-        public Task<Authors> GetAuthorByUserIdAsync(string userId)
+        public Task<Authors> GetAuthorByUserIdAsync(ObjectId userId)
         {
             return _context.Authors.Find(Builders<Authors>.Filter.Eq(author => author.UserId, userId)).FirstOrDefaultAsync();
 

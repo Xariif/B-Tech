@@ -98,10 +98,17 @@ const useService = () => {
 
   const GetImageInfo = ({ id }) => api.get("Posts/GetImageInfo", { id });
 
+  const SearchForPhrase = ({ phrase }) => {
+    return api.get("Posts/SearchForPhrase", {
+      phrase,
+    });
+  };
+
   const IncreaseViews = ({ id }) =>
     api.post("Posts/IncreaseViews", null, { id });
 
   return {
+    SearchForPhrase,
     CancelPost,
     GetApprovedPosts,
     GetTopApprovedPosts,

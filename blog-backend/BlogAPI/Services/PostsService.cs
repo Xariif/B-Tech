@@ -51,6 +51,21 @@ namespace BlogAPI.Services
             return await _postsRepository.FindAllAsync(filter, findOptions);
         }
 
+        public async Task<IEnumerable<Posts>> SearchForPhraseAsync(string phrase)
+        {
+
+
+            var filter = Builders<Posts>.Filter.And(
+                Builders<Posts>.Filter.Eq(x => x.Status, Status.Aproved),
+                Builders<Posts>.Filter.Or(
+                    Builders<Posts>.Filter.Regex(x => x.Title, new BsonRegularExpression(phrase, "i")),
+                    Builders<Posts>.Filter.Regex(x => x.Content, new BsonRegularExpression(phrase, "i"))
+                )
+            );
+
+
+            return await _postsRepository.FindAllAsync(filter);
+        }
         public async Task CancelPostAsync(string postId)
         {
             var post = await GetPostByIdAsync(postId) ?? throw new Exception("Post doesn't exist");

@@ -76,7 +76,8 @@ export default function AppRoutes() {
 
           <Route path="/post/:id" element={<PostWrapper />} />
           <Route path="/author/:id" element={<AuthorWrapper />} />
-          <Route path="/search/:term" element={<Search />} />
+
+          <Route path="/search/:term?" element={<Search />} />
           <Route path="*" exact element={<NotFound />} />
         </Route>
       </Routes>

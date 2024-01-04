@@ -17,6 +17,7 @@ import { deepOrange, red } from "@mui/material/colors";
 import { useAuth0 } from "@auth0/auth0-react";
 import styled from "@emotion/styled";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { Link } from "react-router-dom";
 import useUserService from "../../services/users/useService";
 import useError from "../hooks/useError";
 import { useNotification } from "../hooks/useNotification";
@@ -245,6 +246,7 @@ function Profile() {
 export default Profile;
 
 function AuthorSettings({ data }) {
+  console.log(data);
   const [authorData, setAuthorData] = useState();
   const notification = useNotification();
 
@@ -262,10 +264,11 @@ function AuthorSettings({ data }) {
   }, [data]);
 
   if (!authorData) return null;
-
+  console.log(authorData);
   return (
     <Box sx={{ mt: 2 }}>
       <Typography variant="h2">Author Settings</Typography>
+
       <TextField
         label="Description"
         multiline
@@ -324,7 +327,19 @@ function AuthorSettings({ data }) {
           })
         }
       />
-      <Box display="flex" justifyContent="flex-end">
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Link
+          style={{
+            display: "flex",
+            textDecoration: "none",
+            color: "inherit",
+          }}
+          to={{
+            pathname: `/author/${authorData.id}`,
+          }}
+        >
+          <Button>Author profile preview</Button>
+        </Link>
         <Button
           sx={{ mt: 2 }}
           variant="contained"

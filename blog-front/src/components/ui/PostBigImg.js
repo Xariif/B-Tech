@@ -26,7 +26,7 @@ export default function PostBigImg({ post }) {
       >
         <Category category={post.category} />
         <Link
-          to={`post/${post.id}`}
+          to={`/post/${post.id}`}
           style={{
             fontWeight: "bolder",
             fontSize: "2rem",
@@ -106,7 +106,7 @@ export default function PostBigImg({ post }) {
 
       <Link
         to={{
-          pathname: `post/${post.id}`,
+          pathname: `/post/${post.id}`,
           state: { postData: post },
         }}
         style={{

@@ -15,10 +15,11 @@ import BoltIcon from "@mui/icons-material/Bolt";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
 import { CribSharp, PowerSettingsNew } from "@mui/icons-material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import PersonIcon from "@mui/icons-material/Person";
 import useUser from "../../hooks/useUser";
+import usePostService from "../../../services/posts/useService";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -191,6 +192,7 @@ function BasicMenuBar({ isAuthenticated }) {
 
 function SearchBar() {
   const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
 
   return (
     <Search>
@@ -206,7 +208,7 @@ function SearchBar() {
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             e.preventDefault();
-            window.location.href = `/search/${searchTerm}`;
+            navigate(`/search/${searchTerm}`, { replace: false });
           }
         }}
       />

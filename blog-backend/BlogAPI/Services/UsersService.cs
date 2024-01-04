@@ -68,7 +68,9 @@ namespace BlogAPI.Services
                 Surname = updateUser.Surname,
                 ActiveFrom = user.ActiveFrom,
                 Phone = updateUser.Phone,
-                Email = updateUser.Email
+                Email = updateUser.Email,
+                AvatarId = user.AvatarId,
+
             };
 
             if (user.AvatarId != null)
@@ -89,6 +91,13 @@ namespace BlogAPI.Services
 
         public async Task DeleteUserAsync(string id)
         {
+            var user = await _usersRepository.FindFirstByIdAsync<Users>(id) ?? throw new ArgumentException("User not found");
+
+            if (user.AvatarId != null)
+            {
+                await _usersRepository.DeleteFileAsync(user.AvatarId?.ToString());
+            }
+
             await _usersRepository.DeleteAsync<Users>(id);
         }
 

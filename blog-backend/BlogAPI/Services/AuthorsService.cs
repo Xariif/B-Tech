@@ -20,7 +20,7 @@ namespace BlogAPI.Services
 
             {
                 Id = ObjectId.GenerateNewId(),
-                UserId = userId,
+                UserId = ObjectId.Parse(userId),
                 Description = null,
                 SocialMedia = new SocialMedia(),
             };
@@ -41,7 +41,7 @@ namespace BlogAPI.Services
             return new AuthorsDTO
             {
                 Id = author.Id.ToString(),
-                UserId = author.UserId,
+                UserId = author.UserId.ToString(),
                 Description = author.Description,
                 SocialMedia = author.SocialMedia,
             };
@@ -49,7 +49,7 @@ namespace BlogAPI.Services
 
         public async Task<Authors> GetAuthorByUserIdAsync(string userId)
         {
-            return await _authorsRepository.GetAuthorByUserIdAsync(userId) ?? throw new Exception("Author not found");
+            return await _authorsRepository.GetAuthorByUserIdAsync(ObjectId.Parse(userId)) ?? throw new Exception("Author not found");
         }
 
         public async Task UpdateAuthorAsync(ObjectId authorId, UpdateAuthorsDTO authorDto)
